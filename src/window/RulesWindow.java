@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 public class RulesWindow extends JFrame {
+    // written by Li Siying;
     public RulesWindow() {
         setTitle("Rules in English");  //set the English rules window
         setSize(1050, 700);
@@ -37,6 +38,7 @@ public class RulesWindow extends JFrame {
         textArea.setWrapStyleWord(true);
 
         //Set a new text area;
+        // written by Shen Jinyan;
         String text_introduction =
                 "Basic Introduction:" + "\n"
                         + "  Mahjong is a game for four people invented in ancient China. It is a small rectangular piece made of bamboo, bone or plastic and engraved with patterns or characters. In the version of Mahjong used in this game, there are 134 cards per deck. " +
