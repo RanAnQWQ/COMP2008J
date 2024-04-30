@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 
-public class ChineseRulesWindow extends JFrame {
+public class ChineseRulesWindow extends JFrame { //written by Siying.Li & Jinyan.Shen & Ran.An together
     public ChineseRulesWindow(){
         setTitle("Rules in Chinese");
         setSize(1050,700);
