@@ -45,6 +45,13 @@ public class GameWindow extends JFrame {
         headShot_M("src/profilephoto/cow.png");
         // Add the headShots of 3 machine players;
 
+        chi_button();
+        peng_button();
+        gang_button();
+        ting_button();
+        hu_button();
+        // Add the prompt button to deal tiles;
+
 
     }
 
@@ -59,6 +66,70 @@ public class GameWindow extends JFrame {
         gamePanel.setLayout(null);
         add(gamePanel);
     }
+
+
+    // WORK IN PROGRESS!!! Display the button, need: action listener/ connect with actual act;
+    
+    private void chi_button(){
+        JButton chi = new JButton();
+        chi.setBorderPainted(false);
+        chi.setFocusPainted(false);
+        chi.setContentAreaFilled(false);
+        chi.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Chi.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+
+        chi.setBounds(370, 420, 300, 300);
+
+        gamePanel.add(chi);
+    }
+
+    private void peng_button(){
+        JButton peng = new JButton();
+        peng.setBorderPainted(false);
+        peng.setFocusPainted(false);
+        peng.setContentAreaFilled(false);
+        peng.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Peng.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+
+        peng.setBounds(455, 352, 300, 300);
+
+        gamePanel.add(peng);
+    }
+
+    private void gang_button(){
+        JButton gang = new JButton();
+        gang.setBorderPainted(false);
+        gang.setFocusPainted(false);
+        gang.setContentAreaFilled(false);
+        gang.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Gang.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+
+        gang.setBounds(480, 420, 300, 300);
+
+        gamePanel.add(gang);
+    }
+
+    private void ting_button(){
+        JButton ting = new JButton();
+        ting.setBorderPainted(false);
+        ting.setFocusPainted(false);
+        ting.setContentAreaFilled(false);
+        ting.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Ting.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+
+        ting.setBounds(620, 280, 300, 300);
+
+        gamePanel.add(ting);
+    }
+
+    private void hu_button(){
+        JButton hu = new JButton();
+        hu.setBorderPainted(false);
+        hu.setFocusPainted(false);
+        hu.setContentAreaFilled(false);
+        hu.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Hu.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
+
+        hu.setBounds(650, 280, 300, 300);
+
+        gamePanel.add(hu);
+    }
+
 
 //////////////////////profile photo///////////////////////////////
     private void headShot_M(String imagePath){  //written by Jinyan.Shen
