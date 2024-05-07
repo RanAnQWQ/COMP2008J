@@ -7,19 +7,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.lang.reflect.Array;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
 import java.util.Timer;
-import java.util.TimerTask;
-
-
 
 
 public class GameWindow extends JFrame {
     private ImagePanel gamePanel;
-    private Tilemap tilemap;
     public JTextField nameField;
+    public Tilemap tilemap;
 
     public static void main(String[] args) {
         new GameWindow();
@@ -35,8 +34,7 @@ public class GameWindow extends JFrame {
         helpButtons();
         dice_button(sum);
 
-//        tilemap = new Tilemap();
-//        addTileToWindow(111);
+
         this.setVisible(true);
         chooseAvatar();
 
@@ -45,17 +43,12 @@ public class GameWindow extends JFrame {
         headShot_M("src/profilephoto/cow.png");
         // Add the headShots of 3 machine players;
 
-        chi_button();
-        peng_button();
-        gang_button();
-        ting_button();
-        hu_button();
-        // Add the prompt button to deal tiles;
-
-
+        tilemap = new Tilemap();
+        addTileToWindow();
+//        addTileToWindow(11,220,660);
     }
 
-    private void window_frame(){
+    private void window_frame() {
         setTitle("Game Window");
         setSize(1200, 800);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -67,72 +60,8 @@ public class GameWindow extends JFrame {
         add(gamePanel);
     }
 
-
-    // WORK IN PROGRESS!!! Display the button, need: action listener/ connect with actual act;
-    
-    private void chi_button(){
-        JButton chi = new JButton();
-        chi.setBorderPainted(false);
-        chi.setFocusPainted(false);
-        chi.setContentAreaFilled(false);
-        chi.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Chi.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
-
-        chi.setBounds(370, 420, 300, 300);
-
-        gamePanel.add(chi);
-    }
-
-    private void peng_button(){
-        JButton peng = new JButton();
-        peng.setBorderPainted(false);
-        peng.setFocusPainted(false);
-        peng.setContentAreaFilled(false);
-        peng.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Peng.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
-
-        peng.setBounds(455, 352, 300, 300);
-
-        gamePanel.add(peng);
-    }
-
-    private void gang_button(){
-        JButton gang = new JButton();
-        gang.setBorderPainted(false);
-        gang.setFocusPainted(false);
-        gang.setContentAreaFilled(false);
-        gang.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Gang.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
-
-        gang.setBounds(480, 420, 300, 300);
-
-        gamePanel.add(gang);
-    }
-
-    private void ting_button(){
-        JButton ting = new JButton();
-        ting.setBorderPainted(false);
-        ting.setFocusPainted(false);
-        ting.setContentAreaFilled(false);
-        ting.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Ting.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
-
-        ting.setBounds(620, 280, 300, 300);
-
-        gamePanel.add(ting);
-    }
-
-    private void hu_button(){
-        JButton hu = new JButton();
-        hu.setBorderPainted(false);
-        hu.setFocusPainted(false);
-        hu.setContentAreaFilled(false);
-        hu.setIcon(new ImageIcon(new ImageIcon("src/PromptButton/Hu.PNG").getImage().getScaledInstance(300, 300, Image.SCALE_SMOOTH)));
-
-        hu.setBounds(650, 280, 300, 300);
-
-        gamePanel.add(hu);
-    }
-
-
-//////////////////////profile photo///////////////////////////////
-    private void headShot_M(String imagePath){  //written by Jinyan.Shen
+    //////////////////////profile photo///////////////////////////////
+    private void headShot_M(String imagePath) {  //written by Jinyan.Shen
         ImageIcon com;
         Image scaledCom;
         ImageIcon scaledComIcon;
@@ -144,7 +73,7 @@ public class GameWindow extends JFrame {
 
         com = new ImageIcon(imagePath);
         scaledCom = com.getImage().getScaledInstance(com.getIconWidth() / 9, com.getIconHeight() / 9, Image.SCALE_DEFAULT);
-        scaledComIcon= new ImageIcon(scaledCom);
+        scaledComIcon = new ImageIcon(scaledCom);
         headLabel = new JLabel(scaledComIcon);
         headLabel.setHorizontalAlignment(SwingConstants.CENTER);
         headLabel.setVerticalAlignment(SwingConstants.CENTER);
@@ -157,21 +86,30 @@ public class GameWindow extends JFrame {
         imagePanel.add(headLabel, BorderLayout.CENTER);
 
         // Create a JLabel to display "player"
-        Random random = new Random();
-        String[] playerNames = {"Sing", "Eszter", "Antheia", "Victoria", "Sean", "Henry", "Barbie","Tom","Jerry"};
+        Random random = new Random();  //written by Siying.Li
+        String[] playerNames = {"Sing", "Eszter", "Antheia", "Victoria", "Sean", "Henry", "Barbie", "Tom", "Jerry", "Mickey", "Minnie", "Anna", "Elsa", "Max", "Hari", "Allen", "Antoni", "Jack", "Rose"};
+
+        int start = 0;
+        int end = playerNames.length;
+
         JLabel[] playerLabels = new JLabel[3];
         for (int i = 0; i < 3; i++) {
-            int index = random.nextInt(playerNames.length);
-            playerLabels[i] = new JLabel(playerNames[index]);
+            int index = start + random.nextInt(end - start);
+            String selectedName = playerNames[index];
+            playerLabels[i] = new JLabel(selectedName);
             playerLabels[i].setHorizontalAlignment(SwingConstants.CENTER);
             imagePanel.add(playerLabels[i], BorderLayout.SOUTH);
 
+            String[] tempArray = new String[end - start - 1];
+            System.arraycopy(playerNames, start, tempArray, 0, index - start);
+            System.arraycopy(playerNames, index + 1, tempArray, index - start, end - start - index - 1);
+            playerNames = tempArray;
+
+            end--;
         }
 
 
-
-
-        switch (imagePath){
+        switch (imagePath) {
             case "src/profilephoto/bear.png":
                 // set the "North" headshot;
 
@@ -223,11 +161,10 @@ public class GameWindow extends JFrame {
 
     }
 
-
-
-    private void chooseAvatar(){  //written by Siying.Li
-        JDialog avatarDialog= new JDialog(this,"Player Settings",true);
-        avatarDialog.setSize(600,400);  //set choose window
+///////////////////user profile photo///////////////////////////////
+    private void chooseAvatar() {  //written by Siying.Li
+        JDialog avatarDialog = new JDialog(this, "Player Settings", true);
+        avatarDialog.setSize(600, 400);  //set choose window
         avatarDialog.setLocationRelativeTo(this);
         avatarDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
@@ -235,20 +172,27 @@ public class GameWindow extends JFrame {
         JPanel avatarPanel = new JPanel();
         avatarPanel.setLayout(null);
 
-        JLabel nameLabel = new JLabel("Please enter your name: ");
+        JLabel tips = new JLabel("<html>Please enter your name and choose your headshot ovo<br>Just enter your name(no 'ok' button)<br>and click the headshot button directly!</html>");
+        tips.setFont(new Font("Consolas", Font.BOLD, 16));
+        tips.setForeground(Color.GRAY);
+        tips.setBounds(50, 20, 500, 60);
+        tips.setHorizontalAlignment(SwingConstants.CENTER);
+        avatarPanel.add(tips);
+
+        JLabel nameLabel = new JLabel("<html>Please enter your name: <br>(6 character maximum)</html>");
         nameLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        nameLabel.setBounds(50,50,500,30);
+        nameLabel.setBounds(50, 90, 500, 60);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         avatarPanel.add(nameLabel);
 
-        nameField=new JTextField(8);
-        nameField.setBounds(230,90,150,30);
+        nameField = new JTextField(8);
+        nameField.setBounds(230, 155, 150, 30);
         avatarPanel.add(nameField);
 
         JLabel chooseLabel = new JLabel("Please choose your headshot: ");
         chooseLabel.setHorizontalAlignment(SwingConstants.CENTER);
         chooseLabel.setFont(new Font("Arial", Font.BOLD, 20));
-        chooseLabel.setBounds(50,150,500,30);
+        chooseLabel.setBounds(50, 200, 500, 30);
         avatarPanel.add(chooseLabel);
 
         ImageIcon Icon = new ImageIcon("src/profilephoto/crocodile.png");
@@ -260,7 +204,7 @@ public class GameWindow extends JFrame {
         crocodile.setFocusPainted(false);
         crocodile.setContentAreaFilled(false);
         crocodile.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/crocodile.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-        crocodile.setBounds(65,200,60,60);
+        crocodile.setBounds(65, 240, 60, 60);
         avatarPanel.add(crocodile);
 
         JButton fox = new JButton();
@@ -268,7 +212,7 @@ public class GameWindow extends JFrame {
         fox.setFocusPainted(false);
         fox.setContentAreaFilled(false);
         fox.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/fox.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-        fox.setBounds(165,200,60,60);
+        fox.setBounds(165, 240, 60, 60);
         avatarPanel.add(fox);
 
         JButton hamster = new JButton();
@@ -276,7 +220,7 @@ public class GameWindow extends JFrame {
         hamster.setFocusPainted(false);
         hamster.setContentAreaFilled(false);
         hamster.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/hamster.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-        hamster.setBounds(265,200,60,60);
+        hamster.setBounds(265, 240, 60, 60);
         avatarPanel.add(hamster);
 
         JButton hedgehog = new JButton();
@@ -284,7 +228,7 @@ public class GameWindow extends JFrame {
         hedgehog.setFocusPainted(false);
         hedgehog.setContentAreaFilled(false);
         hedgehog.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/hedgehog.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-        hedgehog.setBounds(365,200,60,60);
+        hedgehog.setBounds(365, 240, 60, 60);
         avatarPanel.add(hedgehog);
 
         JButton rabbit = new JButton();
@@ -292,12 +236,13 @@ public class GameWindow extends JFrame {
         rabbit.setFocusPainted(false);
         rabbit.setContentAreaFilled(false);
         rabbit.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/rabbit.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
-        rabbit.setBounds(465,200,60,60);
+        rabbit.setBounds(465, 240, 60, 60);
         avatarPanel.add(rabbit);
 
         crocodile.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {Image scaledArrow;
+            public void actionPerformed(ActionEvent e) {
+                Image scaledArrow;
                 updateAvatar("src/profilephoto/crocodile.png");
                 avatarDialog.dispose();
             }
@@ -305,7 +250,8 @@ public class GameWindow extends JFrame {
 
         fox.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {Image scaledArrow;
+            public void actionPerformed(ActionEvent e) {
+                Image scaledArrow;
                 updateAvatar("src/profilephoto/fox.png");
                 avatarDialog.dispose();
             }
@@ -313,7 +259,8 @@ public class GameWindow extends JFrame {
 
         hamster.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {Image scaledArrow;
+            public void actionPerformed(ActionEvent e) {
+                Image scaledArrow;
                 updateAvatar("src/profilephoto/hamster.png");
                 avatarDialog.dispose();
             }
@@ -321,7 +268,8 @@ public class GameWindow extends JFrame {
 
         hedgehog.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {Image scaledArrow;
+            public void actionPerformed(ActionEvent e) {
+                Image scaledArrow;
                 updateAvatar("src/profilephoto/hedgehog.png");
                 avatarDialog.dispose();
             }
@@ -329,7 +277,8 @@ public class GameWindow extends JFrame {
 
         rabbit.addActionListener(new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) {Image scaledArrow;
+            public void actionPerformed(ActionEvent e) {
+                Image scaledArrow;
                 updateAvatar("src/profilephoto/rabbit.png");
                 avatarDialog.dispose();
             }
@@ -340,7 +289,7 @@ public class GameWindow extends JFrame {
         avatarDialog.setVisible(true);
     }
 
-    public void updateAvatar(String imagePath){
+    public void updateAvatar(String imagePath) {
         /////for headshot/////
         ImageIcon avatarIcon = new ImageIcon(imagePath);
         Image originalImage = avatarIcon.getImage();
@@ -378,15 +327,15 @@ public class GameWindow extends JFrame {
     }
 
 
-///////////////////////dice button/////////////////////////
-    private void dice_button(int sum){  //written by Jinyan.Shen
+    ///////////////////////dice button/////////////////////////
+    private void dice_button(int sum) {  //written by Jinyan.Shen
 
         JButton num = new JButton("THROW DICE");
         Font dice_font = new Font("Arial", Font.BOLD, 24);
         num.setFocusPainted(false);
         num.setFont(dice_font);
         num.setHorizontalAlignment(SwingConstants.CENTER);
-        num.setBounds(500,0,200,50);
+        num.setBounds(500, 0, 200, 50);
         gamePanel.add(num);
         // set the button;
 
@@ -424,7 +373,7 @@ public class GameWindow extends JFrame {
 
                 JLabel sumLabel = new JLabel("" + sum);
                 Font label_font = new Font("Arial", Font.BOLD, 50);
-                sumLabel.setLocation(560,250);
+                sumLabel.setLocation(560, 250);
                 sumLabel.setFont(label_font);
                 sumLabel.setHorizontalAlignment(SwingConstants.CENTER);
                 sumLabel.setSize(70, 50);
@@ -467,22 +416,22 @@ public class GameWindow extends JFrame {
             case 1:
                 arrowIcon = new ImageIcon("src/window/ArrowDown.png");
                 break;
-                //East;
+            //East;
 
             case 2:
                 arrowIcon = new ImageIcon("src/window/ArrowRight.png");
                 break;
-                //North;
+            //North;
 
             case 3:
                 arrowIcon = new ImageIcon("src/window/ArrowTop.png");
                 break;
-                //West;
+            //West;
 
             default:
                 arrowIcon = new ImageIcon("src/window/ArrowTop.png");
                 break;
-                //South;
+            //South;
 
         }
         return arrowIcon;
@@ -493,10 +442,10 @@ public class GameWindow extends JFrame {
 
     //---------------------not in first game--------------------
 
-    public String getFirstHost(){
+    public String getFirstHost() {
         String host;
         /////////////////////add/////////////////////
-        switch (sum % 4){
+        switch (sum % 4) {
             case 1:
                 host = "East";
                 break;
@@ -516,9 +465,7 @@ public class GameWindow extends JFrame {
     // Store the chosen host in the first round;
 
 
-
-
-///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
+    ///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
     private void helpButtons() {  //written by Siying.Li
         JButton helpButton = new JButton("HELP");  //set the help button
         Font helpFont = new Font("Arial", Font.BOLD, 24);
@@ -581,20 +528,54 @@ public class GameWindow extends JFrame {
         gamePanel.add(helpButton);
     }
 
-/////////////////////////add or delete tiles/////////////////////////////////////////////////////////////////////////
-    public void addTileToWindow(int tileNum) {  //written by Siying.Li
-        String tilePath = tilemap.getTilePath(tileNum);
-        if(tilePath != null) {
-            ImageIcon imageIcon = new ImageIcon(tilePath);
-            JLabel imageLabel = new JLabel();
-            imageLabel.setIcon(imageIcon);
+    /////////////////////////add or delete tiles/////////////////////////////////////////////////////////////////////////
+    public void addTileToWindow(){  //written by Siying.Li
+        int startX = 300;
+        int startY = 660;
+        int rows = 1;
+        int cols = 13;
 
-            imageLabel.setBounds(550,350,100,100);//set the size of image
-            gamePanel.add(imageLabel);
-            gamePanel.revalidate();
-            gamePanel.repaint();
-        }else {
-            System.out.println("Tile not found");
+
+        List<Integer> tileNumber = new ArrayList<>(Arrays.asList(11,11,11,23,24,25,36,36,42,42,42,45,46));
+        for (int i = 0;i < tileNumber.size(); i++) {  //get the tileNumber
+            int tileNum = tileNumber.get(i);
+            String tilePath= tilemap.getTilePath(tileNum);
+
+            if (tilePath != null){
+                ImageIcon TileIcon = new ImageIcon(tilePath);
+
+                int scaledWidth = TileIcon.getIconWidth() / 3;  //reset the size of the tile
+                int scaledHeight = TileIcon.getIconHeight() / 3;
+
+                int currentX = startX + i * (scaledWidth);  //reset the site of the tile
+                int currentY = startY ;
+
+                JLabel tileLabel = new JLabel(new ImageIcon(TileIcon.getImage().getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH)));
+                tileLabel.setBounds(currentX,currentY,scaledWidth,scaledHeight);
+
+                tileLabel.addMouseListener(new MouseAdapter() {  //set the mouse listener
+                    @Override
+                    public void mouseEntered(MouseEvent e) {  //if the mouse entered the tile, the tile will move up
+                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() - 10);
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {  //if the mouse exited the tile, the tile will move down
+                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() + 10);
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+                    }
+                });
+
+                gamePanel.add(tileLabel);
+
+            }
         }
+        gamePanel.revalidate();
+        gamePanel.repaint();
     }
+
 }
+
