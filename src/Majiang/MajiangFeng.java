@@ -2,9 +2,8 @@ package Majiang;
 
 /**
  *
- * @author Administrator
- * 风牌的bean：包含  东、南、西、北、中、发、白
- *              1、 2、  3、 4、  5、 6、 7
+ * @author Qiyue Zhu
+ * types of Feng：including East Feng, South Feng, West Feng, North Feng, Zhong, Fa Cai, Bai Ban：4、5、6、7、8、9、10
  */
 public class MajiangFeng extends Majiang{
     @Override

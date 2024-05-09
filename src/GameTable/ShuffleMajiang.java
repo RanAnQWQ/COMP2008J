@@ -28,11 +28,15 @@ public class ShuffleMajiang {
         createMaJiangs();
         // shuffle the cards
         chaosMaJiangs();
+
+        // test.................................................................
         // print the cards
         System.out.println("【洗牌后所有的牌：】");
         printMaJiangs(0);
         System.out.println("【按照东南西北四个方向输出的牌(all the cards in order)：】");
         printMaJiangs(1);
+        // delete................................................................
+
         // restart teh indexes
         riverIndex=0;
         maJiangsIndex=135;
@@ -72,6 +76,7 @@ public class ShuffleMajiang {
     }
 
     /**
+     * to delete.....................................................................................
      * print out the cards
      * @param direction 0表示输出为一行，1表示按照四个方位进行输出
      * @throws InterruptedException
@@ -108,7 +113,7 @@ public class ShuffleMajiang {
     }
 
     /**
-     * shuffle the cards created in order
+     * shuffle the cards that have been created in order
      */
     private void chaosMaJiangs(){
         Collections.shuffle(maJiangs);
@@ -116,6 +121,7 @@ public class ShuffleMajiang {
 
 
     /**
+     * to delete...........................................................................
      * print the river
      * @throws InterruptedException
      */

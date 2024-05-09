@@ -1,17 +1,18 @@
 package Majiang;
 
 /**
- *
- * @author Administrator
- *  The parent of all cards
+ * Majiang class is the parent of all cards
+ * this define the basic features of a Majiang card
+ * @author Qiyue Zhu
  */
+
 public class Majiang {
     /**
-     * Type：万、条、筒： 1  2  3
-     *      东、南、西、北、中、发、白：4、5、6、7、8、9、10
+     * Type：Wan, Tiao, Bing： 1  2  3
+     *      East Feng, South Feng, West Feng, North Feng, Zhong, Fa Cai, Bai Ban：4、5、6、7、8、9、10
      */
     private int type;
-    
+
     public int getType() {
         return type;
     }
@@ -20,6 +21,7 @@ public class Majiang {
         this.type = type;
     }
 
+    // to delete............................................................................
     @Override
     public String toString() {
         return "MaJiang [type=" + type + "]";

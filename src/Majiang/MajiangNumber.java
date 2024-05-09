@@ -1,5 +1,10 @@
 package Majiang;
 
+/**
+ * MajiangNumber class defines the features of a Maiiang number card.
+ * A card should be able to compare (to place them in order)
+ *
+ */
 
 import java.util.Objects;
 

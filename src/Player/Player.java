@@ -74,6 +74,7 @@ public class Player {
     }
 
     /**
+     * to delete......................................................................
      * print the cards
      */
     public void printMaJiangs(){
