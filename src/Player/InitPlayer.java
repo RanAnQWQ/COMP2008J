@@ -6,14 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author Administrator
- * 初始化玩家：创建四个玩家（包括3个电脑）
+ * Player: create the 4 players
+ * @author Qiyue Zhu
  */
 public class InitPlayer {
-    /**
-     * 4个玩家的信息都存放在List中,下标为0是人，其余的为电脑
-     */
+    //store the information of each in the players
     public static List<Player> players=new ArrayList<Player>();
 
     private Player player=null,computer1=null,computer2=null,computer3=null;
@@ -23,9 +20,7 @@ public class InitPlayer {
         createPlayer();
     }
 
-    /**
-     * 创建4个玩家
-     */
+    //  create 4 players, 3 of them are computers
     private void createPlayer(){
         player = new Player();
         computer1 = new Computer();
@@ -44,7 +39,7 @@ public class InitPlayer {
     }
 
     /**
-     * 输出四个玩家手中的牌
+     * print the cards
      */
     public void printPlayer(){
         //输出当前玩家手中的牌
@@ -60,9 +55,7 @@ public class InitPlayer {
         System.out.println();
     }
 
-    /**
-     * 第一次起牌：轮流起牌，每次起4张，一共起3轮
-     */
+    // deal the cards to players for the first timex
     public void haveFirstBoard(){
         //共3轮
         for (int i = 0; i < 3; i++) {

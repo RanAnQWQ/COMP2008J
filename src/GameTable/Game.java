@@ -16,42 +16,30 @@ public class Game {
 
 
     public static void main(String[] args) throws InterruptedException {
-        @SuppressWarnings("resource")
-        Scanner scanner=new Scanner(System.in);
-
-        //初始化玩家
+        // initial the players
         InitPlayer initPlayer=null;
 
-        //四个玩家
+        // create 4 players, and 3 of them are computers
         Player player=null,computer1=null,computer2=null,computer3=null;
 
-        //麻将
+        // create and hsuffle the Majiang cards
         ShuffleMajiang shuffleMajiang=null;
 
-        //骰子
+        // throw the dice
         GameWindow win = new GameWindow();
         int diceNum= win.sum;
 
-        System.out.println("【欢迎开始“麻将”小游戏。请输入:[Y:开始游戏]，[其他输入:退出游戏]】");
-        String inputStart = scanner.nextLine();
-        if ("Y".equalsIgnoreCase(inputStart)) {
-            System.out.print("【开始初始化麻将桌...】");
-            Thread.sleep(100);
-            //洗牌
-            shuffleMajiang=new ShuffleMajiang();
-        }else {
-            System.out.println("Game over, see u next time!");
-            System.exit(0);
-        }
+
+        // create and shuffle the cards
+        shuffleMajiang=new ShuffleMajiang();
 
         // roll the dice
         // decide the boss
 
-        System.out.println("【掷骰子完毕，是否开始第一次起牌（轮流起牌，每次起4张，一共起3轮）？请输入:[Y:是]，[其他输入:退出游戏]】");
-        String inputFirstBoard = scanner.nextLine();
-        if ("Y".equalsIgnoreCase(inputFirstBoard)) {
-            // create players
-            initPlayer = new InitPlayer();
+
+        // create players
+        initPlayer = new InitPlayer();
+
             //第一次起牌
             initPlayer.haveFirstBoard();
             //输出此时玩家双手中的牌
@@ -59,10 +47,7 @@ public class Game {
             //输出牌局中的整副牌（剩余的牌）
             System.out.println("【此时牌局中的剩余的牌：】");
             shuffleMajiang.printMaJiangs(0);
-        }else {
-            System.out.println("【游戏结束，再见！】");
-            System.exit(0);
-        }
+
 
         System.out.println("【第一次起牌完毕，是否开始跳庄（玩家拿第1和第5张，电脑1拿第2张，电脑2拿第3张，电脑3拿第4张）？请输入:[Y:是]，[其他输入:退出游戏]】");
         String inputJumpBoard = scanner.nextLine();
