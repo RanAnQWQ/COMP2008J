@@ -14,6 +14,8 @@ import java.util.List;
  * @author Qiyue Zhu
  */
 public class Player {
+
+    // find the boss from the window...........................................
     public boolean isBoss;
 
     // the name of the player
