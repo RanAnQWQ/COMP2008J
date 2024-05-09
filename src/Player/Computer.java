@@ -22,8 +22,8 @@ public class Computer extends Player{
 
 
     /**
-     * 起牌:从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
-     * @param index “从ShuffleMaJiang中的maJiangs”获取麻将的指定的位置
+     * gainMajiang: pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
+     * @param index: get the position of the card
      */
     public void gainMajiang(int index){
         //从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
@@ -34,7 +34,7 @@ public class Computer extends Player{
     }
 
     /**
-     * 打牌：从自己的playerMaJiangs中取一粒牌，放入到ShuffleMaJiang中的river中
+     * play a hand：pick a card from playerMaJiangs, and put it into the river
      */
     public Majiang discardMajiang(int index){
         if ((index>playerMajiangs.size()) || (index<=0)) {
@@ -50,7 +50,7 @@ public class Computer extends Player{
     }
 
     /**
-     * 输出该玩家拥有的牌
+     * print
      */
     public void printMaJiangs(){
         for (Majiang maJiang : playerMajiangs) {

@@ -28,7 +28,9 @@ public class Movement {
     public void Chi(){
         Majiang riverLastCard;
         // get the card discarded by the previous player from the river
-        if ( true // detect the card from ? ) {
+        if ( true ) {
+            // detect the card from ?
+
 
             riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex - 1);
             // iterate through the player's cards to find
