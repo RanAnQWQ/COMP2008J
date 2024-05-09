@@ -44,7 +44,7 @@ public class ShuffleMajiang {
 
     /**
      * create majiangs in one game
-     * @throws InterruptedException
+     * @throws InterruptedException;
      */
     private void createMaJiangs() throws InterruptedException {
         // insert cards by their types
@@ -79,7 +79,7 @@ public class ShuffleMajiang {
      * to delete.....................................................................................
      * print out the cards
      * @param direction 0表示输出为一行，1表示按照四个方位进行输出
-     * @throws InterruptedException
+     * @throws InterruptedException;
      */
     public void printMaJiangs(int direction) throws InterruptedException {
         for (int i=0;i<maJiangs.size();i++) {
@@ -123,7 +123,7 @@ public class ShuffleMajiang {
     /**
      * to delete...........................................................................
      * print the river
-     * @throws InterruptedException
+     * @throws InterruptedException;
      */
     public void printMaJiangsRiver() throws InterruptedException {
         for (int i=0;i<river.size();i++) {
@@ -150,7 +150,7 @@ public class ShuffleMajiang {
      */
     public Majiang createMajiang(int type){
         //一次只允许创建一张麻将
-        Majiang m=null;
+        Majiang m;
 
         if (type<=3) {
             m=new MajiangNumber();
