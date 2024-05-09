@@ -57,14 +57,6 @@ public class MajiangNumber extends Majiang implements Comparable<MajiangNumber> 
 
 
 // setter and getter
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     public int getNumber() {
         return number;
     }
