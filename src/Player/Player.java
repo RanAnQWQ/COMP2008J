@@ -10,9 +10,8 @@ import java.util.List;
 
 
 /**
- *
- * @author Administrator
- * 玩家
+ * Player class aims to
+ * @author Qiyue Zhu
  */
 public class Player {
     public boolean isBoss;
@@ -48,8 +47,8 @@ public class Player {
     }
 
     /**
-     * 起牌:从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
-     * @param index “从ShuffleMaJiang中的maJiangs”获取麻将的指定的位置
+     * gainMajiang: pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
+     * @param index: get the position of the card
      */
     public void gainMajiang(int index){
         //从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
@@ -60,23 +59,22 @@ public class Player {
     }
 
     /**
-     * 打牌：从自己的playerMaJiangs中取一粒牌，放入到ShuffleMaJiang中的river中
+     * play a hand：pick a card from playerMaJiangs, and put it into the river
      */
     public Majiang discardMajiang(int index){
         if ((index>playerMajiangs.size()) || (index<=0)) {
-            System.out.println("输入的牌不存在");
             return null;
         }
-        //从自己的playerMaJiangs中取一粒牌，放入到ShuffleMaJiang中的river中
+        // pick a card to put it into the river
         ShuffleMajiang.river.add(ShuffleMajiang.riverIndex, playerMajiangs.get(index-1));
         ShuffleMajiang.riverIndex++;
-        //自己的playerMaJiangs中减少这一粒牌
+        // remove the card from playerMaJiangs
         playerMajiangs.remove(index);
         return playerMajiangs.get(index);
     }
 
     /**
-     * 输出该玩家拥有的牌
+     * print the cards
      */
     public void printMaJiangs(){
         for (Majiang maJiang : playerMajiangs) {

@@ -122,10 +122,6 @@ public class Game {
                 // 杠
                 Movement gang = new Movement(player.getPlayerMajiangs());
                 gang.Gang();
-            }else if("5".equals(inputOperate)) {
-                // 胡
-                Movement hu = new Movement(player.getPlayerMajiangs());
-                hu.huCards();
             }else if("6".equals(inputOperate)){
                 //不做处理，继续下一次
                 continue;
