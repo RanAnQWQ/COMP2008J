@@ -9,18 +9,17 @@ import java.util.List;
 public class Computer extends Player{
     public boolean isBoss;
     private String name;
-    /**
-     * 每个玩家的牌都放在playerMaJiangs中
-     */
+
+    // placing the players' cards
     private List<Majiang> playerMajiangs=new ArrayList<Majiang>();
-    /**
-     * 用来指示“每个玩家的牌”在playerMaJiangs中的下标
-     */
+
+    // to note every index of player's cards in playerMaJiangs
     private int playerMajiangsIndex=0;
 
     public List<Majiang> getPlayerMajiangs() {
         return playerMajiangs;
     }
+
 
     /**
      * 起牌:从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中

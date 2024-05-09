@@ -11,7 +11,7 @@ public class Majiang {
      *      东、南、西、北、中、发、白：4、5、6、7、8、9、10
      */
     private int type;
-
+    
     public int getType() {
         return type;
     }

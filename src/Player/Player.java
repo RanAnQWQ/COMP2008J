@@ -16,17 +16,14 @@ import java.util.List;
  */
 public class Player {
     public boolean isBoss;
-    /**
-     * 玩家姓名
-     */
+
+    // the name of the player
     private String name;
-    /**
-     * 每个玩家的牌都放在playerMaJiangs中
-     */
+
+    // every player's cards
     private List<Majiang> playerMajiangs=new ArrayList<Majiang>();
-    /**
-     * 用来指示“每个玩家的牌”在playerMaJiangs中的下标
-     */
+
+    // note the index of cards of the player
     private int playerMajiangsIndex=0;
 
     public String getName() {

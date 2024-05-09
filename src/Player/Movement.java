@@ -1,5 +1,7 @@
 package Player;
 
+
+
 import GameTable.ShuffleMajiang;
 import Majiang.Majiang;
 
@@ -7,61 +9,90 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+
+
 public class Movement {
-    /**
-     * 每个玩家的牌都放在playerMaJiangs中
-     */
-    private List<Majiang> playerMajiangs=new ArrayList<Majiang>();
+    private List<Majiang> playerMajiangs=new ArrayList<Majiang>();    // player's cards
+    private List<Majiang> cardsToDisplay = new ArrayList<Majiang>();   // cards to display after performing movements
 
     public Movement(List<Majiang> playerMajiangs){
         this.playerMajiangs = playerMajiangs;
     }
 
+    /**
+     * Chi: When you can form a sequence with a tile discarded by your previous player,
+     *      you can choose to eat this tile to complete the sequence.
+     *      For example, if your hand tiles are 3, 4, 5, and your previous player discards 2,
+     *      you can eat the 2 to form the sequence 2, 3, 4.
+     */
+    public void Chi(){
+        Majiang riverLastCard;
+        // get the card discarded by the previous player from the river
+        if ( true // detect the card from ? ) {
+
+
+            riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex - 1);
+            // iterate through the player's cards to find
+            // if the player have 2 same cards with the card just been discarded by the previous player
+            int frequency = Collections.frequency(playerMajiangs, riverLastCard);
+            if (frequency >= 2) {
+                // remove the cards from the player's cards
+                playerMajiangs.remove(riverLastCard);
+                playerMajiangs.remove(riverLastCard);
+                // add these 2 cards aside to display the Chi cards
+                cardsToDisplay.add(riverLastCard);
+                cardsToDisplay.add(riverLastCard);
+            }
+        }
+    }
+
 
     /**
-     * 碰牌:河里刚打出的牌，在玩家手中有两张同样的牌，就可以碰牌
+     * Peng: When a tile discarded by another player
+     *       matches the two identical tiles in your hand to form a set.
+     *       Whether it's your turn to play or not, you can choose to peng the set.
+     *       For example, if you already have two 8 tiles and another player discards an 8,
+     *       you can collide the 8 to form the set 8, 8, 8.
+     *
      */
     public void Peng(){
-        //获取河里刚打出的牌
-        Majiang riverLastJiang = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex-1);
-        //遍历自己的所有的牌，是否包含上面的牌，并且有两张
-        int frequency = Collections.frequency(playerMajiangs, riverLastJiang);
+        // get the last card in teh river (have been displayed)
+        Majiang riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex-1);
+        // iterate through the player's cards to find if the player have 2 same cards with every last card in the river
+        int frequency = Collections.frequency(playerMajiangs, riverLastCard);
+        // if the player have 2 same cards with one card in the river
         if (frequency>=2) {
-            System.out.println("【碰牌成功】");
-            //把碰的牌移除
-            playerMajiangs.remove(riverLastJiang);
-            playerMajiangs.remove(riverLastJiang);
-            return;
-        }else {
-            System.out.println("【没有对应的两张牌，碰牌失败】");
+            // remove these 2 cards from the player's card
+            playerMajiangs.remove(riverLastCard);
+            playerMajiangs.remove(riverLastCard);
+            // add these 2 cards to a new array to display the Peng cards
+            cardsToDisplay.add(riverLastCard);
+            cardsToDisplay.add(riverLastCard);
         }
     }
 
     /**
-     * 杠牌:河里刚打出的牌，在玩家手中有3张同样的牌，就可以杠牌
+     * Gang: When you can have the same 4 cards. It divides to overt gang and covert gang.
+     *      Overt Gang: When you have three same tiles and another player discards the rest tile,
+     *                  you can choose to kong the forth tile and show them in public.
+     *      Covert Gang: When you have three same tiles and you draw the forth tile by yourself,
+     *                  this make up the covert kong and you don't need to show them in public.
+     * However, in this game, we will display the Gang cards anyway.
      */
     public void Gang(){
-        //获取河里刚打出的牌
-        Majiang riverLastJiang = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex-1);
-        //遍历自己的所有的牌，是否包含上面的牌，并且有两张
-        int frequency = Collections.frequency(playerMajiangs, riverLastJiang);
+        // get the last card in teh river (have been displayed)
+        Majiang riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex-1);
+        // iterate through the player's cards to find if the player have 2 same cards with every last card in the river
+        int frequency = Collections.frequency(playerMajiangs, riverLastCard);
         if (frequency>=3) {
-            System.out.println("【杠牌成功】");
-            //把杠的牌移除
-            playerMajiangs.remove(riverLastJiang);
-            playerMajiangs.remove(riverLastJiang);
-            playerMajiangs.remove(riverLastJiang);
-            return;
-        }else {
-            System.out.println("【没有对应的三张牌，杠牌失败】");
+            // remove these 2 cards from the player's card
+            playerMajiangs.remove(riverLastCard);
+            playerMajiangs.remove(riverLastCard);
+            playerMajiangs.remove(riverLastCard);
+            // add these 2 cards to a new array to display the Peng cards
+            cardsToDisplay.add(riverLastCard);
+            cardsToDisplay.add(riverLastCard);
+            cardsToDisplay.add(riverLastCard);
         }
     }
-
-    /**
-     * 胡牌：满足胡牌的规则
-     */
-    public void huCards(){
-        //难度较大，以后再研究
-    }
-
 }

@@ -1,7 +1,6 @@
 package GameTable;
 
 
-import window.GameWindow;
 import Player.InitPlayer;
 import Player.Movement;
 import Player.Player;
@@ -11,7 +10,7 @@ import java.util.Scanner;
 /**
  *
  * @author Administrator
- * 游戏：整个的游戏流程
+ * The whole game process
  */
 public class Game {
 
@@ -30,7 +29,8 @@ public class Game {
         ShuffleMajiang shuffleMajiang=null;
 
         //骰子
-        int diceNum=GameWindow.getDiceNum();
+        GameWindow win = new GameWindow();
+        int diceNum= win.sum;
 
         System.out.println("【欢迎开始“麻将”小游戏。请输入:[Y:开始游戏]，[其他输入:退出游戏]】");
         String inputStart = scanner.nextLine();
@@ -40,7 +40,7 @@ public class Game {
             //洗牌
             shuffleMajiang=new ShuffleMajiang();
         }else {
-            System.out.println("【游戏结束，再见！】");
+            System.out.println("Game over, see u next time!");
             System.exit(0);
         }
 
@@ -50,12 +50,7 @@ public class Game {
         System.out.println("【掷骰子完毕，是否开始第一次起牌（轮流起牌，每次起4张，一共起3轮）？请输入:[Y:是]，[其他输入:退出游戏]】");
         String inputFirstBoard = scanner.nextLine();
         if ("Y".equalsIgnoreCase(inputFirstBoard)) {
-            //计算出从整副牌的什么位置开始起牌
-            //int startIndex = Dice.getStartIndex();
-            //设置整副牌的开始位置
-            //ShuffleMajiang.maJiangsIndex=startIndex-1;
-
-            //玩家
+            // create players
             initPlayer = new InitPlayer();
             //第一次起牌
             initPlayer.haveFirstBoard();
