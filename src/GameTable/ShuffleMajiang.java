@@ -27,6 +27,7 @@ public class ShuffleMajiang {
      */
     public static int riverIndex=0;
 
+
     public ShuffleMajiang() throws InterruptedException {
         //创建一副麻将
         createMaJiangs();
