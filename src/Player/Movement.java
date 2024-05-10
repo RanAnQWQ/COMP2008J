@@ -19,6 +19,7 @@ public class Movement {
         this.playerMajiangs = playerMajiangs;
     }
 
+
     /**
      * Chi: When you can form a sequence with a tile discarded by your previous player,
      *      you can choose to eat this tile to complete the sequence.
@@ -29,7 +30,7 @@ public class Movement {
         Majiang riverLastCard;
         // get the card discarded by the previous player from the river
         if ( true ) {
-            // detect the card from ?
+            // detect is the card from the 上家
 
 
             riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex - 1);
@@ -57,7 +58,7 @@ public class Movement {
      *
      */
     public void Peng(){
-        // get the last card in teh river (have been displayed)
+        // get the last card in the river (have been displayed)
         Majiang riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex-1);
         // iterate through the player's cards to find if the player have 2 same cards with every last card in the river
         int frequency = Collections.frequency(playerMajiangs, riverLastCard);
@@ -76,8 +77,8 @@ public class Movement {
      * Gang: When you can have the same 4 cards. It divides to overt gang and covert gang.
      *      Overt Gang: When you have three same tiles and another player discards the rest tile,
      *                  you can choose to kong the forth tile and show them in public.
-     *      Covert Gang: When you have three same tiles and you draw the forth tile by yourself,
-     *                  this make up the covert kong and you don't need to show them in public.
+     *      Covert Gang: When you have three same tiles, and you draw the forth tile by yourself,
+     *                  this make up the covert kong, and you don't need to show them in public.
      * However, in this game, we will display the Gang cards anyway.
      */
     public void Gang(){

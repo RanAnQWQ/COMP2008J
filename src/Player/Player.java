@@ -53,6 +53,7 @@ public class Player {
      * @param index: get the position of the card
      */
     public void gainMajiang(int index){
+        // pick a card from
         //从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
         playerMajiangs.add(playerMajiangsIndex, ShuffleMajiang.maJiangs.get(index));
         playerMajiangsIndex++;
@@ -61,7 +62,7 @@ public class Player {
     }
 
     /**
-     * play a hand：pick a card from playerMaJiangs, and put it into the river
+     * discardMajiang()：pick a card from playerMaJiangs, and put it into the river
      */
     public Majiang discardMajiang(int index){
         if ((index>playerMajiangs.size()) || (index<=0)) {

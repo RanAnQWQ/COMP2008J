@@ -5,6 +5,7 @@ import Majiang.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class Computer extends Player{
     public boolean isBoss;
@@ -16,56 +17,52 @@ public class Computer extends Player{
     // to note every index of player's cards in playerMaJiangs
     private int playerMajiangsIndex=0;
 
-    public List<Majiang> getPlayerMajiangs() {
-        return playerMajiangs;
-    }
 
 
     /**
-     * gainMajiang: pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
+     * same as Player!
+     * gainMajiang(): pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
      * @param index: get the position of the card
      */
-    public void gainMajiang(int index){
-        //从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
-        playerMajiangs.add(playerMajiangsIndex, ShuffleMajiang.maJiangs.get(index));
-        playerMajiangsIndex++;
-        //原来的ShuffleMaJiang的maJiangs中的牌减少这一粒
-        ShuffleMajiang.maJiangs.remove(index);
-    }
+
+
 
     /**
-     * play a hand：pick a card from playerMaJiangs, and put it into the river
+     * nextCard(): decide which card should be discarded for the computer.
+     *
+     * Algorithm: if there exists card hard to be matched (as a couple or triple),
+     *            discard the first encountered one.
+     *            If all the cards in player's hand can be matched (as a couple or triple),
+     *            then discard a random card.
      */
+    public int nextCard(){
+        int index;
+
+        if ( true  ){
+            index = 1;
+        } else {
+            Random num = new Random();
+            index = num.nextInt(1, 10);
+        }
+        return index;
+    }
+
+
+    /**
+     * same as Player!
+     * discardMajiang()：pick a card from playerMaJiangs, and put it into the river
+     */
+
     public Majiang discardMajiang(int index){
         if ((index>playerMajiangs.size()) || (index<=0)) {
-            System.out.println("输入的牌不存在");
             return null;
         }
-        //从自己的playerMaJiangs中取一粒牌，放入到ShuffleMaJiang中的river中
+        // pick a card to put it into the river
         ShuffleMajiang.river.add(ShuffleMajiang.riverIndex, playerMajiangs.get(index-1));
         ShuffleMajiang.riverIndex++;
-        //自己的playerMaJiangs中减少这一粒牌
+        // remove the card from playerMaJiangs
         playerMajiangs.remove(index);
         return playerMajiangs.get(index);
     }
-
-    /**
-     * print
-     */
-    public void printMaJiangs(){
-        for (Majiang maJiang : playerMajiangs) {
-            int type = maJiang.getType();
-            //输出字牌
-            if (type<=3) {
-                MajiangNumber maJiangNumber=(MajiangNumber)maJiang;
-                System.out.print(maJiangNumber+",");
-                //输出风牌
-            }else {
-                MajiangFeng maJiangWind=(MajiangFeng) maJiang;
-                System.out.print(maJiangWind+",");
-            }
-        }
-    }
-
 
 }

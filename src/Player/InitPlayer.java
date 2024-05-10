@@ -13,24 +13,25 @@ public class InitPlayer {
     //store the information of each in the players
     public static List<Player> players=new ArrayList<Player>();
 
-    private Player player=null,computer1=null,computer2=null,computer3=null;
+    private Player player=null;
+    private Computer computer1=null,computer2=null,computer3=null;
 
     public InitPlayer() {
-        //创建4个玩家
+        // create 4 players
         createPlayer();
     }
 
-    //  create 4 players, 3 of them are computers
+    // create 4 players, 3 of them are computers
     private void createPlayer(){
         player = new Player();
         computer1 = new Computer();
         computer2 = new Computer();
         computer3 = new Computer();
 
-        player.setName("玩家");
-        computer1.setName("电脑1");
-        computer2.setName("电脑2");
-        computer3.setName("电脑3");
+        player.setName("Player");
+        computer1.setName("Computer1");
+        computer2.setName("Computer2");
+        computer3.setName("Computer3");
 
         players.add(player);
         players.add(computer1);
@@ -39,6 +40,7 @@ public class InitPlayer {
     }
 
     /**
+     * only for testing, to delete......................................................................
      * print the cards
      */
     public void printPlayer(){
@@ -55,23 +57,23 @@ public class InitPlayer {
         System.out.println();
     }
 
-    // deal the cards to players for the first timex
+    // deal the cards to players for the first time
     public void haveFirstBoard(){
-        //共3轮
+        // 3 turns in total
         for (int i = 0; i < 3; i++) {
-            //玩家，每次起4张
+            // player, get 4 cards at a time
             for (int j = 0; j < 4; j++) {
                 player.gainMajiang(ShuffleMajiang.maJiangsIndex);
             }
-            //电脑1，每次起4张
+            // computer1, get 4 cards at a time
             for (int j = 0; j < 4; j++) {
                 computer1.gainMajiang(ShuffleMajiang.maJiangsIndex);
             }
-            //电脑2，每次起4张
+            // computer2, get 4 cards at a time
             for (int j = 0; j < 4; j++) {
                 computer2.gainMajiang(ShuffleMajiang.maJiangsIndex);
             }
-            //电脑3，每次起4张
+            // computer3, get 4 cards at a time
             for (int j = 0; j < 4; j++) {
                 computer3.gainMajiang(ShuffleMajiang.maJiangsIndex);
             }
@@ -79,6 +81,7 @@ public class InitPlayer {
     }
 
     /**
+     * change this based on the "isBoss"
      * 第二次起牌：跳庄（玩家拿第1和第5张，电脑1拿第2张，电脑2拿第3张，电脑3拿第4张）
      */
     public void haveJumpBoard(){
