@@ -1,6 +1,5 @@
 package window;
 
-
 import tiles.Tilemap;
 
 
@@ -39,9 +38,9 @@ public class GameWindow extends JFrame {
         this.setVisible(true);
         chooseAvatar();
 
-        headShot_M("src/profilephoto/bear.png");
-        headShot_M("src/profilephoto/cat.png");
-        headShot_M("src/profilephoto/cow.png");
+        headShot_M("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\bear.png");
+        headShot_M("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\cat.png");
+        headShot_M("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\cow.png");
         // Add the headShots of 3 machine players;
 
         chi_button();
@@ -63,7 +62,7 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        gamePanel = new ImagePanel("src/window/background3.jpg");
+        gamePanel = new ImagePanel("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\window\\background3.jpg");
         gamePanel.setLayout(null);
         add(gamePanel);
     }
@@ -118,7 +117,7 @@ public class GameWindow extends JFrame {
 
 
         switch (imagePath) {
-            case "src/profilephoto/bear.png":
+            case "C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\bear.png":
                 // set the "North" headshot;
 
                 int labelWidth1 = scaledComIcon.getIconWidth();
@@ -135,7 +134,7 @@ public class GameWindow extends JFrame {
                 gamePanel.add(imagePanel);
                 break;
 
-            case "src/profilephoto/cat.png":
+            case "C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\cat.png":
                 //set the "South" headshot;
 
                 int labelWidth2 = scaledComIcon.getIconWidth();
@@ -150,7 +149,7 @@ public class GameWindow extends JFrame {
                 gamePanel.add(imagePanel);
                 break;
 
-            case "src/profilephoto/cow.png":
+            case "C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\cow.png":
                 //set the "West" headshot;
 
                 int labelWidth3 = scaledComIcon.getIconWidth();
@@ -170,65 +169,65 @@ public class GameWindow extends JFrame {
     }
 
     // Buttons of Chi Peng Gang Hu;
-    private void chi_button() {
+    private void chi_button(){
         JButton chi = new JButton();
         chi.setBorderPainted(false);
         chi.setFocusPainted(false);
         chi.setContentAreaFilled(false);
-        chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        chi.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Chi.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
 
         chi.setBounds(710, 575, 45, 45);
 
         gamePanel.add(chi);
     }
 
-    private void peng_button() {
+    private void peng_button(){
         JButton peng = new JButton();
         peng.setBorderPainted(false);
         peng.setFocusPainted(false);
         peng.setContentAreaFilled(false);
-        peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        peng.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Peng.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
 
         peng.setBounds(760, 575, 45, 45);
 
         gamePanel.add(peng);
     }
 
-    private void gang_button() {
+    private void gang_button(){
         JButton gang = new JButton();
         gang.setBorderPainted(false);
         gang.setFocusPainted(false);
         gang.setContentAreaFilled(false);
-        gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        gang.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Gang.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
 
         gang.setBounds(810, 575, 45, 45);
 
         gamePanel.add(gang);
     }
 
-    private void ting_button() {
+    private void ting_button(){
         JButton ting = new JButton();
         ting.setBorderPainted(false);
         ting.setFocusPainted(false);
         ting.setContentAreaFilled(false);
-        ting.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Ting.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        ting.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Ting.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
         ting.setBounds(860, 575, 45, 45);
 
         gamePanel.add(ting);
     }
 
-    private void hu_button() {
+    private void hu_button(){
         JButton hu = new JButton();
         hu.setBorderPainted(false);
         hu.setFocusPainted(false);
         hu.setContentAreaFilled(false);
-        if (is_buttonAvailable()) {
-            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        if (is_buttonAvailable()){
+            hu.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Hu.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
             hu.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     // 创建新窗口
                     JFrame scoreFrame = new JFrame("Score");
-                    scoreFrame.setSize(1200, 800);
+                    scoreFrame.setBounds( 550, 300, 400, 300);
 
                     // 假设分数为100，您可以根据实际情况获取分数并显示
                     JLabel scoreLabel = new JLabel("Score: 100");
@@ -239,8 +238,8 @@ public class GameWindow extends JFrame {
                 }
             });
 
-        } else {
-            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
+        }else {
+            hu.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\PromtButton\\Hu_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
         }
         hu.setBounds(930, 575, 45, 45);
 
@@ -248,7 +247,7 @@ public class GameWindow extends JFrame {
 
     }
 
-    private boolean is_buttonAvailable() {
+    private boolean is_buttonAvailable(){
         boolean available = true;
         return available;
     }
@@ -288,7 +287,7 @@ public class GameWindow extends JFrame {
         chooseLabel.setBounds(50, 200, 500, 30);
         avatarPanel.add(chooseLabel);
 
-        ImageIcon Icon = new ImageIcon("src/profilephoto/crocodile.png");
+        ImageIcon Icon = new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\crocodile.png");
         int Width = Icon.getIconWidth();
         int Height = Icon.getIconHeight();
 
@@ -296,7 +295,7 @@ public class GameWindow extends JFrame {
         crocodile.setBorderPainted(false); //set the button frame invisible;
         crocodile.setFocusPainted(false);
         crocodile.setContentAreaFilled(false);
-        crocodile.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/crocodile.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        crocodile.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\crocodile.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         crocodile.setBounds(65, 240, 60, 60);
         avatarPanel.add(crocodile);
 
@@ -304,7 +303,7 @@ public class GameWindow extends JFrame {
         fox.setBorderPainted(false);
         fox.setFocusPainted(false);
         fox.setContentAreaFilled(false);
-        fox.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/fox.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        fox.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\fox.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         fox.setBounds(165, 240, 60, 60);
         avatarPanel.add(fox);
 
@@ -312,7 +311,7 @@ public class GameWindow extends JFrame {
         hamster.setBorderPainted(false);
         hamster.setFocusPainted(false);
         hamster.setContentAreaFilled(false);
-        hamster.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/hamster.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        hamster.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\hamster.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         hamster.setBounds(265, 240, 60, 60);
         avatarPanel.add(hamster);
 
@@ -320,7 +319,7 @@ public class GameWindow extends JFrame {
         hedgehog.setBorderPainted(false);
         hedgehog.setFocusPainted(false);
         hedgehog.setContentAreaFilled(false);
-        hedgehog.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/hedgehog.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        hedgehog.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\hedgehog.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         hedgehog.setBounds(365, 240, 60, 60);
         avatarPanel.add(hedgehog);
 
@@ -328,7 +327,7 @@ public class GameWindow extends JFrame {
         rabbit.setBorderPainted(false);
         rabbit.setFocusPainted(false);
         rabbit.setContentAreaFilled(false);
-        rabbit.setIcon(new ImageIcon(new ImageIcon("src/profilephoto/rabbit.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
+        rabbit.setIcon(new ImageIcon(new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\rabbit.png").getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH)));
         rabbit.setBounds(465, 240, 60, 60);
         avatarPanel.add(rabbit);
 
@@ -336,7 +335,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Image scaledArrow;
-                updateAvatar("src/profilephoto/crocodile.png");
+                updateAvatar("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\crocodile.png");
                 avatarDialog.dispose();
             }
         });
@@ -345,7 +344,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Image scaledArrow;
-                updateAvatar("src/profilephoto/fox.png");
+                updateAvatar("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\fox.png");
                 avatarDialog.dispose();
             }
         });
@@ -354,7 +353,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Image scaledArrow;
-                updateAvatar("src/profilephoto/hamster.png");
+                updateAvatar("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\hamster.png");
                 avatarDialog.dispose();
             }
         });
@@ -363,7 +362,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Image scaledArrow;
-                updateAvatar("src/profilephoto/hedgehog.png");
+                updateAvatar("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\hedgehog.png");
                 avatarDialog.dispose();
             }
         });
@@ -372,7 +371,7 @@ public class GameWindow extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Image scaledArrow;
-                updateAvatar("src/profilephoto/rabbit.png");
+                updateAvatar("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\profilephoto\\rabbit.png");
                 avatarDialog.dispose();
             }
         });
@@ -507,22 +506,22 @@ public class GameWindow extends JFrame {
 
         switch (sum % 4) {
             case 1:
-                arrowIcon = new ImageIcon("src/window/ArrowDown.png");
+                arrowIcon = new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\window\\ArrowDown.png");
                 break;
             //East;
 
             case 2:
-                arrowIcon = new ImageIcon("src/window/ArrowRight.png");
+                arrowIcon = new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\window\\ArrowRight.png");
                 break;
             //North;
 
             case 3:
-                arrowIcon = new ImageIcon("src/window/ArrowTop.png");
+                arrowIcon = new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\window\\ArrowTop.png");
                 break;
             //West;
 
             default:
-                arrowIcon = new ImageIcon("src/window/ArrowTop.png");
+                arrowIcon = new ImageIcon("C:\\Users\\dell\\Desktop\\Majiang\\Majiang\\src\\window\\ArrowTop.png");
                 break;
             //South;
 
@@ -622,185 +621,58 @@ public class GameWindow extends JFrame {
     }
 
     /////////////////////////add or delete tiles/////////////////////////////////////////////////////////////////////////
-//    public void addTileToWindow(){  //written by Siying.Li
-//        int startX = 250;
-//        int startY = 640;
-////        int startX = 450;
-////        int startY = 480;
-//
-//
-//        List<Integer> tileNumber = new ArrayList<>(Arrays.asList(11,11,11,23,24,25,36,36,42,42,42,45,46));
-//        for (int i = 0;i < tileNumber.size(); i++) {  //get the tileNumber
-//            int tileNum = tileNumber.get(i);
-//            String tilePath= tilemap.getTilePath(tileNum);
-//
-//            if (tilePath != null){
-//                ImageIcon TileIcon = new ImageIcon(tilePath);
-//
-//                int scaledWidth = TileIcon.getIconWidth() / 5 * 2;  //reset the size of the tile
-//                int scaledHeight = TileIcon.getIconHeight() / 5 * 2;
-//
-////                int scaledWidth = TileIcon.getIconWidth() / 6;  //throe tiles size
-////                int scaledHeight = TileIcon.getIconHeight() / 6;
-//
-//                int currentX = startX + i * (scaledWidth);  //reset the site of the tile
-//                int currentY = startY ;
-//
-//                JLabel tileLabel = new JLabel(new ImageIcon(TileIcon.getImage().getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH)));
-//                tileLabel.setBounds(currentX,currentY,scaledWidth,scaledHeight);
-//
-//                tileLabel.addMouseListener(new MouseAdapter() {  //set the mouse listener
-//                    @Override
-////                    public void mouseClicked(MouseEvent e) { //if the tile is clicked, the tile will be removed
-////                        gamePanel.remove(tileLabel);
-////                        gamePanel.revalidate();
-////                        gamePanel.repaint();
-////                    }
-//
-//                    public void mouseClicked(MouseEvent e) {  //if the tile is clicked, the tile will be removed
-//                        JLabel clickedTile = (JLabel) e.getSource();
-//
-//                        ImageIcon tileIcon =(ImageIcon) clickedTile.getIcon();
-//                        int tileWidth = tileIcon.getIconWidth();
-//                        int tileHeight = tileIcon.getIconHeight();
-//                        int tileX = clickedTile.getX();
-//                        int tileY = clickedTile.getY();
-//
-////                        int removeTileNum = tileNumber.get(gamePanel.getComponentZOrder(clickedTile));
-////                        tileNumber.remove(Integer.valueOf(removeTileNum));
-//
-//                        //gamePanel.remove(clickedTile);
-//
-////                        int newX = tileX;
-////                        int newY = tileY;
-////                        for (Component tile : gamePanel.getComponents()) {
-////                            if (tile instanceof JLabel) {
-////                                tile.setLocation(newX, newY);
-////                                newX += tileWidth + 10;
-////                            }
-////                        }
-//
-//                        int newWidth = tileWidth/2;
-//                        int newHeight = tileHeight/2;
-//                        JLabel newTile = new JLabel(new ImageIcon(tileIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH)));
-//                        newTile.setBounds(tileX, tileY, tileWidth, tileHeight);
-//
-//                        int newTileX = 420;
-//                        int newTileY = 420;
-//                        newTile.setLocation(newTileX, newTileY);
-//                        gamePanel.add(newTile);
-//
-//                        gamePanel.remove(clickedTile);
-//                        gamePanel.revalidate();
-//                        gamePanel.repaint();
-//                    }
-//
-//                    @Override
-//                    public void mouseEntered(MouseEvent e) {  //if the mouse entered the tile, the tile will move up
-//                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() - 10);
-//                        gamePanel.revalidate();
-//                        gamePanel.repaint();
-//                    }
-//
-//                    @Override
-//                    public void mouseExited(MouseEvent e) {  //if the mouse exited the tile, the tile will move down
-//                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() + 10);
-//                        gamePanel.revalidate();
-//                        gamePanel.repaint();
-//                    }
-//                });
-//
-//                gamePanel.add(tileLabel);
-//
-//            }
-//        }
-//        gamePanel.revalidate();
-//        gamePanel.repaint();
-//    }
+    public void addTileToWindow(){  //written by Siying.Li
+        int startX = 250;
+        int startY = 640;
+//        int startX = 450;
+//        int startY = 480;
+        int rows = 1;
+        int cols = 13;
 
 
-    List<Integer> tileNumber;
-    int startX = 250;
-    int startY = 640;
-    public void addTileToWindow() {  //written by Siying.Li
-        tileNumber = new ArrayList<>(Arrays.asList(11, 11, 11, 23, 24, 25, 36, 36, 42, 42, 42, 45, 46));
-        listTiles(tileNumber, startX, startY);
-
-        gamePanel.revalidate();
-        gamePanel.repaint();
-    }
-
-    public void listTiles(List<Integer> tileNumber, int startX, int startY) {
-        for (int i = 0; i < tileNumber.size(); i++) {  //get the tileNumber
+        List<Integer> tileNumber = new ArrayList<>(Arrays.asList(11,11,11,23,24,25,36,36,42,42,42,45,46));
+        for (int i = 0;i < tileNumber.size(); i++) {  //get the tileNumber
             int tileNum = tileNumber.get(i);
-            String tilePath = tilemap.getTilePath(tileNum);
+            String tilePath= tilemap.getTilePath(tileNum);
 
-            if (tilePath != null) {
+            if (tilePath != null){
                 ImageIcon TileIcon = new ImageIcon(tilePath);
 
                 int scaledWidth = TileIcon.getIconWidth() / 5 * 2;  //reset the size of the tile
                 int scaledHeight = TileIcon.getIconHeight() / 5 * 2;
 
-                int currentX = startX + i * (scaledWidth);  //reset the site of the tile
-                int currentY = startY;
+//                int scaledWidth = TileIcon.getIconWidth() / 6;  //throe tiles size
+//                int scaledHeight = TileIcon.getIconHeight() / 6;
 
-                JLabel tileLabel = createTileLabel(TileIcon, scaledWidth, scaledHeight, currentX, currentY);
+                int currentX = startX + i * (scaledWidth);  //reset the site of the tile
+                int currentY = startY ;
+
+                JLabel tileLabel = new JLabel(new ImageIcon(TileIcon.getImage().getScaledInstance(scaledWidth,scaledHeight,Image.SCALE_SMOOTH)));
+                tileLabel.setBounds(currentX,currentY,scaledWidth,scaledHeight);
+
+                tileLabel.addMouseListener(new MouseAdapter() {  //set the mouse listener
+                    @Override
+                    public void mouseEntered(MouseEvent e) {  //if the mouse entered the tile, the tile will move up
+                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() - 10);
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {  //if the mouse exited the tile, the tile will move down
+                        tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() + 10);
+                        gamePanel.revalidate();
+                        gamePanel.repaint();
+                    }
+                });
+
                 gamePanel.add(tileLabel);
+
             }
         }
+        gamePanel.revalidate();
+        gamePanel.repaint();
     }
 
-    private JLabel createTileLabel(ImageIcon TileIcon, int scaledWidth, int scaledHeight, int currentX, int currentY) {
-        JLabel tileLabel = new JLabel(new ImageIcon(TileIcon.getImage().getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_SMOOTH)));
-        tileLabel.setBounds(currentX, currentY, scaledWidth, scaledHeight);
-
-        tileLabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e) {
-                JLabel clickedTile = (JLabel) e.getSource();
-                ImageIcon tileIcon = (ImageIcon) clickedTile.getIcon();
-                int tileNum = tileNumber.get(gamePanel.getComponentZOrder(clickedTile));
-
-                int tileWidth = tileIcon.getIconWidth();
-                int tileHeight = tileIcon.getIconHeight();
-                int tileX = clickedTile.getX();
-                int tileY = clickedTile.getY();
-
-                gamePanel.remove(clickedTile);  //remove the clicked tile
-
-                int newWidth = tileWidth / 2;  // set the new size of the tile in the river
-                int newHeight = tileHeight / 2;
-
-                JLabel newTile = new JLabel(new ImageIcon(tileIcon.getImage().getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH)));
-                newTile.setBounds(tileX, tileY, tileWidth, tileHeight);
-
-                int newTileX = 420;
-                int newTileY = 420;
-                newTile.setLocation(newTileX, newTileY);
-                gamePanel.add(newTile);  //make the smaller clicked tile in the river position
-
-                tileNumber.remove(Integer.valueOf(tileNum));  //remove the clickedtile's number and relist the rest tiles
-                listTiles(tileNumber, startX, startY);
-
-                gamePanel.revalidate();
-                gamePanel.repaint();
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() - 10);
-                gamePanel.revalidate();
-                gamePanel.repaint();
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                tileLabel.setLocation(tileLabel.getX(), tileLabel.getY() + 10);
-                gamePanel.revalidate();
-                gamePanel.repaint();
-            }
-        });
-
-        return tileLabel;
-    }
 }
 
