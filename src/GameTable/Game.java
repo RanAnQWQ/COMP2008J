@@ -22,18 +22,17 @@ public class Game {
         Player player = null;
         Computer computer1 = null, computer2 = null, computer3 = null;
 
-        // create and hsuffle the Majiang cards
+        // create and shuffle the Majiang cards
         ShuffleMajiang shuffleMajiang = null;
-
-        // throw the dice
-        GameWindow win = new GameWindow();
-        int diceNum= win.sum;
 
 
         // create and shuffle the cards
         shuffleMajiang=new ShuffleMajiang();
 
-        // roll the dice
+        // throw the dice
+        //GameWindow win = new GameWindow();
+        //int diceNum= win.sum;
+
         // decide the boss
 
 
@@ -42,7 +41,7 @@ public class Game {
         // deal the cards the first time evenly
         initPlayer.haveFirstBoard();
 
-        // to delete.................................................................
+
         // print the players' cards
         initPlayer.printPlayer();
         //输出牌局中的整副牌（剩余的牌）
@@ -53,7 +52,7 @@ public class Game {
         // add one more card to the boss
         initPlayer.haveJumpBoard();
 
-        // to delete.............................................................
+
         //输出此时玩家双手中的牌
         initPlayer.printPlayer();
         //输出牌局中的整副牌（剩余的牌）
@@ -63,7 +62,7 @@ public class Game {
 
         // change this according to the listener
         System.out.println("【 您是庄家，请打一张牌。 请输入:[待打出牌对应的顺序，例如：1表示打出第一张牌] 】");
-        String inputdiscardBoard = scanner.nextLine();
+        //String inputdiscardBoard = scanner.nextLine();
 
         player=initPlayer.players.get(0);
         computer1=(Computer) initPlayer.players.get(1);
@@ -72,9 +71,9 @@ public class Game {
 
 
         // discard a card
-        player.discardMajiang(Integer.valueOf(inputdiscardBoard)-1);
+        //player.discardMajiang(Integer.valueOf(inputdiscardBoard)-1);
 
-        // to delete................................................................................
+
         //输出此时玩家双手中的牌
         System.out.println("【此时玩家手中的牌：】");
         player.printMaJiangs();
@@ -94,7 +93,7 @@ public class Game {
 
             // player's turn
             System.out.println("【开始打牌：请输入:[1:起牌]，[2:打牌]，[3:碰牌]，[4:杠牌]，[5:胡牌]，[6:不做操作]，[其他输入:退出游戏]】");
-            String inputOperate = scanner.nextLine();
+            String inputOperate = "1";
             if (shuffleMajiang.maJiangs.size()==0) {
                 System.out.println("【留局】");
                 System.out.println("【游戏结束，再见！】");
