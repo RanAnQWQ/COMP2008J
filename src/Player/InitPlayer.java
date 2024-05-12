@@ -1,6 +1,7 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
+import window.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,53 +14,90 @@ public class InitPlayer {
     //store the information of each in the players
     public static List<Player> players=new ArrayList<Player>();
 
-    private Player player=null;
-    private Computer computer1=null,computer2=null,computer3=null;
+    public Player player;
+    public Computer computer1, computer2, computer3;
+
 
     public InitPlayer() {
-        // create 4 players
-        createPlayer();
-    }
 
-    // create 4 players, 3 of them are computers
-    private void createPlayer(){
+        // create players
         player = new Player();
         computer1 = new Computer();
         computer2 = new Computer();
         computer3 = new Computer();
 
-        player.setName("Player");
-        computer1.setName("Computer1");
-        computer2.setName("Computer2");
-        computer3.setName("Computer3");
+        // set the names of the players
+        player.setName("p");
+        computer1.setName("c1");
+        computer2.setName("c2");
+        computer3.setName("c3");
 
-        players.add(player);
-        players.add(computer1);
-        players.add(computer2);
-        players.add(computer3);
+        // throw the dice to decide the first host (had been decided in the GameWindow class)
+        // player: East; computer1: North; computer2: West; computer3: South
+        //GameWindow window = new GameWindow();
+        //if (window.getFirstHost().equalsIgnoreCase("east")) {
+        if (true){
+            // reset the boolean isHost based on the host result
+            player.isHost = true;
+            computer1.isHost = false;
+            computer2.isHost = false;
+            computer3.isHost = false;
+            // resort the players' order
+            players.add(player);
+            players.add(computer1);
+            players.add(computer2);
+            players.add(computer3);
+        }
+        /*
+        else if (window.getFirstHost().equalsIgnoreCase("north")) {
+            // reset the boolean isHost based on the host result
+            computer1.isHost = true;
+            player.isHost = false;
+            computer2.isHost = false;
+            computer3.isHost = false;
+            // resort the players' order
+            players.add(computer1);
+            players.add(computer2);
+            players.add(computer3);
+            players.add(player);
+        } else if (window.getFirstHost().equalsIgnoreCase("west")) {
+            // reset the boolean isHost based on the host result
+            computer2.isHost = true;
+            computer1.isHost = false;
+            player.isHost = false;
+            computer3.isHost = false;
+            // resort the players' order
+            players.add(computer2);
+            players.add(computer3);
+            players.add(player);
+            players.add(computer1);
+        } else if (window.getFirstHost().equalsIgnoreCase("south")) {
+            // reset the boolean isHost based on the host result
+            computer3.isHost = true;
+            computer1.isHost = false;
+            computer2.isHost = false;
+            player.isHost = false;
+            // resort the players' order
+            players.add(computer3);
+            players.add(player);
+            players.add(computer1);
+            players.add(computer2);
+        }
+        */
+
+
     }
+
+
 
     /**
-     * only for testing, to delete......................................................................
-     * print the cards
+     * haveFirstBoard: deal the cards to all players for the first time
+     *
+     * Result: Everyone will get 12 cards on their hands evenly.
      */
-    public void printPlayer(){
-        //输出当前玩家手中的牌
-        System.out.println("【当前玩家手中的牌如下：】");
-        System.out.print("【玩家】");
-        player.printMaJiangs();
-        System.out.print("\n【电脑1】");
-        computer1.printMaJiangs();
-        System.out.print("\n【电脑2】");
-        computer2.printMaJiangs();
-        System.out.print("\n【电脑3】");
-        computer3.printMaJiangs();
-        System.out.println();
-    }
-
-    // deal the cards to players for the first time
     public void haveFirstBoard(){
-        // 3 turns in total
+        // 4 turns in total
+        // the first 3 turns will get 12 cards each
         for (int i = 0; i < 3; i++) {
             // player, get 4 cards at a time
             for (int j = 0; j < 4; j++) {
@@ -78,18 +116,10 @@ public class InitPlayer {
                 computer3.gainMajiang(ShuffleMajiang.maJiangsIndex);
             }
         }
+        // the last turn will get one more card each
+        player.gainMajiang(ShuffleMajiang.maJiangsIndex);
+        computer1.gainMajiang(ShuffleMajiang.maJiangsIndex);
+        computer2.gainMajiang(ShuffleMajiang.maJiangsIndex);
+        computer3.gainMajiang(ShuffleMajiang.maJiangsIndex);
     }
-
-    /**
-     * change this based on the "isBoss"
-     * 第二次起牌：跳庄（玩家拿第1和第5张，电脑1拿第2张，电脑2拿第3张，电脑3拿第4张）
-     */
-    public void haveJumpBoard(){
-        player.gainMajiang(0);
-        player.gainMajiang(4);
-        computer1.gainMajiang(1);
-        computer2.gainMajiang(2);
-        computer3.gainMajiang(3);
-    }
-
 }
