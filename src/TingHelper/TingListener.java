@@ -1,75 +1,115 @@
 package TingHelper;
 
 import HuHelper.Hu;
+import Player.Player;
 import Player.Movement;
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class TingListener {
 
     Hu hu=new Hu();
-    public static HashMap<Integer,ArrayList<Integer>> pairs=new HashMap<>();
+    public boolean ting=false;
 
-    public  boolean isTing(ArrayList<Integer> currenthand, ArrayList<Integer> HuTiles, int Chi, int Peng, int Gang){
-        Throw_NeedPairs(currenthand,HuTiles,Chi,Peng,Gang);
+    public boolean getTing() {
+        return ting;
+    }
+
+    public static HashMap<Integer,ArrayList<Integer>> pairs=new HashMap<>();
+    public ArrayList<Integer> TingTiles=new ArrayList();
+    public  boolean isTing(Player player){
+        Throw_NeedPairs(player);
         if(!pairs.isEmpty()){
+            ting=true;
             return true;
         }
         return false;
     }
-    public void Throw_NeedPairs(ArrayList<Integer> currenthand, ArrayList<Integer> HuTiles, int Chi, int Peng, int Gang){
-        Movement movement=new Movement(currenthand);
-        ArrayList<Integer> hand = (ArrayList<Integer>) currenthand.clone();
-        if(hand.size()+HuTiles.size()>=14&&!hu.isHu(hand,HuTiles,Chi,Peng,Gang)){
+
+
+    public void Throw_NeedPairs(Player player){;
+        ArrayList<Integer> hand = (ArrayList<Integer>) player.getPlayerMajiangs().clone();
+        ArrayList<Integer> HuTiles = (ArrayList<Integer>) player.getCardsToDisplay().clone();
+        int chi=player.ChiNumber;
+        int peng=player.PengNumber;
+        int gang=player.GangNumber;
+        if(hand.size()+HuTiles.size()>=14&&!hu.isHu(hand,HuTiles,chi,peng,gang)){
+            Movement movement=new Movement(hand);
             for(Integer tile:hand){
                 hand.remove(tile);
-                ArrayList<Integer> TingTiles=new ArrayList();
+
                 for(int i=11;i<=19;i++){
-                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
-                    tempCards.add(i);
-                    movement.Chi(i);
-                    movement.Gang(i);
-                    movement.Peng(i);
-                    if(hu.isHu(tempCards,HuTiles,Chi,Peng,Gang)){
+                    hand.add(i);
+                    if(movement.isChi(i)){
+                        chi++;
+                    }
+                    if(movement.Peng(i)){
+                        peng++;
+                    }
+                    if(movement.Gang(i)){
+                        gang++;
+                    }
+                    if(hu.isHu(hand,HuTiles,player.ChiNumber,player.PengNumber,player.GangNumber)){
                         TingTiles.add(i);
                     }
+                    hand.remove(i);
                 }
                 for(int i=21;i<=29;i++){
-                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
-                    tempCards.add(i);
-                    movement.Chi(i);
-                    movement.Gang(i);
-                    movement.Peng(i);
-                    if(hu.isHu(tempCards,HuTiles,Chi,Peng,Gang)){
+                    if(movement.isChi(i)){
+                        chi++;
+                    }
+                    if(movement.Peng(i)){
+                        peng++;
+                    }
+                    if(movement.Gang(i)){
+                        gang++;
+                    }
+                    if(hu.isHu(hand,HuTiles,player.ChiNumber,player.PengNumber,player.GangNumber)){
                         TingTiles.add(i);
                     }
+                    hand.remove(i);
                 }
                 for(int i=31;i<=39;i++){
-                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
-                    tempCards.add(i);
-                    movement.Chi(i);
-                    movement.Gang(i);
-                    movement.Peng(i);
-                    if(hu.isHu(tempCards,HuTiles,Chi,Peng,Gang)){
+                    if(movement.isChi(i)){
+                        chi++;
+                    }
+                    if(movement.Peng(i)){
+                        peng++;
+                    }
+                    if(movement.Gang(i)){
+                        gang++;
+                    }
+                    if(hu.isHu(hand,HuTiles,player.ChiNumber,player.PengNumber,player.GangNumber)){
                         TingTiles.add(i);
                     }
+                    hand.remove(i);
                 }
                 for(int i=41;i<=47;i++){
-                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
-                    tempCards.add(i);
-                    movement.Chi(i);
-                    movement.Gang(i);
-                    movement.Peng(i);
-                    if(hu.isHu(tempCards,HuTiles,Chi,Peng,Gang)){
+                    if(movement.isChi(i)){
+                        chi++;
+                    }
+                    if(movement.Peng(i)){
+                        peng++;
+                    }
+                    if(movement.Gang(i)){
+                        gang++;
+                    }
+                    if(hu.isHu(hand,HuTiles,player.ChiNumber,player.PengNumber,player.GangNumber)){
                         TingTiles.add(i);
                     }
+                    hand.remove(i);
                 }
                 pairs.put(tile,TingTiles);
+
             }
         }
     }
+
     public  HashMap<Integer,ArrayList<Integer>> getPairs(){
         return pairs;
+    }
+    public  ArrayList<Integer> getTiles(){
+        return TingTiles;
     }
 }
