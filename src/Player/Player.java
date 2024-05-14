@@ -6,6 +6,7 @@ import Majiang.MajiangFeng;
 import Majiang.MajiangNumber;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -14,15 +15,30 @@ import java.util.List;
  * @author Qiyue Zhu
  */
 public class Player {
-
-    // find the boss from the window...........................................
-    public boolean isBoss;
+    // the boss is decided in the GameWindow and will be assigned in the Game class.
+    public boolean isHost;
 
     // the name of the player
     private String name;
 
+    // the number of performing Chi
+    public int ChiNumber = 0;
+
+    // the number of performing Peng
+    public int PengNumber = 0;
+
+    // the number of performing Gang
+    public int GangNumber = 0;
+
     // every player's cards
-    private List<Majiang> playerMajiangs=new ArrayList<Majiang>();
+    public ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
+
+    // cards to display after performing movements
+    public ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
+    public ArrayList<Integer> getCardsToDisplay() {
+        return cardsToDisplay;
+    }
+
 
     // note the index of cards of the player
     private int playerMajiangsIndex=0;
@@ -35,11 +51,11 @@ public class Player {
         this.name = name;
     }
 
-    public List<Majiang> getPlayerMajiangs() {
+    public ArrayList<Integer> getPlayerMajiangs() {
         return playerMajiangs;
     }
 
-    public void setPlayerMajiangs(List<Majiang> playerMajiangs) {
+    public void setPlayerMajiangs(ArrayList<Integer> playerMajiangs) {
         this.playerMajiangs = playerMajiangs;
     }
 
@@ -53,47 +69,41 @@ public class Player {
      * @param index: get the position of the card
      */
     public void gainMajiang(int index){
-        // pick a card from
-        //从ShuffleMaJiang中的maJiangs中取一粒麻将，放入到自己的playerMaJiangs中
+        // pick a card from the cards and put it into the player's hand
         playerMajiangs.add(playerMajiangsIndex, ShuffleMajiang.maJiangs.get(index));
         playerMajiangsIndex++;
-        //原来的ShuffleMaJiang的maJiangs中的牌减少这一粒
+        // remove this card from maJiangs
         ShuffleMajiang.maJiangs.remove(index);
+        Collections.sort(playerMajiangs);
     }
-
-    /**
-     * discardMajiang()：pick a card from playerMaJiangs, and put it into the river
-     */
-    public Majiang discardMajiang(int index){
-        if ((index>playerMajiangs.size()) || (index<=0)) {
-            return null;
+    // this operation will be performed in "all turn"
+    public void operationTest(Movement movement){
+        movement.playerMajiangs = this.playerMajiangs;
+        int riverLastCard = ShuffleMajiang.riverIndex-1;
+        if(movement.Peng(riverLastCard)){
+            PengNumber++;
         }
-        // pick a card to put it into the river
-        ShuffleMajiang.river.add(ShuffleMajiang.riverIndex, playerMajiangs.get(index-1));
-        ShuffleMajiang.riverIndex++;
-        // remove the card from playerMaJiangs
-        playerMajiangs.remove(index);
-        return playerMajiangs.get(index);
-    }
-
-    /**
-     * to delete......................................................................
-     * print the cards
-     */
-    public void printMaJiangs(){
-        for (Majiang maJiang : playerMajiangs) {
-            int type = maJiang.getType();
-            //输出字牌
-            if (type<=3) {
-                MajiangNumber maJiangNumber=(MajiangNumber)maJiang;
-                System.out.print(maJiangNumber+",");
-                //输出风牌
-            }else {
-                MajiangFeng maJiangWind=(MajiangFeng) maJiang;
-                System.out.print(maJiangWind+",");
-            }
+        if(movement.isChi(riverLastCard)){
+            ChiNumber++;
+        }
+        if(movement.Gang(riverLastCard)){
+            GangNumber++;
         }
     }
 
+    // this operation will be performed only "in my turn"
+    public void  operationTest(Movement movement, int riverLastCard){
+        movement.playerMajiangs = this.playerMajiangs;
+        if(movement.Peng(riverLastCard)){
+            PengNumber++;
+        }
+        if(movement.isChi(riverLastCard)){
+            ChiNumber++;
+        }
+        if(movement.Gang(riverLastCard)){
+            GangNumber++;
+        }
+    }
 
 }
+
