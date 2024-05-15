@@ -1,90 +1,82 @@
 package Player;
 
 import static org.junit.Assert.*;
+
+import GameTable.ShuffleMajiang;
 import org.junit.Test;
 import java.util.ArrayList;
 
 public class TestChi {
+    Player player = new Player();
 
-    @Test
-    public void testChiWithBothNeighboursCorrect() {
-        // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(5);
-        playerMajiangs.add(6);
-        playerMajiangs.add(7);
-        // Act
-        Movement chi = new Movement(6);
-        // Assert
-        assertEquals(1, chi.ChiNumber);
+    public void initialize(int card1, int card2, int card){
+        ShuffleMajiang.river.add(card);
+        player.playerRiver.add(card);
+        player.playerMajiangs.add(card1);
+        player.playerMajiangs.add(card2);
     }
 
 
+    //listener=1 : left(set1)
     @Test
-    public void testChiWithBothNeighboursWrong() {
+    public void testChiWithSet1() {
         // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(5);
-        playerMajiangs.add(6);
-        playerMajiangs.add(9);
-        // Act
-        Movement chi = new Movement(6);
+        initialize(24, 25, 26);
+        player.set1.add(24);
+        player.set1.add(25);
+        player.Chi(player.set1, 26);
         // Assert
-        assertEquals(0, chi.ChiNumber);
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(new ArrayList<>(), player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(1, player.ChiNumber);
     }
 
 
+    //listener=2 : middle(set2)
     @Test
-    public void testChiWithRightNeighbourCorrect() {
+    public void testChiWithSet2() {
         // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(5);
-        playerMajiangs.add(8);
-        playerMajiangs.add(9);
-        // Act
-        Movement chiR = new Movement(7);
+        initialize(25, 27, 26);
+        player.set2.add(25);
+        player.set2.add(27);
+        player.Chi(player.set2, 26);
         // Assert
-        assertEquals(1, chiR.ChiNumber);
-    }
-
-    @Test
-    public void testChiWithRightNeighbourWrong() {
-        // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(5);
-        playerMajiangs.add(7);
-        playerMajiangs.add(8);
-        // Act
-        Movement chiR = new Movement(7);
-        // Assert
-        assertEquals(0, chiR.ChiNumber);
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        correctDisplay.add(27);
+        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(new ArrayList<>(), player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(2, player.ChiNumber);
     }
 
 
+    //listener=3 : right(set3)
     @Test
-    public void testChiWithLeftNeighbourCorrect() {
+    public void testChiWithSet3() {
         // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(5);
-        playerMajiangs.add(6);
-        playerMajiangs.add(9);
-        // Act
-        Movement chiL = new Movement(7);
+        initialize(27, 28, 26);
+        player.set3.add(27);
+        player.set3.add(28);
+        player.Chi(player.set3, 26);
         // Assert
-        assertEquals(1, chiL.ChiNumber);
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(26);
+        correctDisplay.add(27);
+        correctDisplay.add(28);
+        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(new ArrayList<>(), player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(3, player.ChiNumber);
     }
 
-
-    @Test
-    public void testChiWithLeftNeighbourWrong() {
-        // Arrange
-        ArrayList<Integer> playerMajiangs = new ArrayList<>();
-        playerMajiangs.add(6);
-        playerMajiangs.add(7);
-        playerMajiangs.add(9);
-        // Act
-        Movement chiL = new Movement(7);
-        // Assert
-        assertEquals(0, chiL.ChiNumber);
-    }
 }
