@@ -12,21 +12,14 @@ public class Computer extends Player{
 
     // a boolean to tell if it fits the Chi condition
     public boolean isChi = false;
-
-    // a boolean to tell if it fits the Peng condition
-    public boolean isPeng =false;
-
-    // a boolean to tell if it fits the G condition
-    public boolean isGang = false;
-
     // the number of performing Chi
-    public int ChiNumber = 0;
+    public static int ChiNumber = 0;
 
     // the number of performing Peng
-    public int PengNumber = 0;
+    public static int PengNumber = 0;
 
     // the number of performing Gang
-    public int GangNumber = 0;
+    public static int GangNumber = 0;
 
     // placing the players' cards
     private ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
@@ -87,7 +80,7 @@ public class Computer extends Player{
      */
     public void Aside(int card){
         // add this card aside to display the card
-        cardsToDisplay.add(playerMajiangs.indexOf(card));
+        cardsToDisplay.add(card);
         // remove the card from the player's card
         playerMajiangs.remove(playerMajiangs.indexOf(card));
     }
@@ -101,41 +94,38 @@ public class Computer extends Player{
      *      you can eat the 2 to form the sequence 2, 3, 4.
      */
     public void Chi(int card){
-        // the neighbours of the card
-        int neighbourLeft = card - 1;
-        int neighbourRight = card + 1;
         // if the card both have left and right neighbour, its neighbours and itself will be a sequence
-        if ( playerMajiangs.contains(neighbourRight) && playerMajiangs.contains(neighbourLeft) ) {
-            Aside(neighbourLeft);
-            Aside(neighbourRight);
+        if ( playerMajiangs.contains(card + 1) && playerMajiangs.contains(card - 1) ) {
+            Aside(card - 1);
+            Aside(card + 1);
             // add this card aside to display the card
             cardsToDisplay.add(card);
             // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.riverLastCard);
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             playerRiver.remove(playerRiver.size() - 1);
             // add up the times of Chi
             ChiNumber++;
         }
         // if the card only have right neighbour, its right neighbour,the right neighbour of its right neighbour and itself will be a sequence
-        else if ( playerMajiangs.contains(neighbourRight) && ! playerMajiangs.contains(neighbourLeft) ) {
-            Aside(neighbourRight);
-            Aside(neighbourRight + 1);
+        else if ( playerMajiangs.contains(card + 1) &&  playerMajiangs.contains(card + 2) ) {
+            Aside(card + 1);
+            Aside(card + 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
             // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.riverLastCard);
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             playerRiver.remove(playerRiver.size() - 1);
             // add up the times of Chi
             ChiNumber++;
         }
         // if the card only have left neighbour, its left neighbour,the left neighbour of its left neighbour and itself will be a sequence
-        else if ( playerMajiangs.contains(neighbourLeft) && ! playerMajiangs.contains(neighbourRight) ) {
-            Aside(neighbourLeft);
-            Aside(neighbourLeft - 1);
+        else if ( playerMajiangs.contains(card - 1) && playerMajiangs.contains(card - 2) ) {
+            Aside(card - 1);
+            Aside(card - 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
             // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.riverLastCard);
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             playerRiver.remove(playerRiver.size() - 1);
             // add up the times of Chi
             ChiNumber++;
@@ -166,15 +156,11 @@ public class Computer extends Player{
             // add this card aside to display the card
             cardsToDisplay.add(card);
             // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.riverLastCard);
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             playerRiver.remove(playerRiver.size() - 1);
             // add up the times of Peng
             PengNumber++;
         }
-
-
-        // test
-        //System.out.println(PengNumber);
     }
 
     /**
@@ -197,14 +183,11 @@ public class Computer extends Player{
             // add this card aside to display the card
             cardsToDisplay.add(card);
             // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.riverLastCard);
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             playerRiver.remove(playerRiver.size() - 1);
             // add up the times of Gang
             GangNumber++;
         }
-
-        // test
-        //System.out.println(GangNumber);
     }
 
 

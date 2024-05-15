@@ -21,20 +21,14 @@ public class Player {
     // a boolean to tell if it fits the Chi condition
     public boolean isChi = false;
 
-    // a boolean to tell if it fits the Peng condition
-    public boolean isPeng =false;
-
-    // a boolean to tell if it fits the G condition
-    public boolean isGang = false;
-
     // the number of performing Chi
     public static int ChiNumber;
 
     // the number of performing Peng
-    public static int PengNumber = 0;
+    public static int PengNumber;
 
     // the number of performing Gang
-    public static int GangNumber = 0;
+    public static int GangNumber;
 
     // every player's cards
     public ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
@@ -185,6 +179,31 @@ public class Player {
 
 
     /**
+     * Peng: When a tile discarded by another player
+     *       matches the two identical tiles in your hand to form a set.
+     *       Whether it's your turn to play or not, you can choose to peng the set.
+     *       For example, if you already have two 8 tiles and another player discards an 8,
+     *       you can collide the 8 to form the set 8, 8, 8.
+     *
+     */
+    public void Peng(int card){
+        // remove these 2 same cards from the player's card
+        // then add these 2 same cards to a new array to display the Peng cards
+        Aside(card);
+        Aside(card);
+        // add this card aside to display the card
+        cardsToDisplay.add(card);
+        // remove this card from the river (both the player's river and the whole river)
+        ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
+        playerRiver.remove(playerRiver.size() - 1);
+        // add up the times of Peng
+        PengNumber++;
+    }
+
+
+
+
+    /**
      * isGang: isGang method is written to test if the card just discarded fits the Gang condition:
      *        has 3 more same cards with the given card.
      *
@@ -202,6 +221,30 @@ public class Player {
         }
         return false;
     }
+
+    /**
+     * Gang: When you can have the same 4 cards. It can be divided into overt gang and covert gang.
+     *      Overt Gang: When you have three same tiles and another player discards the rest tile,
+     *                  you can choose to gang the forth tile and show them in public.
+     *      Covert Gang: When you have three same tiles, and you draw the forth tile by yourself,
+     *                  this make up the covert gang, and you don't need to show them in public.
+     * In this case, the overt gang is shown below.
+     */
+    public void Gang(int card){
+        // remove these 3 cards from the player's card
+        // then add these 3 cards to a new array to display the Gang cards
+        Aside(card);
+        Aside(card);
+        Aside(card);
+        // add this card aside to display the card
+        cardsToDisplay.add(card);
+        // remove this card from the river (both the player's river and the whole river)
+        ShuffleMajiang.river.remove(ShuffleMajiang.river.size() -1);
+        playerRiver.remove(playerRiver.size() - 1);
+        // add up the times of Gang
+        GangNumber++;
+    }
+
 
 }
 
