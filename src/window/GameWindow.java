@@ -77,10 +77,10 @@ public class GameWindow extends JFrame {
     }
 
     ////////////////////////////set buttons///////////////////////
-    public void setbuttons(ArrayList<Integer> set, boolean pengJudge, boolean gangJudge){
+    public void setbuttons(ArrayList<Integer> set, boolean pengJudge, boolean gangJudge){// add more parameter from agame method;
         chi_button(set);
-        peng_button(pengJudge);
-        gang_button(gangJudge);
+        peng_button(pengJudge); //complete;
+        gang_button(gangJudge); //complete;
     }
 
     public void chi_button(ArrayList<Integer> set) {//the index should be int
