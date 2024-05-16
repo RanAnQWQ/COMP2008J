@@ -34,20 +34,13 @@ public class Player {
     public ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
 
     // cards to display after performing movements
-    private ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
-    public ArrayList<Integer> getCardsToDisplay() {
-        return cardsToDisplay;
-    }
+    public ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
 
     // player's river (the discarded cards)
     public ArrayList<Integer> playerRiver = new ArrayList<>();
 
     // the sets of Chi user might choose
-    public ArrayList<Integer> set1=new ArrayList<>();
-    public ArrayList<Integer> set2=new ArrayList<>();
-    public ArrayList<Integer> set3=new ArrayList<>();
-
-
+    public ArrayList<Integer> set=new ArrayList<>();
 
     public ArrayList<Integer> getPlayerMajiangs() {
         return playerMajiangs;
@@ -76,12 +69,31 @@ public class Player {
     }
 
 
-    public void Aside(int card){
-        // add this card aside to display the card
-        cardsToDisplay.add(card);
-        // remove the card from the player's card
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
+    public void Aside(ArrayList<Integer> set, int cardIndex){
+        if (cardIndex == 2){
+            // add this card aside to display the card
+            cardsToDisplay.add(set.get(0));
+            cardsToDisplay.add(set.get(1));
+            // remove the card from the player's card
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
+        } else if (cardIndex == 1) {
+            // add this card aside to display the card
+            cardsToDisplay.add(set.get(0));
+            cardsToDisplay.add(set.get(2));
+            // remove the card from the player's card
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
+        } else if (cardIndex == 0) {
+            // add this card aside to display the card
+            cardsToDisplay.add(set.get(1));
+            cardsToDisplay.add(set.get(2));
+            // remove the card from the player's card
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
+        }
     }
+
 
 
     /**
@@ -94,39 +106,38 @@ public class Player {
      *
      * Chi action can be taken if isChi is true and the user click the Chi bottom.
      */
-    public void isChi(int card){
+    public ArrayList<Integer> isChi(int card){
         // reset the variables
         isChi =false;
-        set1.clear();
-        set2.clear();
-        set3.clear();
+        set.clear();
         // if the card is the Number cards
         if(card<41){
             // this can have different situation, and the final sequence (set1/ set2/ set3) will be chosen by the user
 
             // if the card only have left neighbour, its left neighbour,the left neighbour of its left neighbour and itself will be a sequence
             if ( playerMajiangs.contains(card-1) && playerMajiangs.contains(card-2) ) {
-                //set2.add(card);
-                set1.add(card-2);
-                set1.add(card-1);
+                set.add(card-2);
+                set.add(card-1);
+                set.add(card);
                 isChi = true;
             }
             // if the card both have left and right neighbour, its neighbours and itself will be a sequence
             if ( playerMajiangs.contains(card-1) && playerMajiangs.contains(card+1) ) {
                 // choose this condition to be a sequence
-                set2.add(card-1);
-                //set1.add(card);
-                set2.add(card+1);
+                set.add(card-1);
+                set.add(card);
+                set.add(card+1);
                 isChi = true;
             }
             // if the card only have right neighbour, its right neighbour,the right neighbour of its right neighbour and itself will be a sequence
             if ( playerMajiangs.contains(card+1) && playerMajiangs.contains(card+2) ) {
-                //set3.add(card);
-                set3.add(card+1);
-                set3.add(card+2);
+                set.add(card);
+                set.add(card+1);
+                set.add(card+2);
                 isChi = true;
             }
         }
+        return set;
     }
 
 
@@ -138,16 +149,51 @@ public class Player {
      *      For example, if your hand tiles are 3, 4, 5, and your previous player discards 2,
      *      you can eat the 2 to form the sequence 2, 3, 4.
      */
-    public void Chi(ArrayList<Integer> set, int card){
-        //listener=1 : left(set1)
-        //listener=2 : middle(set2)
-        //listener=3 : right(set3)
+    public void Chi(ArrayList<Integer> set, int listener, int card) {
+        // listener=3
+        // if set has 3 cards
+        if (listener == 3){
+            listener = set.indexOf(card);
+        }
+        // listener=2 (card on the right)
+        // listener=1 (card in the middle)
+        // listener=0 (card on the left)
+        else if (set.size() == 6) {
+            // if cards fit: (card-2, card-1, card), card-1, card, card+1
+            if (listener == 2) {
+                set = new ArrayList<>(set.subList(0, 3));
+            }
+            // if cards fit: card-1, card, card+1, (card, card+1, card+2)
+            else if (listener == 0) {
+                set = new ArrayList<>(set.subList(3, 6));
+            } else {
+                int cardIndex = set.indexOf(card);
+                if (cardIndex == 1){
+                    set = new ArrayList<>(set.subList(0, 3));
+                } else {
+                    set = new ArrayList<>(set.subList(3, 6));
+                }
 
+            }
+        }
+        else if (set.size() == 9){
+            // if cards fit: (card-2, card-1, card), card-1, card, card+1, card, card+1, card+2
+            if (listener == 2){
+                set = new ArrayList<>(set.subList(0, 3));
+            }
+            // if cards fit: card-2, (card-1, card, card+1), card+2
+            else if (listener == 1) {
+                set = new ArrayList<>(set.subList(3, 6));
+            }
+            // if cards fit:  card-1, (card, card+1, card+2)
+            else if (listener == 0) {
+                set = new ArrayList<>(set.subList(6, 9));
+            }
+        }
         // add this card aside to display the card
         // remove the card from the player's card
-        Aside(set.get(0));
-        Aside(set.get(1));
-        cardsToDisplay.add(card);
+        Aside(set, listener);
+        cardsToDisplay.add(set.get(listener));
         Collections.sort(cardsToDisplay);
         // remove this card from the river (both the player's river and the whole river)
         ShuffleMajiang.river.remove(ShuffleMajiang.river.size()-1);
@@ -189,8 +235,13 @@ public class Player {
     public void Peng(int card){
         // remove these 2 same cards from the player's card
         // then add these 2 same cards to a new array to display the Peng cards
-        Aside(card);
-        Aside(card);
+
+        // add this card aside to display the card
+        cardsToDisplay.add(card);
+        cardsToDisplay.add(card);
+        // remove the card from the player's card
+        playerMajiangs.remove(playerMajiangs.indexOf(card));
+        playerMajiangs.remove(playerMajiangs.indexOf(card));
         // add this card aside to display the card
         cardsToDisplay.add(card);
         // remove this card from the river (both the player's river and the whole river)
@@ -233,9 +284,15 @@ public class Player {
     public void Gang(int card){
         // remove these 3 cards from the player's card
         // then add these 3 cards to a new array to display the Gang cards
-        Aside(card);
-        Aside(card);
-        Aside(card);
+
+        // add this card aside to display the card
+        cardsToDisplay.add(card);
+        cardsToDisplay.add(card);
+        cardsToDisplay.add(card);
+        // remove the card from the player's card
+        playerMajiangs.remove(playerMajiangs.indexOf(card));
+        playerMajiangs.remove(playerMajiangs.indexOf(card));
+        playerMajiangs.remove(playerMajiangs.indexOf(card));
         // add this card aside to display the card
         cardsToDisplay.add(card);
         // remove this card from the river (both the player's river and the whole river)

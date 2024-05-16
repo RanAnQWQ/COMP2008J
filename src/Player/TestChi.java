@@ -9,28 +9,26 @@ import java.util.ArrayList;
 public class TestChi {
     Player player = new Player();
 
-    public void initialize(int card1, int card2, int card){
-        ShuffleMajiang.river.add(card);
-        player.playerRiver.add(card);
-        player.playerMajiangs.add(card1);
-        player.playerMajiangs.add(card2);
-    }
 
-
-    //listener=1 : left(set1)
+    // set length=3, listener=0 (card on the left), card: 24
+    // 24, 25, 26;
     @Test
-    public void testChiWithSet1() {
+    public void testChi30() {
         // Arrange
-        initialize(24, 25, 26);
-        player.set1.add(24);
-        player.set1.add(25);
-        player.Chi(player.set1, 26);
+        ShuffleMajiang.river.add(24);
+        player.playerRiver.add(24);
+        player.playerMajiangs.add(25);
+        player.playerMajiangs.add(26);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 0, 24);
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
         correctDisplay.add(25);
         correctDisplay.add(26);
-        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(correctDisplay, player.cardsToDisplay);
         assertEquals(new ArrayList<>(), player.playerMajiangs);
         assertEquals(new ArrayList<>(), player.playerRiver);
         assertEquals(new ArrayList<>(), ShuffleMajiang.river);
@@ -38,20 +36,25 @@ public class TestChi {
     }
 
 
-    //listener=2 : middle(set2)
+    // set length=3, listener=1 (card in the middle), card: 25
+    // 24, 25, 26
     @Test
-    public void testChiWithSet2() {
+    public void testChi31() {
         // Arrange
-        initialize(25, 27, 26);
-        player.set2.add(25);
-        player.set2.add(27);
-        player.Chi(player.set2, 26);
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 1, 25);
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
         correctDisplay.add(25);
         correctDisplay.add(26);
-        correctDisplay.add(27);
-        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(correctDisplay, player.cardsToDisplay);
         assertEquals(new ArrayList<>(), player.playerMajiangs);
         assertEquals(new ArrayList<>(), player.playerRiver);
         assertEquals(new ArrayList<>(), ShuffleMajiang.river);
@@ -59,24 +62,279 @@ public class TestChi {
     }
 
 
-    //listener=3 : right(set3)
+
+    // set length=3, listener=2 (card on the right), card: 26
+    // 24, 25, 26
     @Test
-    public void testChiWithSet3() {
+    public void testChi32() {
         // Arrange
-        initialize(27, 28, 26);
-        player.set3.add(27);
-        player.set3.add(28);
-        player.Chi(player.set3, 26);
+        ShuffleMajiang.river.add(26);
+        player.playerRiver.add(26);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 2, 26);
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
+        correctDisplay.add(25);
         correctDisplay.add(26);
-        correctDisplay.add(27);
-        correctDisplay.add(28);
-        assertEquals(correctDisplay, player.getCardsToDisplay());
+        assertEquals(correctDisplay, player.cardsToDisplay);
         assertEquals(new ArrayList<>(), player.playerMajiangs);
         assertEquals(new ArrayList<>(), player.playerRiver);
         assertEquals(new ArrayList<>(), ShuffleMajiang.river);
         assertEquals(3, player.ChiNumber);
+    }
+
+
+    // set length=6, listener=0 (card on the left), card: 24
+    // playerMajiangs: 23, (24, 25, 26)
+    // set: 23, 24, 25, (24, 25, 26)
+    @Test
+    public void testChi60() {
+        // Arrange
+        ShuffleMajiang.river.add(24);
+        player.playerRiver.add(24);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(25);
+        player.playerMajiangs.add(26);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 0, 24);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(23);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(4, player.ChiNumber);
+    }
+
+
+
+    // set length=6, listener=2 (card on the right), card: 25
+    // playerMajiangs: (23, 24, 25), 26
+    // set: (23, 24, 25), 24, 25, 26
+    @Test
+    public void testChi62() {
+        // Arrange
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 2, 25);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(23);
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(26);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(5, player.ChiNumber);
+    }
+
+
+
+    // set length=9, listener=0 (card on the left), card: 25
+    // playerMajiangs: 23, 24, (25, 26, 27)
+    // set: 23, 24, 25, 24, 25, 26, (25, 26, 27)
+    @Test
+    public void testChi90() {
+        // Arrange
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.playerMajiangs.add(27);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(27);
+        player.Chi(player.set, 0, 25);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        correctDisplay.add(27);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(23);
+        correctCards.add(24);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(6, player.ChiNumber);
+    }
+
+
+    // set length=9, listener=1 (card in the middle), card: 25
+    // playerMajiangs: 23, (24, 25, 26), 27
+    // set: 23, 24, 25, (24, 25, 26), 25, 26, 27
+    @Test
+    public void testChi91() {
+        // Arrange
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.playerMajiangs.add(27);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(27);
+        player.Chi(player.set, 1, 25);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(23);
+        correctCards.add(27);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(7, player.ChiNumber);
+    }
+
+
+
+    // set length=9, listener=2 (card on the right), card: 25
+    // playerMajiangs: (23, 24, 25), 26, 27
+    // set: (23, 24, 25), 24, 25, 26, 25, 26, 27
+    @Test
+    public void testChi92() {
+        // Arrange
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.playerMajiangs.add(27);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(25);
+        player.set.add(26);
+        player.set.add(27);
+        player.Chi(player.set, 2, 25);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(23);
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(26);
+        correctCards.add(27);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(8, player.ChiNumber);
+    }
+
+
+    // set length=6, listener=1 (card in the middle), card: 24
+    // playerMajiangs: (23, 24, 25), 26
+    // set: (23, 24, 25), 24, 25, 26
+    @Test
+    public void testChi61A() {
+        // Arrange
+        ShuffleMajiang.river.add(24);
+        player.playerRiver.add(24);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(25);
+        player.playerMajiangs.add(26);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 1, 24);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(23);
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(26);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(9, player.ChiNumber);
+    }
+
+
+    // set length=6, listener=1 (card in the middle), card: 25
+    // playerMajiangs: 23, (24, 25, 26)
+    // set: 23, 24, 25, (24, 25, 26)
+    @Test
+    public void testChi61B() {
+        // Arrange
+        ShuffleMajiang.river.add(25);
+        player.playerRiver.add(25);
+        player.playerMajiangs.add(23);
+        player.playerMajiangs.add(24);
+        player.playerMajiangs.add(26);
+        player.set.add(23);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(24);
+        player.set.add(25);
+        player.set.add(26);
+        player.Chi(player.set, 1, 25);
+        // Assert
+        ArrayList<Integer> correctDisplay = new ArrayList<>();
+        correctDisplay.add(24);
+        correctDisplay.add(25);
+        correctDisplay.add(26);
+        ArrayList<Integer> correctCards = new ArrayList<>();
+        correctCards.add(23);
+        assertEquals(correctDisplay, player.cardsToDisplay);
+        assertEquals(correctCards, player.playerMajiangs);
+        assertEquals(new ArrayList<>(), player.playerRiver);
+        assertEquals(new ArrayList<>(), ShuffleMajiang.river);
+        assertEquals(10, player.ChiNumber);
     }
 
 }

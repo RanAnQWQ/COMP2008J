@@ -10,6 +10,8 @@ public class TestIsChi {
     Player player = new Player();
 
 
+    // 24, 25, 26, 27, 28; card: 26
+    // set: 24, 25, 26, 25, 26, 27, 26, 27, 28
     @Test
     public void testIsChiWith4Neighbours() {
         // Arrange
@@ -19,24 +21,26 @@ public class TestIsChi {
         cards.add(27);
         cards.add(28);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        correctSet1.add(24);
-        correctSet1.add(25);
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        correctSet2.add(25);
-        correctSet2.add(27);
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        correctSet3.add(27);
-        correctSet3.add(28);
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(24);
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(27);
+        correctSet.add(26);
+        correctSet.add(27);
+        correctSet.add(28);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
 
 
+
+    // 25, 26, 27, 28; card: 26
+    // set: 25, 26, 27, 26, 27, 28
     @Test
     public void testIsChiWith3Neighbours1() {
         // Arrange
@@ -45,22 +49,23 @@ public class TestIsChi {
         cards.add(27);
         cards.add(28);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        correctSet2.add(25);
-        correctSet2.add(27);
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        correctSet3.add(27);
-        correctSet3.add(28);
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(27);
+        correctSet.add(26);
+        correctSet.add(27);
+        correctSet.add(28);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
 
 
+
+    // 24, 25, 26, 27; card: 26
+    // set: 24, 25, 26, 25, 26, 27
     @Test
     public void testIsChiWith3Neighbours2() {
         // Arrange
@@ -69,22 +74,23 @@ public class TestIsChi {
         cards.add(25);
         cards.add(27);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        correctSet1.add(24);
-        correctSet1.add(25);
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        correctSet2.add(25);
-        correctSet2.add(27);
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(24);
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(27);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
 
 
+
+    // 25, 26, 27; card: 26
+    // set: 25, 26, 27
     @Test
     public void testIsChiWith2NeighboursMiddle() {
         // Arrange
@@ -92,21 +98,20 @@ public class TestIsChi {
         cards.add(25);
         cards.add(27);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        correctSet2.add(25);
-        correctSet2.add(27);
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(25);
+        correctSet.add(26);
+        correctSet.add(27);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
 
 
 
+    // 24, 25, 26; card: 26
+    // set: 24, 25, 26
     @Test
     public void testIsChiWith3LeftNeighbours() {
         // Arrange
@@ -114,21 +119,20 @@ public class TestIsChi {
         cards.add(24);
         cards.add(25);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        correctSet1.add(24);
-        correctSet1.add(25);
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(24);
+        correctSet.add(25);
+        correctSet.add(26);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
 
 
 
+    // 26, 27, 28; card: 26
+    // set: 26, 27, 28
     @Test
     public void testIsChiWith2RightNeighbours() {
         // Arrange
@@ -136,16 +140,14 @@ public class TestIsChi {
         cards.add(27);
         cards.add(28);
         player.playerMajiangs = cards;
-        player.isChi(26);
+        ArrayList<Integer> set= player.isChi(26);
         // Assert
-        ArrayList<Integer> correctSet1 = new ArrayList<>();
-        ArrayList<Integer> correctSet2 = new ArrayList<>();
-        ArrayList<Integer> correctSet3 = new ArrayList<>();
-        correctSet3.add(27);
-        correctSet3.add(28);
-        assertEquals(correctSet1, player.set1);
-        assertEquals(correctSet2, player.set2);
-        assertEquals(correctSet3, player.set3);
+        ArrayList<Integer> correctSet = new ArrayList<>();
+        correctSet.add(26);
+        correctSet.add(27);
+        correctSet.add(28);
+        assertEquals(correctSet, set);
         assertEquals(true, player.isChi);
     }
+
 }
