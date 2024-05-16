@@ -3,9 +3,8 @@ package window;
 
 import GameTable.ShuffleMajiang;
 import HuHelper.Hu;
-import TingHelper.TingListener;
+import Player.Player;
 import tiles.Tilemap;
-import Player.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,11 +14,15 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
-import java.util.Timer;
+import java.util.concurrent.CountDownLatch;
+import static window.GameContent.*;
+
+//import static window.GameContent.agame;
+//import static window.GameContent.helpButtons;
 
 
 public class GameWindow extends JFrame {
-    private ImagePanel gamePanel;
+    public ImagePanel gamePanel;
     public JTextField nameField;
     public Tilemap tilemap;
     public ArrayList<Integer> tileNumber;
@@ -27,99 +30,11 @@ public class GameWindow extends JFrame {
 
 
 
-/*
-
-    public static void main(String[] args) {
-        new GameWindow();
-
-    }
-*/
-
+    //    static {
+    GameContent gameContent = new GameContent();
+    //    }
     public void setTileNumber(ArrayList<Integer> tileNumber) {
         this.tileNumber = tileNumber;
-    }
-
-    public static void agame() throws InterruptedException {  // the methods to create a game
-        GameWindow gameWindow = new GameWindow();  // initial the game window
-
-        // initial the players
-        InitPlayer initPlayer = new InitPlayer();
-
-        // create 4 players, and 3 of them are computers
-        Player player = initPlayer.player;
-        Computer computer1 = initPlayer.computer1, computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
-
-        // create and shuffle the Majiang cards
-        ShuffleMajiang shuffleMajiang = new ShuffleMajiang();
-
-
-        // deal the cards for the first time evenly (13 cards each)
-        ShuffleMajiang.maJiangsIndex=0;
-        initPlayer.haveFirstBoard();
-
-
-        // sort the cards
-        Collections.sort(player.getPlayerMajiangs());
-        Collections.sort(computer1.getPlayerMajiangs());
-        Collections.sort(computer2.getPlayerMajiangs());
-        Collections.sort(computer3.getPlayerMajiangs());
-
-        // in the first turn, the host will gain one more card to discard first
-        initPlayer.players.get(0).gainMajiang(1);  // index are got from the window
-
-
-        System.out.println("player: "+player.playerMajiangs);
-        System.out.println("size: "+player.playerMajiangs.size());
-
-
-        gameWindow.tilemap = new Tilemap();
-        gameWindow.setTileNumber(player.getPlayerMajiangs());
-        System.out.println("tile: "+gameWindow.tileNumber);
-
-        gameWindow.addTileToWindow();
-        gameWindow.hideTiles();
-
-
-        // in the first turn, the host will discard a card
-        System.out.println(gameWindow.cardToDiscard);
-        //initPlayer.players.get(0).discardMajiang(player.playerMajiangs.indexOf(gameWindow.cardToDiscard));  // index are got from the window
-
-
-
-        // to judge if any of the players will Hu or not
-        boolean playerHu = Hu.isHu(player.getPlayerMajiangs(), player.getCardsToDisplay(), player.ChiNumber, player.PengNumber, player.GangNumber);
-        boolean computer1Hu = Hu.isHu(computer1.getPlayerMajiangs(), computer1.getCardsToDisplay(), computer1.ChiNumber, computer1.PengNumber, computer1.GangNumber);
-        boolean computer2Hu = Hu.isHu(computer2.getPlayerMajiangs(), computer2.getCardsToDisplay(), computer2.ChiNumber, computer2.PengNumber, computer2.GangNumber);
-        boolean computer3Hu = Hu.isHu(computer3.getPlayerMajiangs(), computer3.getCardsToDisplay(), computer3.ChiNumber, computer3.PengNumber, computer3.GangNumber);
-
-
-
-        if (ShuffleMajiang.river.size() > 0){
-            // take turns to play, always start with the host
-            for (int turn = 1; turn < 4; turn++) {
-                // if any of the players Hu, the game will end
-                if ((!playerHu) && (!computer1Hu) && (!computer2Hu) && (!computer3Hu)) {
-                    // in one's turn, the movement of Chi, Peng, Gang will happen
-                    int riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex);
-                    Movement movement1 = new Movement(riverLastCard, initPlayer.players.get(turn).ChiNumber, initPlayer.players.get(turn).PengNumber, initPlayer.players.get(turn).GangNumber);
-
-                    // in one's turn, the player will gain a card and discard one
-                    initPlayer.players.get(turn).gainMajiang(1);  // index are got from the window
-                    //initPlayer.players.get(turn).discardMajiang(player.playerMajiangs.indexOf(gameWindow.cardToDiscard));  // index are got from the window
-
-                    //and for others, the possible movements like Peng, Gang will be detected
-                    Movement movement2 = new Movement(initPlayer.players.get((turn + 1) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 1) % 4).ChiNumber, initPlayer.players.get((turn + 1) % 4).PengNumber, initPlayer.players.get((turn + 1) % 4).GangNumber);
-                    Movement movement3 = new Movement(initPlayer.players.get((turn + 2) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 2) % 4).ChiNumber, initPlayer.players.get((turn + 2) % 4).PengNumber, initPlayer.players.get((turn + 2) % 4).GangNumber);
-                    Movement movement4 = new Movement(initPlayer.players.get((turn + 3) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 3) % 4).ChiNumber, initPlayer.players.get((turn + 3) % 4).PengNumber, initPlayer.players.get((turn + 3) % 4).GangNumber);
-
-                /*
-        // after a Peng or Gang happens, the order of turn will change
-        if ( this.PengNumber != PengNumber || this.GangNumber != GangNumber ){
-             currentPlayer = ;
-        }*/
-                }
-            }
-        }
     }
 
 
@@ -131,8 +46,9 @@ public class GameWindow extends JFrame {
 
     public GameWindow() {
         window_frame();
-        helpButtons();
-        dice_button(sum);
+//        GameContent.helpB
+        gameContent.helpButtons(gamePanel);
+        gameContent.dice_button(sum,gamePanel);
 
         this.setVisible(true);
         chooseAvatar();
@@ -143,29 +59,11 @@ public class GameWindow extends JFrame {
         headShot_M("src/profilephoto/cow.png");
         // Add the headShots of 3 machine players;
 
-        ArrayList<Integer> a = new ArrayList<>(Arrays.asList(11, 11, 13, 12, 12));
-        // TESTTTTTTTTTTTTTTTT--------------!!!!!! ting
-
-
-
-        chi_button();
-        peng_button();
-        gang_button();
-        ting_button(a,  new ArrayList<>(Arrays.asList( 21, 21, 21, 23, 24, 25, 31, 32, 33)), 2, 2, 0);
-        skip_button();
-        hu_button(a, new ArrayList<>(Arrays.asList(12,12,12,21,21,21,23,24,25,31,32,01)),2,2,0);
-        // Add 5 prompt buttons to option;
-
         tileNumber = new ArrayList<>();
-//        tilemap = new Tilemap();
-//        addTileToWindow();
-//        hideTiles();
-//        addTileToWindow(11,220,660);
-
-//        tileLabel.setVisible(false);
-//        tileLabel.setEnabled(false);
 
     }
+
+
     private void window_frame() {
         setTitle("Game Window");
         setSize(1200, 800);
@@ -173,40 +71,275 @@ public class GameWindow extends JFrame {
         setLocationRelativeTo(null);
         setResizable(false);
 
-        gamePanel = new ImagePanel("src/window/background3.jpg");
+        gamePanel = new ImagePanel("src/window/background/background3.jpg");
         gamePanel.setLayout(null);
         add(gamePanel);
     }
 
+    ////////////////////////////set buttons///////////////////////
+    public void setbuttons(ArrayList<Integer> set, boolean pengJudge, boolean gangJudge){
+        chi_button(set);
+        peng_button(pengJudge);
+        gang_button(gangJudge);
+    }
+
+    public void chi_button(ArrayList<Integer> set) {//the index should be int
+        JButton chi = new JButton();
+        chi.setBorderPainted(false);
+        chi.setFocusPainted(false);
+        chi.setContentAreaFilled(false);
+        //chi.setVisible(true);
+
+        boolean judge;
+        if (set != null){
+            judge = true;
+        }else {
+            judge = false;
+        }
+
+        if (judge){
+            chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            chi.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println(" Display available");
+                    // test, num == 3 right now
+                    chi_choice(set);
+                }
+            });
+        }else {
+            chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+        }
+        chi.setBounds(695, 570, 45, 57);
+
+        gamePanel.add(chi);
+    }
+
+
+
+
+    private int chi_choice(ArrayList<Integer> option){
+        int num = option.size();
+
+        CountDownLatch latch = new CountDownLatch(1);
+        int[] index = new int[1];
+
+        if (num == 3){
+            return 3;
+        }
+        //if exist 1 chi type, return 3 directly
+        JFrame choice = new JFrame("Choice of Chi Method");
+        choice.setSize(480, 210);
+        choice.setLocationRelativeTo(null);
+        choice.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        choice.setLayout(new BorderLayout());
+
+        JLabel hint = new JLabel("<html><br>Please choose your deck:<br><br>");
+        hint.setFont(new Font("Consolas", Font.BOLD, 24));
+        hint.setForeground(Color.GRAY);
+        hint.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel hintPanel = new JPanel(new BorderLayout());
+        hintPanel.add(hint, BorderLayout.SOUTH);
+        choice.add(hintPanel, BorderLayout.NORTH);
+
+        JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        mainPanel.setOpaque(false);
+
+        Tilemap tilemap = new Tilemap();
+
+        for (int i = 0; i < num; i += 3) {
+            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
+            panel.setOpaque(false);
+            panel.putClientProperty("index", i); // 设置面板的索引属性
+
+            for (int j = 0; j < 3; j++) {
+                int tileNum = option.get(i + j);
+                String tilePath = tilemap.getTilePath(tileNum);
+                ImageIcon icon = new ImageIcon(new ImageIcon(tilePath).getImage().getScaledInstance(132 / 3, 191 / 3, Image.SCALE_SMOOTH));
+                JLabel label = new JLabel(icon);
+                panel.add(label);
+            }
+
+            panel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    JPanel clickedPanel = (JPanel) e.getSource();
+                    index[0] = (int) clickedPanel.getClientProperty("index");
+                    System.out.println("Clicked panel index: " + index[0]);
+                    choice.dispose();
+                    latch.countDown();
+                }
+            });
+
+            mainPanel.add(panel);
+        }
+
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+
+        choice.add(scrollPane, BorderLayout.CENTER);
+        choice.setVisible(true);
+        choice.setResizable(false);
+
+        return index[0];
+    }
+
+
+    public boolean peng_button(boolean judge) {
+        JButton peng = new JButton();
+        peng.setBorderPainted(false);
+        peng.setFocusPainted(false);
+        peng.setContentAreaFilled(false);
+        // set the button of "peng";
+
+        //judge if peng is available;
+        if (judge){
+            peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            peng.setBounds(745, 570, 45, 57);
+            peng.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Peng is available");
+                }
+            });
+            gamePanel.add(peng);
+            System.out.println("Peng is chosen");
+            return true;
+            //return true if the user chosed peng;
+        }else {
+            peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            peng.setBounds(745, 570, 45, 57);
+            gamePanel.add(peng);
+            //default mode;
+        }
+        return false;
+    }
+
+    public boolean gang_button(boolean judge) {
+        JButton gang = new JButton();
+        gang.setBorderPainted(false);
+        gang.setFocusPainted(false);
+        gang.setContentAreaFilled(false);
+        //set the button of Gang;
+
+        //judge if the gang is available;
+        if (judge){
+            gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            gang.setBounds(795, 570, 45, 57);
+            gang.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Gang is available");
+                }
+            });
+            gamePanel.add(gang);
+            return true;
+            //return true if user choose gang;
+        }else {
+            gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            gang.setBounds(795, 570, 45, 57);
+            gamePanel.add(gang);
+            // default mode;
+        }
+        return false;
+    }
+    private boolean isAvailable(){
+        return true;
+    }
+
+    public void ting_button(Player player){
+        JButton ting = new JButton();
+        ting.setBorderPainted(false);
+        ting.setFocusPainted(false);
+        ting.setContentAreaFilled(false);
+
+//        if (player.isTing()){
+//            ting.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Ting.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+//            ting.addActionListener(new ActionListener() {
+//                public void actionPerformed(ActionEvent e) {
+//                    System.out.println("Ting is available");
+//                }
+//            });
+//        }else {
+//            ting.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Ting_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+//
+//        }
+        ting.setBounds(845, 570, 45, 57);
+
+        gamePanel.add(ting);
+    }
+
+
+    public void hu_button(ArrayList<Integer> hand,ArrayList<Integer> HuTiles,int Chi,int Peng,int Gang, ImagePanel gamePanel) {
+        Hu judge = new Hu();
+
+        JButton hu = new JButton();
+        hu.setBorderPainted(false);
+        hu.setFocusPainted(false);
+        hu.setContentAreaFilled(false);
+//        if (judge.isHu(hand, HuTiles, Chi, Peng, Gang)) {
+//            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+//            hu.addActionListener(new ActionListener() {
+//                public void actionPerformed(ActionEvent e) {
+//                    // create a new frame called score
+//                    JFrame scoreFrame = new JFrame("Score");
+//                    scoreFrame.setBounds( 550, 300, 400, 300);
+//
+//                    //suppose the score is 100, you can get the score and show it according to the actual situation
+//                    JLabel scoreLabel = new JLabel("Score: 100");
+//                    scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
+//
+//                    scoreFrame.add(scoreLabel);
+//                    scoreFrame.setVisible(true);
+//                }
+//            });
+//
+//        } else {
+//            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+//        }
+        hu.setBounds(895, 570, 45, 57);
+
+        gamePanel.add(hu);
+
+    }
+
+    public void skip_button(ImagePanel gamePanel) {
+        JButton skip = new JButton();
+        skip.setBorderPainted(false);
+        skip.setFocusPainted(false);
+        skip.setContentAreaFilled(false);
+
+        if (isAvailable()){
+            skip.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo.png").getImage().getScaledInstance(42, 55, Image.SCALE_SMOOTH)));
+            skip.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    System.out.println("Skip is available");
+                }
+            });
+        }else {
+            skip.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo_unable.png").getImage().getScaledInstance(42, 55, Image.SCALE_SMOOTH)));
+        }
+        skip.setBounds(945, 570, 42, 55);
+
+        gamePanel.add(skip);
+    }
+
+
 /////////////////////////add or delete tiles/////////////////////////////////////////////////////////////////////////
 
-    int startX = 250; //the position of use's tiles in hand
+    int startX = 230; //the position of use's tiles in hand
     int startY = 640;
     public void addTileToWindow() {  //written by Siying.Li
-        //tileNumber = new ArrayList<>(Arrays.asList());
-//        Random random = new Random();
-//        for (int i = 0; i < 13; i++) {
-//            int randomNumber;
-//            do {
-//                randomNumber = random.nextInt(37) + 11; // 生成 11 到 47 之间的随机数
-//            } while (randomNumber == 20 || randomNumber == 30 || randomNumber == 40);
-//            tileNumber.add(randomNumber);
-//        }
-//        System.out.print("Generated Random Numbers:");
-//        for (int number : tileNumber) {
-//            System.out.print(number+" ");
-//        }
-
-        //Collections.sort(tileNumber);
         listTiles(tileNumber, startX, startY);
-
-
         gamePanel.revalidate();
         gamePanel.repaint();
 
     }
 
-    private void hideTiles(){
+    public void computerTile(){
+
+    }
+
+    void hideTiles(){
         for (Component comp : gamePanel.getComponents()) {
             if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null) {
                 comp.setVisible(false);
@@ -216,13 +349,6 @@ public class GameWindow extends JFrame {
     }
 
     public void listTiles(List<Integer> tileNumber, int startX, int startY) {
-//        for (int i = 0; i < gamePanel.getComponentCount(); i++) {
-//            Component comp = gamePanel.getComponent(i);
-//            if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null) {
-//                gamePanel.remove(comp);
-//                i--;//唱注：这里i--是因为此处的牌会一张张减少。若保持13张牌则再修改
-//            }
-//        }
         if(tileNumber == null){
             System.out.println("tileNumber is null");
         }
@@ -342,10 +468,6 @@ public class GameWindow extends JFrame {
         ImageIcon scaledComIcon;
         JLabel headLabel;
         //create the image object;
-
-        //Label playerLabel;
-        //create player label to display name;
-
         com = new ImageIcon(imagePath);
         scaledCom = com.getImage().getScaledInstance(com.getIconWidth() / 9, com.getIconHeight() / 9, Image.SCALE_DEFAULT);
         scaledComIcon = new ImageIcon(scaledCom);
@@ -353,7 +475,6 @@ public class GameWindow extends JFrame {
         headLabel.setHorizontalAlignment(SwingConstants.CENTER);
         headLabel.setVerticalAlignment(SwingConstants.CENTER);
         // adjust the image;
-
 
         // Create a JPanel to hold the image and "Player" label
         JPanel imagePanel = new JPanel();
@@ -433,161 +554,7 @@ public class GameWindow extends JFrame {
                 break;
 
         }
-
     }
-
-    // Buttons of Chi Peng Gang Hu;
-    private void chi_button() {
-        //Movement movement = new Movement(playerMajiangs, numChi, numPeng, numGang);
-
-        JButton chi = new JButton();
-        chi.setBorderPainted(false);
-        chi.setFocusPainted(false);
-        chi.setContentAreaFilled(false);
-
-        if (isAvailable()){
-            chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            chi.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Chi is available");
-                }
-            });
-        }else {
-            chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-        }
-        chi.setBounds(690, 575, 40, 40);
-
-        gamePanel.add(chi);
-    }
-
-    private void peng_button() {
-        JButton peng = new JButton();
-        peng.setBorderPainted(false);
-        peng.setFocusPainted(false);
-        peng.setContentAreaFilled(false);
-        if (isAvailable()){
-            peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            peng.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Chi is available");
-                }
-            });
-        }else {
-            peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-        }
-        peng.setBounds(740, 575, 45, 45);
-
-        gamePanel.add(peng);
-    }
-
-    private void gang_button() {
-        JButton gang = new JButton();
-        gang.setBorderPainted(false);
-        gang.setFocusPainted(false);
-        gang.setContentAreaFilled(false);
-        if (isAvailable()){
-            gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            gang.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Chi is available");
-                }
-            });
-        }else {
-            gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-        }
-
-        gang.setBounds(790, 575, 45, 45);
-
-        gamePanel.add(gang);
-    }
-
-    private void ting_button(ArrayList<Integer> currenthand, ArrayList<Integer> HuTiles, int Chi, int Peng, int Gang) {
-        TingListener isTing = new TingListener();
-        JButton ting = new JButton();
-        ting.setBorderPainted(false);
-        ting.setFocusPainted(false);
-        ting.setContentAreaFilled(false);
-
-        if (isTing.isTing(currenthand, HuTiles, Chi, Peng, Gang)){
-            ting.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Ting.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            ting.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Ting is available");
-                }
-            });
-        }else {
-            ting.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Ting_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-
-        }
-        ting.setBounds(840, 575, 45, 45);
-
-        gamePanel.add(ting);
-    }
-
-
-    private void hu_button(ArrayList<Integer> hand,ArrayList<Integer> HuTiles,int Chi,int Peng,int Gang) {
-        Hu judge = new Hu();
-
-        JButton hu = new JButton();
-        hu.setBorderPainted(false);
-        hu.setFocusPainted(false);
-        hu.setContentAreaFilled(false);
-        if (judge.isHu(hand, HuTiles, Chi, Peng, Gang)) {
-            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            hu.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    // 创建新窗口
-                    JFrame scoreFrame = new JFrame("Score");
-                    scoreFrame.setBounds( 550, 300, 400, 300);
-
-                    // 假设分数为100，您可以根据实际情况获取分数并显示
-                    JLabel scoreLabel = new JLabel("Score: 100");
-                    scoreLabel.setHorizontalAlignment(SwingConstants.CENTER);
-
-                    scoreFrame.add(scoreLabel);
-                    scoreFrame.setVisible(true);
-                }
-            });
-
-        } else {
-            hu.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Hu_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-        }
-        hu.setBounds(895, 575, 45, 45);
-
-        gamePanel.add(hu);
-
-    }
-
-    private void skip_button() {
-        JButton skip = new JButton();
-        skip.setBorderPainted(false);
-        skip.setFocusPainted(false);
-        skip.setContentAreaFilled(false);
-
-        if (isAvailable()){
-            skip.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-            skip.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    System.out.println("Skip is available");
-                }
-            });
-        }else {
-            skip.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo_unable.png").getImage().getScaledInstance(45, 45, Image.SCALE_SMOOTH)));
-        }
-        skip.setBounds(945, 575, 45, 45);
-
-        gamePanel.add(skip);
-    }
-
-
-    private boolean isAvailable(){
-        return true;
-    }
-
-
-
-
-
 
     ///////////////////user profile photo///////////////////////////////
     private void chooseAvatar() {  //written by Siying.Li
@@ -595,7 +562,6 @@ public class GameWindow extends JFrame {
         avatarDialog.setSize(600, 400);  //set choose window
         avatarDialog.setLocationRelativeTo(this);
         avatarDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-
 
         JPanel avatarPanel = new JPanel();
         avatarPanel.setLayout(null);
@@ -624,8 +590,6 @@ public class GameWindow extends JFrame {
         avatarPanel.add(chooseLabel);
 
         ImageIcon Icon = new ImageIcon("src/profilephoto/crocodile.png");
-        int Width = Icon.getIconWidth();
-        int Height = Icon.getIconHeight();
 
         JButton crocodile = new JButton();
         crocodile.setBorderPainted(false); //set the button frame invisible;
@@ -712,7 +676,6 @@ public class GameWindow extends JFrame {
             }
         });
 
-
         avatarDialog.add(avatarPanel);
         avatarDialog.setVisible(true);
     }
@@ -734,7 +697,6 @@ public class GameWindow extends JFrame {
 
         gamePanel.add(avatarLabel);
 
-
         /////for input player's name/////
         String inputName = nameField.getText();
         JLabel nameLabel = new JLabel(inputName);
@@ -747,146 +709,12 @@ public class GameWindow extends JFrame {
         avatarPanel.setBounds(270, 560, scaledWidth, scaledHeight + 17); // Increase height to accommodate "Player" label
         gamePanel.add(avatarPanel);
 
-        ///////////////////////////////////
-
+        //////////////////////////////////////////
         gamePanel.revalidate();
         gamePanel.repaint();
-
     }
 
-
-    ///////////////////////dice button/////////////////////////
-    private void dice_button(int sum) {  //written by Jinyan.Shen
-
-        JButton num = new JButton("THROW DICE");
-        Font dice_font = new Font("Arial", Font.BOLD, 24);
-        num.setFocusPainted(false);
-        num.setFont(dice_font);
-        num.setHorizontalAlignment(SwingConstants.CENTER);
-        num.setBounds(500, 0, 200, 50);
-        gamePanel.add(num);
-        // set the button;
-
-        num.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (Component comp : gamePanel.getComponents()) {
-
-                    if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null && !comp.isVisible()) {
-
-                        comp.setVisible(true);
-                        comp.setEnabled(true);
-                    }
-                }
-
-                for (Component comp : gamePanel.getComponents()) {
-                    if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null) {
-                    }
-                }
-
-                Image scaledArrow;
-                ImageIcon scaledArrowIcon;
-                JLabel arrowLabel;
-
-                ImageIcon arrowIcon = choose_arrow(sum);
-                scaledArrow = arrowIcon.getImage().getScaledInstance(arrowIcon.getIconWidth() / 15, arrowIcon.getIconHeight() / 15, Image.SCALE_DEFAULT);
-                scaledArrowIcon = new ImageIcon(scaledArrow);
-                arrowLabel = new JLabel(scaledArrowIcon);
-                // set the arrowLabel object to display (and remove after 5s);
-
-                arrowLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                arrowLabel.setVerticalAlignment(SwingConstants.CENTER);
-                //set horizontal center & vertical center;
-
-                gamePanel.setLayout(null);
-                //remove the default lay
-
-                int labelWidth = scaledArrowIcon.getIconWidth();
-                int labelHeight = scaledArrowIcon.getIconHeight();
-                int panelWidth = gamePanel.getWidth();
-                int panelHeight = gamePanel.getHeight();
-                int x = (panelWidth - labelWidth) / 2;
-                int y = (panelHeight - labelHeight) / 2;
-                arrowLabel.setBounds(x, y, labelWidth, labelHeight);
-                //compute the position of the arrow;
-
-                gamePanel.add(arrowLabel);
-                // add the label picture to game screen;
-
-                JLabel sumLabel = new JLabel("" + sum);
-                Font label_font = new Font("Arial", Font.BOLD, 50);
-                sumLabel.setLocation(560, 250);
-                sumLabel.setFont(label_font);
-                sumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                sumLabel.setSize(70, 50);
-                sumLabel.setBackground(Color.WHITE);
-                sumLabel.setOpaque(true);
-                gamePanel.add(sumLabel);
-                revalidate();
-                repaint();
-                // set the label, show the sum of 2 dices;
-
-                gamePanel.remove(num);
-//                tileLabel.setEnabled(true);
-//                tileLabel.setVisible(true);
-                // remove the original button once the label occur;
-
-                Timer timer = new Timer();
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        SwingUtilities.invokeLater(() -> {
-                            gamePanel.remove(sumLabel);
-                            gamePanel.remove(arrowLabel);
-                            gamePanel.revalidate();
-                            gamePanel.repaint();
-
-                        });
-                        timer.cancel();
-                    }
-                }, 5000);
-                // set a timer, let the number of dice and the arrow label remain 5s and remove;
-
-            }
-        });
-
-    }
-    // set the dice to choose the host;
-
-    private ImageIcon choose_arrow(int sum) {
-        ImageIcon arrowIcon;
-
-        switch (sum % 4) {
-            case 1:
-                arrowIcon = new ImageIcon("src/window/ArrowDown.png");
-                break;
-            //East;
-
-            case 2:
-                arrowIcon = new ImageIcon("src/window/ArrowRight.png");
-                break;
-            //North;
-
-            case 3:
-                arrowIcon = new ImageIcon("src/window/ArrowTop.png");
-                break;
-            //West;
-
-            default:
-                arrowIcon = new ImageIcon("src/window/ArrowTop.png");
-                break;
-            //South;
-
-        }
-        return arrowIcon;
-    }
-
-    // This is the way to choose the host in first game;
-    // Set the arrow to choose the host. According to rules, from the East player, counting n times (n is the sum of 2 dices) in counter-clockwise, the last one is the host of this game;
-
-    //---------------------not in first game--------------------
-
+    //---------------------not the first game--------------------
     public String getFirstHost() {
         String host;
         /////////////////////add/////////////////////
@@ -909,83 +737,5 @@ public class GameWindow extends JFrame {
     }
     // Store the chosen host in the first round;
 
-
-
-    ///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
-    private void helpButtons() {  //written by Siying.Li
-        JButton helpButton = new JButton("HELP");  //set the help button
-        Font helpFont = new Font("Arial", Font.BOLD, 24);
-        helpButton.setFocusPainted(false);
-        helpButton.setFont(helpFont);
-        helpButton.setHorizontalAlignment(SwingConstants.CENTER);
-        helpButton.addActionListener(new ActionListener() {  //if click the game button, the menu window will be closed and the game window will be open
-            public void actionPerformed(ActionEvent e) {
-                JFrame helpWindow = new JFrame("Help Window");
-                helpWindow.setSize(240, 240);
-                helpWindow.setLayout(new GridLayout(3, 1));
-
-                JButton menuButton = new JButton("Main Menu");  //set the menu button
-                menuButton.setFocusPainted(false);
-                Font backFont = new Font("Arial", Font.BOLD, 30);
-                menuButton.setSize(80, 80);
-                menuButton.setFont(backFont);
-                menuButton.addActionListener(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {  //if click the menu button, the game window will be closed and the main menu window will be open
-                        helpWindow.dispose();
-                        dispose();
-                        new MainMenuWindow();
-                    }
-                });
-                helpWindow.add(menuButton);
-
-                JButton restartButton = new JButton("Restart");  //set the restart button
-                restartButton.setFocusPainted(false);
-                Font restartFont = new Font("Arial", Font.BOLD, 30);
-                restartButton.setSize(80, 80);
-                restartButton.setFont(restartFont);
-                restartButton.addActionListener(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {  //if click the restart button, the game window will reopen for a new game
-//                        try {
-//                            helpWindow.dispose();
-//                            dispose();
-//                            //new GameWindow().setVisible(true);
-//                            setNewGame();
-//                        }catch(InterruptedException ex) {
-//                            ex.printStackTrace();
-//                        }
-                        helpWindow.dispose();
-                        dispose();
-//                        GameWindow newGame = new GameWindow();
-//                        newGame.setVisible(true);
-                        try {
-                            agame();
-                        } catch (InterruptedException ex) {
-                            throw new RuntimeException(ex);
-                        }
-                    }
-                });
-                helpWindow.add(restartButton);
-
-                JButton rulesButton = new JButton("Rules");  //set the rules button
-                rulesButton.setFocusPainted(false);
-                Font rulesFont = new Font("Arial", Font.BOLD, 30);
-                rulesButton.setSize(80, 80);
-                rulesButton.setFont(rulesFont);
-                rulesButton.addActionListener(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {  //if click the rules button, the game window will not be closed and the rules window will be open
-                        new RulesWindow().setVisible(true);
-                    }
-                });
-                helpWindow.add(rulesButton);
-                helpWindow.setLocationRelativeTo(null);
-                helpWindow.setVisible(true);
-            }
-        });
-        helpButton.setBounds(1100, 0, 100, 50);  //set the button site and size
-        gamePanel.add(helpButton);
-    }
 }
 
