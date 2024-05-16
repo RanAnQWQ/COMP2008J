@@ -13,7 +13,7 @@ public class MainMenuWindow extends JFrame {
         setResizable(false);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        ImagePanel panel = new ImagePanel("src/window/background1.png");
+        ImagePanel panel = new ImagePanel("src/window/background/background1.png");
         add(panel);
         panel.setLayout(null);
 
@@ -32,8 +32,6 @@ public class MainMenuWindow extends JFrame {
         label1.setFont(font1);
         panel.add(label1);
 
-
-
 ///////////////////////Game button/////////////////////////////////////////////
         JButton gameButton = new JButton("Start Game");
         gameButton.setFocusPainted(false);
@@ -43,7 +41,13 @@ public class MainMenuWindow extends JFrame {
         gameButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 dispose();
-                new GameWindow().setVisible(true);
+                //new GameWindow().setVisible(true);
+                try{
+                    GameContent.agame();
+
+                }catch(InterruptedException ex){
+                    ex.printStackTrace();
+                }
             }
         });
         gameButton.setBounds(500, 500, 190, 50);
