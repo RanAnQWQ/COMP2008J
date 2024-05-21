@@ -6,39 +6,44 @@ import Player.Computer;
 import Player.InitPlayer;
 import Player.Movement;
 import Player.Player;
-import TingHelper.TingListener;
 import tiles.Tilemap;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.List;
 import java.util.Timer;
 import java.util.*;
-
-import static jdk.jfr.FlightRecorder.isAvailable;
-import static window.GameWindow.*;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class GameContent extends JFrame {
 
     public static GameWindow gameWindow;
+
     //Player player = new Player();
+    public static AddComputerTile addComputerTile;
 
+    public Lock lock = new ReentrantLock();
+    public Condition game = lock.newCondition();
+    public Condition click = lock.newCondition();
 
-    public static void agame() throws InterruptedException {  // the methods to create a game
+    public GameContent() {
+        addComputerTile = new AddComputerTile();
+    }
+    public void aGame() throws InterruptedException {  // the methods to create a game
         //GameWindow gameWindow = new GameWindow();  // initial the game window
+        int playerIndex;
         gameWindow = new GameWindow();
+
 
         // initial the players
         InitPlayer initPlayer = new InitPlayer();
 
         // create 4 players, and 3 of them are computers
         Player player = initPlayer.player;
-        Computer computer1 = initPlayer.computer1;
-                Computer computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
+        Computer computer1 = initPlayer.computer1, computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
         // create and shuffle the Majiang cards
         ShuffleMajiang shuffleMajiang = new ShuffleMajiang();
 
@@ -54,13 +59,17 @@ public class GameContent extends JFrame {
         Collections.sort(computer2.getPlayerMajiangs());
         Collections.sort(computer3.getPlayerMajiangs());
 
-        // in the first turn, the host will gain one more card to discard first
-        initPlayer.players.get(0).gainMajiang(1);  // index are got from the window
 
         gameWindow.tilemap = new Tilemap();
 
         //gameWindow.runButton(shuffleMajiang.river.get(shuffleMajiang.river.size()-1));
         gameWindow.setTileNumber(player.getPlayerMajiangs());
+        // display the computers' tiles
+        addComputerTile.addComputerTileToWindow(computer1.getPlayerMajiangs().size(),gameWindow.gamePanel);
+        addComputerTile.addComputerTileToWindow(computer2.getPlayerMajiangs().size(),gameWindow.gamePanel);
+        addComputerTile.addComputerTileToWindow(computer3.getPlayerMajiangs().size(),gameWindow.gamePanel);
+
+
         System.out.println("player: "+gameWindow.tileNumber);  //print the players tiles
         System.out.println("playersize: "+player.playerMajiangs.size());
 
@@ -73,24 +82,13 @@ public class GameContent extends JFrame {
         System.out.println("computer3: "+computer3.getPlayerMajiangs());
         System.out.println("size3: "+computer3.getPlayerMajiangs().size());
 
-        AddComputerTile addComputerTile =new AddComputerTile();  //add the computer players' tiles to window
-        addComputerTile.addComputerTileToWindow(computer1.getPlayerMajiangs().size(),gameWindow.gamePanel);
-        addComputerTile.addComputerTileToWindow(computer2.getPlayerMajiangs().size(),gameWindow.gamePanel);
-        addComputerTile.addComputerTileToWindow(computer3.getPlayerMajiangs().size(),gameWindow.gamePanel);
 
 
-
-        ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12,13, 14));//test chi
+        //ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test chi
         //player.isPeng();
-        boolean pengJudge = true;
-        boolean gangJudge = true;
-        gameWindow.addTileToWindow(); // add user player's tiles to window
-        gameWindow.hideTiles();
-        gameWindow.setbuttons(b, pengJudge, gangJudge);
+        //boolean pengJudge = true;
+        //boolean gangJudge = true;
 
-        // in the first turn, the host will discard a card
-        System.out.println(gameWindow.cardToDiscard);
-        //initPlayer.players.get(0).discardMajiang(player.playerMajiangs.indexOf(gameWindow.cardToDiscard));  // index are got from the window
 
 
 
@@ -100,34 +98,74 @@ public class GameContent extends JFrame {
         boolean computer2Hu = Hu.isHu(computer2.getPlayerMajiangs(), computer2.getCardsToDisplay());
         boolean computer3Hu = Hu.isHu(computer3.getPlayerMajiangs(), computer3.getCardsToDisplay());
 
+        //while ((!playerHu) && (!computer1Hu) && (!computer2Hu) && (!computer3Hu)) {
+            int turn =initPlayer.playerIndex;
+            //for (turn = 0; turn < 4; turn++){
+                // if it's player's turn
+                if (turn == initPlayer.playerIndex){
+                    // gain a card
+                    player.gainCard(0);
+
+                    lock.lock();
+                    try {
+                        click.await();
+                        gameWindow.addTileToWindow(lock, game, click); // add user player's tiles to window
+                    } finally {
+                        lock.unlock();
+                    }
+
+                    gameWindow.hideTiles();
+                    //gameWindow.setbuttons(b, pengJudge, gangJudge);
+
+                    // in the first turn, the host will discard a card
+                    System.out.println(gameWindow.cardToDiscard);
+                    System.out.println("Clicked!!");
+
+
+                    // conduct gw 644
+
+                    // add the card into the river (GameWindow line 683-689)
+
+
+                    gameWindow.resetTurn();
+
+                }
+
+                // computers' turns
+                else{
+                    //gameWindow.setbuttons(b, pengJudge, gangJudge);
+
+                    // in the first turn, the host will discard a card
+                    System.out.println(gameWindow.cardToDiscard);
+
+
+                    // conduct gw 644
+
+                    // add the card into the river (GameWindow line 683-689)
+
+
+                    gameWindow.resetTurn();
+
+                }
+            //}
+            turn++;
+        //}
+
 
         if (ShuffleMajiang.river.size() > 0){// 暂时没有进循环//////////////////////
+            System.out.println("size: "+ ShuffleMajiang.river.size());
+            System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
 
-            // take turns to play, always start with the host
-            for (int turn = 1; turn < 4; turn++) {
-                // if any of the players Hu, the game will end
-                if ((!playerHu) && (!computer1Hu) && (!computer2Hu) && (!computer3Hu)) {
-                    // in one's turn, the movement of Chi, Peng, Gang will happen
-
-                    int riverLastCard = ShuffleMajiang.river.get(ShuffleMajiang.riverIndex);
-                    Movement movement1 = new Movement(riverLastCard, initPlayer.players.get(turn).ChiNumber, initPlayer.players.get(turn).PengNumber, initPlayer.players.get(turn).GangNumber);
-
-                    // in one's turn, the player will gain a card and discard one
-                    initPlayer.players.get(turn).gainMajiang(1);  // index are got from the window
+            // remove the card
+            initPlayer.players.get(initPlayer.playerIndex).discardMajiang(ShuffleMajiang.riverIndex);
 
 
-                    Movement movement2 = new Movement(initPlayer.players.get((turn + 1) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 1) % 4).ChiNumber, initPlayer.players.get((turn + 1) % 4).PengNumber, initPlayer.players.get((turn + 1) % 4).GangNumber);
-                    Movement movement3 = new Movement(initPlayer.players.get((turn + 2) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 2) % 4).ChiNumber, initPlayer.players.get((turn + 2) % 4).PengNumber, initPlayer.players.get((turn + 2) % 4).GangNumber);
-                    Movement movement4 = new Movement(initPlayer.players.get((turn + 3) % 4).getPlayerMajiangs(), initPlayer.players.get((turn + 3) % 4).ChiNumber, initPlayer.players.get((turn + 3) % 4).PengNumber, initPlayer.players.get((turn + 3) % 4).GangNumber);
 
-                /*
-        // after a Peng or Gang happens, the order of turn will change
-        if ( this.PengNumber != PengNumber || this.GangNumber != GangNumber ){
-             currentPlayer = ;
-        }*/
-                }
-            }
         }
+
+
+        //gameWindow.addTileToWindow(player); // add user player's tiles to window
+        //gameWindow.hideTiles();
     }
 
     ///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
@@ -170,7 +208,7 @@ public class GameContent extends JFrame {
                         helpWindow.dispose();
                         gameWindow.dispose();
                         try {
-                            agame();
+                            aGame();
                         } catch (InterruptedException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -213,10 +251,11 @@ public class GameContent extends JFrame {
         num.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Component comp : gamePanel.getComponents()) {
+                for (Component comp : gamePanel.getComponents()) {// the players' tiles will be showed after clicking the dice button
                     if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null && !comp.isVisible()) {
                         comp.setVisible(true);
-                        comp.setEnabled(true);  // the players' tiles will be showed after clicking the dice button
+                        comp.setEnabled(true);
+                       addComputerTile.showComputerTile();
                     }
                 }
 
@@ -287,42 +326,55 @@ public class GameContent extends JFrame {
             }
         });
     }
+
     public static ImageIcon choose_arrow(int sum) {
         ImageIcon arrowIcon;
 
         switch (sum % 4) {
             case 1:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowDown.png");
                 break;
             //East;
 
             case 2:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowRight.png");
                 break;
             //North;
 
             case 3:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowTop.png");
                 break;
             //West;
 
             default:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
+                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowLeft.png");
                 break;
             //South;
 
         }
         return arrowIcon;
     }
+    //---------------------not the first game--------------------
+    public String getFirstHost() {
+        String host;
+        int sum = gameWindow.getsum();
+        /////////////////////add/////////////////////
+        switch (sum % 4) {
+            case 1:
+                host = "East";
+                break;
+            case 2:
+                host = "North";
+                break;
+            case 3:
+                host = "West";
+                break;
+            default:
+                host = "South";
+                break;
+        }
+        return host;
 
-
-
-
-
-    private boolean isAvailable(){
-        return true;
     }
-
-
+    // Store the chosen host in the first round;
 }
-
