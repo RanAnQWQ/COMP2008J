@@ -1,5 +1,4 @@
 package TingHelper;
-import Player.Player;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -12,11 +11,11 @@ import java.util.Arrays;
 public class testTing {
     @Test
     public void ting() {
-        Player player1=new Player();
-        Player player2=new Player();
-        Player player3=new Player();
-        Player player4=new Player();
-        Player player5=new Player();
+        Player.HumanPlayer player1=new Player.HumanPlayer();
+        Player.HumanPlayer player2=new Player.HumanPlayer();
+        Player.HumanPlayer player3=new Player.HumanPlayer();
+        Player.HumanPlayer player4=new Player.HumanPlayer();
+        Player.HumanPlayer player5=new Player.HumanPlayer();
         TingListener Listener=new TingListener();
 
         player1.ChiNumber=2;
