@@ -4,7 +4,7 @@ import GameTable.ShuffleMajiang;
 import HuHelper.Hu;
 import Player.Computer;
 import Player.InitPlayer;
-import Player.Movement;
+import Player.HumanPlayer;
 import Player.Player;
 import tiles.Tilemap;
 
@@ -14,39 +14,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Timer;
 import java.util.*;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class GameContent extends JFrame {
 
     public static GameWindow gameWindow;
 
-    //Player player = new Player();
     public static AddComputerTile addComputerTile;
 
-    public Lock lock = new ReentrantLock();
-    public Condition game = lock.newCondition();
-    public Condition click = lock.newCondition();
+    public static String host;
+    public static int hostNumber;
 
     public GameContent() {
         addComputerTile = new AddComputerTile();
     }
-    public void aGame() throws InterruptedException {  // the methods to create a game
+
+    public  void aGame() throws InterruptedException {  // the methods to create a game
+
         //GameWindow gameWindow = new GameWindow();  // initial the game window
-        int playerIndex;
         gameWindow = new GameWindow();
-
-
+        //dice_button(sum, gameWindow.gamePanel);
         // initial the players
         InitPlayer initPlayer = new InitPlayer();
 
-        // create 4 players, and 3 of them are computers
-        Player player = initPlayer.player;
-        Computer computer1 = initPlayer.computer1, computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
-        // create and shuffle the Majiang cards
-        ShuffleMajiang shuffleMajiang = new ShuffleMajiang();
 
+        // create 4 players, and 3 of them are computers
+        HumanPlayer player = initPlayer.player;
+
+        Computer computer1 = initPlayer.computer1, computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
+        ShuffleMajiang shuffleMajiang = new ShuffleMajiang();
 
         // deal the cards for the first time evenly (13 cards each)
         ShuffleMajiang.maJiangsIndex=0;
@@ -59,114 +54,127 @@ public class GameContent extends JFrame {
         Collections.sort(computer2.getPlayerMajiangs());
         Collections.sort(computer3.getPlayerMajiangs());
 
+        String host=getFirstHost();
+        System.out.println(host);
+        int index;
+
+        // in the first turn, the host will gain one more card to discard first
+        System.out.println("aaaaaaaaaaaaaa");
+        // index are got from the window
 
         gameWindow.tilemap = new Tilemap();
 
         //gameWindow.runButton(shuffleMajiang.river.get(shuffleMajiang.river.size()-1));
-        gameWindow.setTileNumber(player.getPlayerMajiangs());
-        // display the computers' tiles
-        addComputerTile.addComputerTileToWindow(computer1.getPlayerMajiangs().size(),gameWindow.gamePanel);
-        addComputerTile.addComputerTileToWindow(computer2.getPlayerMajiangs().size(),gameWindow.gamePanel);
-        addComputerTile.addComputerTileToWindow(computer3.getPlayerMajiangs().size(),gameWindow.gamePanel);
-
-
-        System.out.println("player: "+gameWindow.tileNumber);  //print the players tiles
+        //gameWindow.setTileNumber(player.getPlayerMajiangs());
+        System.out.println("player: "+player.playerMajiangs);  //print the players tiles
         System.out.println("playersize: "+player.playerMajiangs.size());
 
-        System.out.println("computer1: "+computer1.getPlayerMajiangs());
-        System.out.println("size1: "+computer1.getPlayerMajiangs().size());
+        gameWindow.setComputer1(computer1);
+        System.out.println("computer1: "+computer1.playerMajiangs);
+        System.out.println("size1: "+computer1.playerMajiangs.size());
 
+        gameWindow.setComputer2(computer2);
         System.out.println("computer2: "+computer2.getPlayerMajiangs());
         System.out.println("size2: "+computer2.getPlayerMajiangs().size());
 
+        gameWindow.setComputer3(computer3);
+        gameWindow.setHuman(player);
         System.out.println("computer3: "+computer3.getPlayerMajiangs());
         System.out.println("size3: "+computer3.getPlayerMajiangs().size());
 
+        addComputerTile.addComputer1Tile(computer1.getPlayerMajiangs().size(),gameWindow.gamePanel);
+        addComputerTile.addComputer2Tile(computer2.getPlayerMajiangs().size(),gameWindow.gamePanel);
+        addComputerTile.addComputer3Tile(computer3.getPlayerMajiangs().size(),gameWindow.gamePanel);
 
 
-        //ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test chi
+
+        ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test chi
         //player.isPeng();
-        //boolean pengJudge = true;
-        //boolean gangJudge = true;
+        ArrayList<Integer> c =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test ting
+        boolean pengJudge = true;
+        boolean gangJudge = true;
+        gameWindow.addTileToWindow(player.playerMajiangs); // add user player's tiles to window
+        gameWindow.hideTiles();
+        addComputerTile.hideComputerTiles();
+       // gameWindow.setbuttons(b, pengJudge, gangJudge,c, false, false);
+
+        // in the first turn, the host will discard a card
+        System.out.println(",,,,,,"+gameWindow.cardToDiscard);
+
+    }
 
 
+    public void init(String host){
+        if(host.equals("East")){
+            //hostNumber=0;
+            hostNumber=4;
+
+        }else if(host.equals("South")){
+            //hostNumber=1;
+            hostNumber=3;
+
+        }else if(host.equals("West")){
+            //hostNumber=2;
+            hostNumber=2;
+
+        }else if(host.equals("North")){
+            //hostNumber=3;
+            hostNumber=1;
+
+        }
+        gameWindow.startRobotPlaySequence(hostNumber);
+    }
 
 
-        // to judge if any of the players will Hu or not
-        boolean playerHu = Hu.isHu(player.getPlayerMajiangs(), player.getCardsToDisplay());
-        boolean computer1Hu = Hu.isHu(computer1.getPlayerMajiangs(), computer1.getCardsToDisplay());
-        boolean computer2Hu = Hu.isHu(computer2.getPlayerMajiangs(), computer2.getCardsToDisplay());
-        boolean computer3Hu = Hu.isHu(computer3.getPlayerMajiangs(), computer3.getCardsToDisplay());
-
-        //while ((!playerHu) && (!computer1Hu) && (!computer2Hu) && (!computer3Hu)) {
-            int turn =initPlayer.playerIndex;
-            //for (turn = 0; turn < 4; turn++){
-                // if it's player's turn
-                if (turn == initPlayer.playerIndex){
-                    // gain a card
-                    player.gainCard(0);
-
-                    lock.lock();
-                    try {
-                        click.await();
-                        gameWindow.addTileToWindow(lock, game, click); // add user player's tiles to window
-                    } finally {
-                        lock.unlock();
-                    }
-
-                    gameWindow.hideTiles();
-                    //gameWindow.setbuttons(b, pengJudge, gangJudge);
-
-                    // in the first turn, the host will discard a card
-                    System.out.println(gameWindow.cardToDiscard);
-                    System.out.println("Clicked!!");
-
-
-                    // conduct gw 644
-
-                    // add the card into the river (GameWindow line 683-689)
-
-
-                    gameWindow.resetTurn();
-
-                }
-
-                // computers' turns
-                else{
-                    //gameWindow.setbuttons(b, pengJudge, gangJudge);
-
-                    // in the first turn, the host will discard a card
-                    System.out.println(gameWindow.cardToDiscard);
-
-
-                    // conduct gw 644
-
-                    // add the card into the river (GameWindow line 683-689)
-
-
-                    gameWindow.resetTurn();
-
-                }
-            //}
-            turn++;
-        //}
-
-
-        if (ShuffleMajiang.river.size() > 0){// 暂时没有进循环//////////////////////
-            System.out.println("size: "+ ShuffleMajiang.river.size());
-            System.out.println("iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-
-            // remove the card
-            initPlayer.players.get(initPlayer.playerIndex).discardMajiang(ShuffleMajiang.riverIndex);
-
-
-
+    int decideNextComputer(Integer card, Computer computer1, Computer computer2, Computer computer3,HumanPlayer player){
+        if (computer1.isGang(card)) {
+            computer1.Gang(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 1;
+        }else if(computer2.isGang(card)){
+            computer2.Gang(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 2;
+        }else if(computer3.isGang(card)){
+            computer3.Gang(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 3;
+        }else if(computer1.isPeng(card)){
+            computer1.Peng(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 1;
+        }else if(computer2.isPeng(card)){
+            computer2.Peng(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(),gameWindow.gamePanel);
+            return 2;
+        }else if(computer3.isPeng(card)){
+            computer3.Peng(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 3;
+        }else if(!computer1.isChi(card).isEmpty()){
+            computer1.Chi(card);
+            player.playerRiver.remove(card);
+            addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
+            gameWindow.addTileToWindow(player.playerMajiangs);
+            return 1;
+        }else {
+            return 1;
         }
 
 
-        //gameWindow.addTileToWindow(player); // add user player's tiles to window
-        //gameWindow.hideTiles();
     }
+
 
     ///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
     void helpButtons(ImagePanel gamePanel) {  //written by Siying.Li
@@ -236,8 +244,9 @@ public class GameContent extends JFrame {
         gamePanel.add(helpButton);
     }
 
-////////////////////////////dice button///////////////////////////
-    public void dice_button(int sum,ImagePanel gamePanel) {  //written by Jinyan.Shen
+
+    ////////////////////////////dice button///////////////////////////
+    public void dice_button(int sum, ImagePanel gamePanel) {  //written by Jinyan.Shen
 
         JButton num = new JButton("THROW DICE");
         Font dice_font = new Font("Arial", Font.BOLD, 24);
@@ -255,7 +264,7 @@ public class GameContent extends JFrame {
                     if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null && !comp.isVisible()) {
                         comp.setVisible(true);
                         comp.setEnabled(true);
-                       addComputerTile.showComputerTile();
+                        addComputerTile.showComputerTile();
                     }
                 }
 
@@ -323,6 +332,9 @@ public class GameContent extends JFrame {
                     }
                 }, 5000);
                 // set a timer, let the number of dice and the arrow label remain 5s and remove;
+                init(host);
+                System.out.println("host:"+host);
+                System.out.println("hostnumber"+hostNumber);
             }
         });
     }
@@ -332,22 +344,22 @@ public class GameContent extends JFrame {
 
         switch (sum % 4) {
             case 1:
-                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowDown.png");
+                arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
                 break;
             //East;
 
             case 2:
-                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowRight.png");
+                arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
                 break;
             //North;
 
             case 3:
-                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowTop.png");
+                arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
                 break;
             //West;
 
             default:
-                arrowIcon = new ImageIcon("Majiang/src/window/Arrow/ArrowLeft.png");
+                arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
                 break;
             //South;
 
@@ -356,25 +368,36 @@ public class GameContent extends JFrame {
     }
     //---------------------not the first game--------------------
     public String getFirstHost() {
-        String host;
-        int sum = gameWindow.getsum();
-        /////////////////////add/////////////////////
+        int sum;
+
+        try {
+            sum = gameWindow.getsum();
+        } catch (NullPointerException e) {
+            System.out.println("The game hasn't started yet, no host, waiting for throwing dice!");
+            return null;
+        }
+        System.out.println("sum:"+sum);
         switch (sum % 4) {
             case 1:
-                host = "East";
+                //host = "South";
+                host="East";
                 break;
             case 2:
                 host = "North";
                 break;
             case 3:
-                host = "West";
+                //host = "North";
+                host="West";
                 break;
             default:
-                host = "South";
+                host="South";
+                //host = "East";
+
                 break;
         }
-        return host;
 
+        return host;
     }
+
     // Store the chosen host in the first round;
 }
