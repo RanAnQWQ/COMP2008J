@@ -4,44 +4,22 @@ import GameTable.ShuffleMajiang;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.Random;
 
 public class Computer extends Player{
-    public boolean isHost;
-
-    // a boolean to tell if it fits the Chi condition
-    public boolean isChi = false;
-    // the number of performing Chi
-    public static int ChiNumber = 0;
-
-    // the number of performing Peng
-    public static int PengNumber = 0;
-
-    // the number of performing Gang
-    public static int GangNumber = 0;
-
-    // placing the players' cards
-    private ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
-
-    // cards to display after performing movements
-    private ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
-
-
-
-
-    /**
-     * same as Player!
-     * gainMajiang(): pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
-     * @param index: get the position of the card
-     */
-
+    public int discardMajiang(int index) {
+        int card = playerMajiangs.get(index);
+        playerMajiangs.remove(index);
+        ShuffleMajiang.river.add(card);
+        ShuffleMajiang.riverIndex++;
+        return card;
+    }
 
 
     /**
      * nextCard(): decide which card should be discarded for the computer.
      *
-     * return: an index of the card to be discarded in the player's cards
+     * return: the index of the card to be discarded in the player's cards
      *
      * Algorithm: if there exists card hard to be matched (as a couple, triple or a sequence),
      *            discard the first encountered one.
@@ -51,7 +29,7 @@ public class Computer extends Player{
     public int nextCard(){
         // if nothing happen after, then randomly pick one card to discard
         Random num = new Random();
-        int index = num.nextInt(playerMajiangs.size());
+        int index = num.nextInt(playerMajiangs.size()-1);
 
         // check if there exists card hard to be matched (as a couple or triple)
         for (int element: playerMajiangs){
@@ -65,12 +43,11 @@ public class Computer extends Player{
             if (frequency < 2 || (! middle) || (! left) || (! right)) {
                 // discard the first encountered one
                 index = playerMajiangs.indexOf(element);
+                break;
             }
         }
         return index;
     }
-
-
 
 
     /**
@@ -86,7 +63,6 @@ public class Computer extends Player{
     }
 
 
-
     /**
      * Chi: When you can form a sequence with a tile discarded by your previous player,
      *      you can choose to eat this tile to complete the sequence.
@@ -100,9 +76,10 @@ public class Computer extends Player{
             Aside(card + 1);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-            playerRiver.remove(playerRiver.size() - 1);
+            ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
         }
@@ -112,9 +89,10 @@ public class Computer extends Player{
             Aside(card + 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-            playerRiver.remove(playerRiver.size() - 1);
+            ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
         }
@@ -124,72 +102,13 @@ public class Computer extends Player{
             Aside(card - 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-            playerRiver.remove(playerRiver.size() - 1);
+            ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
         }
-
-        // test
-        //System.out.println(ChiNumber);
     }
-
-
-    /**
-     * Peng: When a tile discarded by another player
-     *       matches the two identical tiles in your hand to form a set.
-     *       Whether it's your turn to play or not, you can choose to peng the set.
-     *       For example, if you already have two 8 tiles and another player discards an 8,
-     *       you can collide the 8 to form the set 8, 8, 8.
-     *
-     */
-    public void Peng(int card){
-        // iterate through the player's cards to find if the player have 2 same cards with every last card in the river
-        int frequency = Collections.frequency(playerMajiangs, card);
-        // if the player have 2 same cards with one card in the river
-        if (frequency == 2) {
-            // remove these 2 same cards from the player's card
-            // then add these 2 same cards to a new array to display the Peng cards
-            Aside(card);
-            Aside(card);
-            // add this card aside to display the card
-            cardsToDisplay.add(card);
-            // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-            playerRiver.remove(playerRiver.size() - 1);
-            // add up the times of Peng
-            PengNumber++;
-        }
-    }
-
-    /**
-     * Gang: When you can have the same 4 cards. It can be divided into overt gang and covert gang.
-     *      Overt Gang: When you have three same tiles and another player discards the rest tile,
-     *                  you can choose to gang the forth tile and show them in public.
-     *      Covert Gang: When you have three same tiles, and you draw the forth tile by yourself,
-     *                  this make up the covert gang, and you don't need to show them in public.
-     * In this case, the overt gang is shown below.
-     */
-    public void Gang(int card){
-        // iterate through the player's cards to find if the player have 3 same cards with this card
-        int frequency = Collections.frequency(playerMajiangs, card);
-        if (frequency==3) {
-            // remove these 3 cards from the player's card
-            // then add these 3 cards to a new array to display the Gang cards
-            Aside(card);
-            Aside(card);
-            Aside(card);
-            // add this card aside to display the card
-            cardsToDisplay.add(card);
-            // remove this card from the river (both the player's river and the whole river)
-            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-            playerRiver.remove(playerRiver.size() - 1);
-            // add up the times of Gang
-            GangNumber++;
-        }
-    }
-
-
 
 }
