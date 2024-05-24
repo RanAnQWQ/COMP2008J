@@ -1,21 +1,12 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
-import Majiang.Majiang;
-import Majiang.MajiangFeng;
-import Majiang.MajiangNumber;
+import HuHelper.Hu;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-
-/**
- * Player class aims to create a player and its features.
- * @author Qiyue Zhu
- */
-public class Player {
-    // the boss is decided in the GameWindow and will be assigned in the Game class.
+public abstract class Player {
+    // the boss is decided in the InitPlayer class
     public boolean isHost;
 
     // a boolean to tell if it fits the Chi condition
@@ -30,17 +21,8 @@ public class Player {
     // the number of performing Gang
     public static int GangNumber;
 
-    // every player's cards
+    // cards in player's hand
     public ArrayList<Integer> playerMajiangs=new ArrayList<Integer>();
-
-    // cards to display after performing movements
-    public ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
-
-    // player's river (the discarded cards)
-    public ArrayList<Integer> playerRiver = new ArrayList<>();
-
-    // the sets of Chi user might choose
-    public ArrayList<Integer> set=new ArrayList<>();
 
     public ArrayList<Integer> getPlayerMajiangs() {
         return playerMajiangs;
@@ -50,50 +32,48 @@ public class Player {
         this.playerMajiangs = playerMajiangs;
     }
 
+    // cards to display after performing movements
+    public ArrayList<Integer> cardsToDisplay = new ArrayList<Integer>();
+
+    public ArrayList<Integer> getCardsToDisplay() {
+        return cardsToDisplay;
+    }
+
+    // player's river (the discarded cards)
+    public ArrayList<Integer> playerRiver = new ArrayList<>();
+
+    public boolean isTing;
+    public boolean isHu;
+    public boolean Tinging;
+    public HashMap<Integer,ArrayList<Integer>> pairs=new HashMap<>();
+    public ArrayList<Integer> TingTiles=new ArrayList();
+    ArrayList<Integer> TingThrowTiles=new ArrayList<>();
+    public ArrayList<Integer> set=new ArrayList<>();
+
+
+
     /**
      * gainMajiang: pick one from maJiangs in ShuffleMaJiang and put it in playerMaJiangs
-     * @param index: get the position of the card
      */
-    public void gainMajiang(int index){
-        // pick a card from the cards and put it into the player's hand
-        playerMajiangs.add(ShuffleMajiang.maJiangs.get(index));
+    public void gainMajiang(){
+        // pick a card from the cards and put it into the extra place
+        playerMajiangs.add(ShuffleMajiang.maJiangs.get(0));
         // remove this card from maJiangs
-        ShuffleMajiang.maJiangs.remove(index);
-        Collections.sort(playerMajiangs);
-
-        // pick a card from the cards and put it into the player's hand
-//        playerMajiangs.add(ShuffleMajiang.maJiangs.get(index));
-//        // remove this card from maJiangs
-//        ShuffleMajiang.maJiangs.remove(index);
-//        Collections.sort(playerMajiangs);
+        ShuffleMajiang.maJiangs.remove(0);
     }
 
+    /**
+     * discardMajiang()：remove a card from the player, the card will be chosen by nextCard()
+     */
+    public abstract int discardMajiang(int index);
 
-    public void Aside(ArrayList<Integer> set, int cardIndex){
-        if (cardIndex == 2){
-            // add this card aside to display the card
-            cardsToDisplay.add(set.get(0));
-            cardsToDisplay.add(set.get(1));
-            // remove the card from the player's card
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
-        } else if (cardIndex == 1) {
-            // add this card aside to display the card
-            cardsToDisplay.add(set.get(0));
-            cardsToDisplay.add(set.get(2));
-            // remove the card from the player's card
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
-        } else if (cardIndex == 0) {
-            // add this card aside to display the card
-            cardsToDisplay.add(set.get(1));
-            cardsToDisplay.add(set.get(2));
-            // remove the card from the player's card
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
-        }
+
+    public void discardAfterTing(){
+        int card=playerMajiangs.remove(playerMajiangs.size()-1);
+        playerRiver.add(card);
+        ShuffleMajiang.river.add(card);
+        ShuffleMajiang.riverIndex++;
     }
-
 
 
     /**
@@ -142,79 +122,6 @@ public class Player {
 
 
 
-
-    /**
-     * Chi: When you can form a sequence with a tile discarded by your previous player,
-     *      you can choose to eat this tile to complete the sequence.
-     *      For example, if your hand tiles are 3, 4, 5, and your previous player discards 2,
-     *      you can eat the 2 to form the sequence 2, 3, 4.
-     *
-     * listener is first assigned as the chosen position of the Chi patterns.
-     *
-     * If set have 3 cards, meaning there will only be one choice for player.
-     *
-     * If set have 6 cards, there will be 2 choices for the player:
-     *    choose the left (listener = 0) or the right(listener = 1) half of the set.
-     *    To notice, if a card both have its left 2 neighbours and its right 2 neighbours,
-     *    the length of the set should be 9 instead of 6.
-     *
-     * If set have 9 cards, there will be 3 choices for the player:
-     *    choose the left (listener = 0), the middle(listener = 1) or the right(listener = 2) part of the set.
-     *
-     * In this process, listener is set finally as the index of the pattern chosen.
-     */
-    public void Chi(ArrayList<Integer> set, int listener, int card) {
-        // listener=3
-        // if set has 3 cards
-        if (listener == 3){
-            listener = set.indexOf(card);
-        }
-        else if (set.size() == 6) {
-            // if cards fit: (card-2, card-1, card), card-1, card, card+1
-            // listener=0 (card on the left)
-            // if cards fit: (card-1, card, card+1), card, card+1, card+2
-            // listener=0 (card in the middle)
-            if (listener == 0) {
-                set = new ArrayList<>(set.subList(0, 3));
-                listener = set.indexOf(card);
-            }
-            // if cards fit: card-1, card, card+1, (card, card+1, card+2)
-            // listener=1 (card on the right)
-            // if cards fit: card-2, card-1, card, (card-1, card, card+1)
-            // listener=1 (card in the middle)
-            else {
-                set = new ArrayList<>(set.subList(3, 6));
-                listener = set.indexOf(card) - 1;
-            }
-        }
-        else if (set.size() == 9){
-            // if cards fit: (card-2, card-1, card), card-1, card, card+1, card, card+1, card+2
-            if (listener == 2){
-                set = new ArrayList<>(set.subList(0, 3));
-            }
-            // if cards fit: card-2, (card-1, card, card+1), card+2
-            else if (listener == 1) {
-                set = new ArrayList<>(set.subList(3, 6));
-            }
-            // if cards fit:  card-1, (card, card+1, card+2)
-            else if (listener == 0) {
-                set = new ArrayList<>(set.subList(6, 9));
-            }
-        }
-        // add this card aside to display the card
-        // remove the card from the player's card
-        Aside(set, listener);
-        cardsToDisplay.add(set.get(listener));
-        Collections.sort(cardsToDisplay);
-        // remove this card from the river (both the player's river and the whole river)
-        ShuffleMajiang.river.remove(ShuffleMajiang.river.size()-1);
-        playerRiver.remove(playerRiver.size() - 1);
-        // add up the number of Chi
-        ChiNumber++;
-    }
-
-
-
     /**
      * isPeng: isPeng method is written to test if the card just discarded fits the Peng condition:
      *        has 2 same cards to complete a set.
@@ -233,6 +140,7 @@ public class Player {
         }
         return false;
     }
+
 
 
     /**
@@ -264,7 +172,6 @@ public class Player {
 
 
 
-
     /**
      * isGang: isGang method is written to test if the card just discarded fits the Gang condition:
      *        has 3 more same cards with the given card.
@@ -283,6 +190,8 @@ public class Player {
         }
         return false;
     }
+
+
 
     /**
      * Gang: When you can have the same 4 cards. It can be divided into overt gang and covert gang.
@@ -313,6 +222,155 @@ public class Player {
         GangNumber++;
     }
 
+
+
+    //Hu method
+    public static boolean isWinningType(ArrayList<Integer> hand, ArrayList<Integer> HuTiles ) {
+        // Implement your winning hand logic here
+        // For simplicity, let's assume a winning hand is a hand with 14 tiles
+        return hand.size()+ HuTiles.size() >= 14;
+    }
+
+
+    private static ArrayList<Integer> getPairs(ArrayList<Integer> hand) {
+        Collections.sort(hand);
+        ArrayList<Integer> res=new ArrayList<>();
+        if (null != hand && hand.size() > 1) {
+            for (int i = 0; i < hand.size() - 1; i++) {
+                if (hand.get(i) == hand.get(i+1)) {
+                    res.add(hand.get(i));
+                    i++;
+                }
+            }
+        }
+        return res;
+
+    }
+
+    // Method to count the number of triplets in the hand
+
+    private static ArrayList<Integer> removeTriplets(ArrayList<Integer> temp) {
+        Iterator<Integer> iterator = temp.iterator();
+
+        while (iterator.hasNext()) {
+            Integer tile = iterator.next();
+            int count = countTiles(temp, tile);
+
+            if (count >= 3) {
+                int removals = count >= 4 ? 4 : 3;  // Remove 4 if there are quadruplets, otherwise remove 3
+                for (int i = 0; i < removals; i++) {
+                    iterator.remove();             // Remove the current element safely
+                    if (i < removals - 1) {        // If not the last iteration, move to next element
+                        iterator.next();
+                    }
+                }
+                if (iterator.hasNext()) {          // Move to next element if exists, or iterator will automatically end
+                    iterator.next();
+                }
+            }
+        }
+        return temp;
+    }
+
+
+    // Method to count the number of sequences in the hand
+    private static ArrayList<Integer> removeSequences(ArrayList<Integer> temp) {
+        Collections.sort(temp);
+        //remove Feng tiles
+        int[] feng={41,42,43,44,45,46,47};
+        for (Integer i:feng){
+            if(temp.contains(i)){
+                temp.remove(i);
+            }
+        }
+        ArrayList<Integer> tempCards = (ArrayList<Integer>) temp.clone();
+        for (int i = 0; i < temp.size() - 2; i++) {
+            if (temp.get(i) + 1 == temp.get(i+1)&& temp.get(i+1)+ 1 == temp.get(i+2)) {
+                Integer a=temp.get(i);
+                Integer b=temp.get(i+1);
+                Integer c=temp.get(i+2);
+                tempCards.remove(a);
+                tempCards.remove(b);
+                tempCards.remove(c);
+                i += 2; // Skip the next two tiles as they're part of the sequence
+            }
+        }
+        return tempCards;
+    }
+
+    // Method to count the occurrences of a specific tile in the hand
+    private static int countTiles(ArrayList<Integer> hand, int tile) {
+        int count = 0;
+        for (int t : hand) {
+            if (t == tile) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    public boolean isHu(ArrayList<Integer> hand,ArrayList<Integer> HuTiles){
+        if(isWinningType(hand,HuTiles)) {
+            ArrayList<Integer> js = getPairs(hand);
+            if (null == js || js.size() <= 0) {
+                return false;
+            }else{
+                for (Integer j : js) {
+                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
+                    tempCards.remove(j);
+                    tempCards.remove(j);
+                    Collections.sort(tempCards);
+                    tempCards = removeTriplets(tempCards);
+                    tempCards= removeSequences(tempCards);
+                    if (tempCards.size() <= 0) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+
+    //Ting method
+    public boolean isTing(){
+        Throw_NeedPairs();
+        if(!this.pairs.isEmpty()){
+            this.isTing=true;
+            return true;
+        }
+        return false;
+    }
+    public void Throw_NeedPairs() {
+        ArrayList<Integer> hand = new ArrayList<>(this.getPlayerMajiangs());   //use Arraylist to copy list
+        ArrayList<Integer> HuTiles = new ArrayList<>(this.getCardsToDisplay()); // same as above
+        //ArrayList<Integer> TingTiles = new ArrayList<>();  // initialize TingTiles ArrayList
+        Hu hu = new Hu(); // instance Hu (if is not finished)
+
+        if (hand.size() + HuTiles.size() >= 14 && !hu.isHu(hand, HuTiles)) {
+            for (Integer tile : hand) {
+                ArrayList<Integer> tempHand = new ArrayList<>(hand); // create temporary arraylist for updating every time
+
+                tempHand.remove(tile); // remove the tile from the temporary arraylist
+
+                for (Integer i = 11; i <= 47; i++) { // Iterate all possible tiles
+                    if (i >= 11 && i <= 19 || i >= 21 && i <= 29 || i >= 31 && i <= 39 || i >= 41 && i <= 47) {
+                        tempHand.add(i); // add the current tile to temporary copy
+                        if (hu.isHu(tempHand, HuTiles)) { // check is hu
+                            this.TingTiles.add(i);
+                        }
+                        tempHand.remove(i); // remove tile from copy
+                    }
+                }
+                if(!this.TingTiles.isEmpty()){
+                    this.pairs.put(tile, new ArrayList<>(this.TingTiles)); // put TingTiles copy into pairs
+                    this.TingTiles.clear(); // clear TingTiles for next use;
+                    TingThrowTiles.add(tile);
+                }
+
+            }
+        }
+    }
 
 }
 
