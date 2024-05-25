@@ -7,8 +7,13 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * TestIsPeng: test the Gang(int card) in the Player class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestGang {
-    Player player = new Player();
+    HumanPlayer player = new HumanPlayer();
 
 
     @Test

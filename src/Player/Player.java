@@ -5,6 +5,14 @@ import HuHelper.Hu;
 
 import java.util.*;
 
+/**
+ * Player: define the related features of players,
+ *         including gain card, discard card, chi, peng, gang, ting & hu.
+ *         the gain card, discard card, chi, peng, gang are written by Qiyue Zhu,
+ *         and the ting and hu related methods are written by Ran An.
+ *
+ * @author: Qiyue Zhu & Ran An
+ */
 public abstract class Player {
     // the boss is decided in the InitPlayer class
     public boolean isHost;

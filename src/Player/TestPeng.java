@@ -7,8 +7,13 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * TestPeng: test the Peng(int card) in the Player class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestPeng {
-    Player player = new Player();
+    HumanPlayer player = new HumanPlayer();
 
 
     @Test
@@ -67,3 +72,4 @@ public class TestPeng {
         assertEquals(2, player.PengNumber);
     }
 }
+

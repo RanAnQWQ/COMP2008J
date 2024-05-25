@@ -6,6 +6,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
+/**
+ * HumanPlayer: define the related features of human players,
+ *              including gain card, discard card, chi, peng, gang, ting & hu.
+ *              the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu
+ */
+
 public class HumanPlayer extends Player {
 
     /**

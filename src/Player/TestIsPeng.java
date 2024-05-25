@@ -1,13 +1,17 @@
 package Player;
 
 import org.junit.Test;
-
 import java.util.ArrayList;
-
 import static org.junit.Assert.assertEquals;
 
+/**
+ * TestIsPeng: test the isPeng(int card) in the Player class
+ *
+ * @author: Qiyue Zhu
+ */
+
 public class TestIsPeng {
-    Player player = new Player();
+    HumanPlayer player = new HumanPlayer();
 
 
     @Test
