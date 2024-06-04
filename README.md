@@ -1,2 +1,2 @@
-#comp2008j
-# COMP2008J
+#[ ] COMP2008J Mahjiong Project
+
