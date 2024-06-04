@@ -8,7 +8,7 @@
 
 <p>Our Mahjong game features essential functions such as Chi, Pong, Kong, Ready Hand, and Win. Players can enjoy the game in single-player mode or connect over a local area network (LAN) for multiplayer sessions, either on the same computer or across multiple computers. Additionally, players have the option to choose their avatars and set their own nicknames, enhancing the personalized gaming experience.</p>
 
-<h3>Features-特性</h3>
+<h3>Features</h3>
 
 <p>Our Mahjong game includes the following features:</p>
 
@@ -22,7 +22,7 @@
 </ul>
 <p>These features ensure a comprehensive and enjoyable Mahjong experience for all players.</p>
 
-<h2>Requirements-环境依赖</h2>
+<h2>Environment Requirements</h2>
 
 <p>Our Mahjong game  has the following dependencies and environmental requirements:</p>
 
@@ -36,11 +36,55 @@
 
 <h2>Configuration-配置</h2>
 
-<p>Include configuration information necessary for the project.</p>
+<p>To configure the Mahjong game, follow these steps:</p>
 
-<h2>Installation-安装</h2>
+<ol>
+    <li>
+        <strong>Download and Install Java:</strong>
+        <ul>
+            <li>Ensure you have Java Runtime Environment (JRE) version 8 or above installed on your system. You can download it from the <a href="https://www.java.com/en/download/">official Java website</a>.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Network Configuration for Multiplayer Mode:</strong>
+        <ul>
+            <li>For LAN multiplayer mode, ensure all participating computers are connected to the same local network.</li>
+            <li>Configure the firewall settings on each computer to allow the Mahjong game to communicate over the network. Typically, you need to allow the game executable and Java to access the network.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Game Configuration:</strong>
+        <ul>
+            <li>Download the Mahjong game package and extract it to your desired location.</li>
+            <li>Open the game configuration file (<code>config.properties</code> or similar) in a text editor to customize settings like screen resolution, sound volume, and default avatars. Example configuration entries might look like:</li>
+        </ul>
+        <pre><code>
+screen.width=1920
+screen.height=1080
+sound.volume=75
+default.avatar=avatar1.png
+        </code></pre>
+    </li>
+    <li>
+        <strong>Multiplayer Server Setup:</strong>
+        <ul>
+            <li>To host a multiplayer game, one player needs to start the game in server mode. This can usually be done through an option in the game menu or by running a specific command like:</li>
+        </ul>
+        <pre><code>java -jar MahjongGame.jar --mode server</code></pre>
+        <ul>
+            <li>Other players can join by selecting the multiplayer option and entering the server's IP address. The IP address can typically be found in the network settings of the server computer.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Avatar and Nickname Selection:</strong>
+        <ul>
+            <li>Upon launching the game, navigate to the profile settings to choose an avatar and set your nickname. These settings will be saved for future sessions.</li>
+        </ul>
+    </li>
+</ol>
 
-<p>Provide step-by-step installation and deployment instructions, ideally including screenshots and videos.</p>
+<p>Ensure you follow these configuration steps to set up the game according to your preferences and network environment.</p>
+
 
 <h2>Usage-用法</h2>
 
