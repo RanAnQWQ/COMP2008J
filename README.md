@@ -1,16 +1,11 @@
-COMP2008J Mahjiong Project
-# README-TEMPLATE
+# COMP2008J Mahjong Project
 
-# [icon]
+# # Game Of Mahjong
 
-# # Name
-# # Badge-徽章
+# ## Introduction
 
-*------ 备注：某些 READMEs 上，可能会看到小图像，例如项目是否通过了所有测试。可以使用*[护盾](http://shields.io/?fileGuid=2wAlXOVLNVUJQjAP)*在阅读器中添加说明。许多服务中也有添加徽章的说明。*
-
-# ## Introduction-项目介绍
-
-*------ 备注：让人们知道项目具体可以做什么。对阅读者任何可能不熟悉的地方，提供参考及访问链接；此处还可添加****功能列表****或****背景****的子菜单。如果有同类项目，应该在介绍中说明差异化、优势分析。*
+This is a basic implementation of Mahjong game. Mahjong is a game for four people invented in ancient China. It is a small rectangular piece made of bamboo, bone or plastic and engraved with patterns or characters. In the version of Mahjong used in this game, there are 134 cards per deck. The main types of mahjong cards are Bing (Wenqian), Tiao (suozi), Wan (Wan Guan), wind.
+In this project, we have realized the basic functions of mahjong, and can play in two modes: stand-alone and online mode.
 
 ## ### Summary-概要
 
