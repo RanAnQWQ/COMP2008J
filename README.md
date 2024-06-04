@@ -91,21 +91,36 @@ screen.height=800
 
 <h2>Usage</h2>
 
-<p>Describe the basic usage of the project, including screenshots and videos if possible.</p>
+<p>To get started with the Mahjong game, follow these basic usage instructions:</p>
 
-<h2>Changelog-更新日志</h2>
+<h3>Single-Player Mode</h3>
+<ul>
+    <li>Launch the game by running the <code>Main</code> class.</li>
+    <li>Select "Start Game" from the main menu.</li>
+    <li>Choose your avatar and set your nickname.</li>
+    <li>Start the game and enjoy playing against computer-controlled opponents.</li>
+</ul>
 
-<p>Provide a brief history of changes, replacements, or other updates.</p>
+<h3>Multiplayer Mode</h3>
+<h4>Using a Single Computer</h4>
+<ul>
+    <li>Run the <code>Server</code> class to start the game server.</li>
+    <li>Run the <code>Main</code>, <code>Main1</code>, <code>Main2</code>, and <code>Main3</code> classes in sequence to open four game interfaces on the same computer.</li>
+    <li>Each player can choose their avatar and set their nickname on their respective interfaces.</li>
+</ul>
 
-<h2>FAQ-常见问题</h2>
+<h4>Using Multiple Computers</h4>
+<ul>
+    <li>One player starts the game server by running the <code>Server</code> class and then runs the <code>Main</code> class to join the game as a client.</li>
+    <li>Other players join the game by running the <code>Main</code> class on their own computers.</li>
+    <li>All players must enter the server's IP address and port number <code>12345</code> to connect.</li>
+    <li>Ensure all players are connected to the same local network.</li>
+    <li>Each player can choose their avatar and set their nickname upon joining the game.</li>
+</ul>
 
-<p>Compile a list of common questions and answers to help new users.</p>
+<p>For a visual guide, refer to the screenshots and tutorial videos provided in the <em>docs</em> folder.</p>
 
-<h2>Support-支持</h2>
-
-<p>Inform users where they can seek help, such as issue trackers, chat rooms, email addresses, etc.</p>
-
-<h2>Contributing-贡献</h2>
+<h2>Contributing</h2>
 
 <p>Provide guidelines for contributing to the project.</p>
 
