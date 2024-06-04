@@ -24,9 +24,15 @@
 
 <h2>Requirements-环境依赖</h2>
 
+<p>Our Mahjong game  has the following dependencies and environmental requirements:</p>
+
 <ul>
-    <li>List all dependencies and required environments for the project and its submodules and libraries.</li>
+    <li>Operating System: The game is compatible with Windows, macOS, and Linux.</li>
+    <li>Java Runtime Environment (JRE): Version 8 or above is required to run the game.</li>
+    <li>Network: For multiplayer mode, a stable local area network (LAN) connection is necessary.</li>
+    <li>Input Devices: A keyboard and mouse are required for gameplay.</li>
 </ul>
+<p>Ensure that your system meets these requirements to run the Mahjong game smoothly.</p>
 
 <h2>Configuration-配置</h2>
 
