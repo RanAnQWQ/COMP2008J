@@ -59,20 +59,24 @@
             <li>Open the game configuration file (<code>config.properties</code> or similar) in a text editor to customize settings like screen resolution, sound volume, and default avatars. Example configuration entries might look like:</li>
         </ul>
         <pre><code>
-screen.width=1920
-screen.height=1080
-sound.volume=75
-default.avatar=avatar1.png
+screen.width=1200
+screen.height=800
         </code></pre>
     </li>
     <li>
-        <strong>Multiplayer Server Setup:</strong>
+        <strong>Single Computer Multiplayer Setup:</strong>
         <ul>
-            <li>To host a multiplayer game, one player needs to start the game in server mode. This can usually be done through an option in the game menu or by running a specific command like:</li>
+            <li>Run the <code>Server</code> class first to start the game server.</li>
+            <li>Then run the <code>Main</code>, <code>Main1</code>, <code>Main2</code>, and <code>Main3</code> classes in sequence to open four game interfaces on the same computer.</li>
         </ul>
-        <pre><code>java -jar MahjongGame.jar --mode server</code></pre>
+    </li>
+    <li>
+        <strong>Multiple Computer Multiplayer Setup:</strong>
         <ul>
-            <li>Other players can join by selecting the multiplayer option and entering the server's IP address. The IP address can typically be found in the network settings of the server computer.</li>
+            <li>One player starts the game in server mode by running the <code>Server</code> class. This player also starts a client by running the <code>Main</code> class.</li>
+            <li>Other players join the game by running the <code>Main</code> class on their computers.</li>
+            <li>All players must be on the same network segment (within the same local area network).</li>
+            <li>Clients connect to the server using the IP address and port number <code>12345</code> of the computer running the server.</li>
         </ul>
     </li>
     <li>
@@ -85,14 +89,9 @@ default.avatar=avatar1.png
 
 <p>Ensure you follow these configuration steps to set up the game according to your preferences and network environment.</p>
 
-
-<h2>Usage-用法</h2>
+<h2>Usage</h2>
 
 <p>Describe the basic usage of the project, including screenshots and videos if possible.</p>
-
-<h2>Development-开发</h2>
-
-<p>Document how to develop the project, including API information and compatibility notes.</p>
 
 <h2>Changelog-更新日志</h2>
 
@@ -105,14 +104,6 @@ default.avatar=avatar1.png
 <h2>Support-支持</h2>
 
 <p>Inform users where they can seek help, such as issue trackers, chat rooms, email addresses, etc.</p>
-
-<h3>Doc-文档</h3>
-
-<p>Link to additional documentation.</p>
-
-<h3>Release Planning-版本规划</h3>
-
-<p>Describe the future direction of the project.</p>
 
 <h2>Contributing-贡献</h2>
 
