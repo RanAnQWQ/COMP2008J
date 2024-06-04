@@ -4,13 +4,23 @@
 
 <p>This is a basic implementation of the Mahjong game. Mahjong is a game for four people invented in ancient China. The game involves small rectangular pieces made of bamboo, bone, or plastic, engraved with patterns or characters. In the version of Mahjong used in this game, there are 134 cards per deck. The main types of Mahjong cards are Bing (Wenqian), Tiao (suozi), Wan (Wan Guan), and wind. This project realizes the basic functions of Mahjong and can be played in two modes: stand-alone and online mode.</p>
 
-<h3>Summary-概要</h3>
+<h3>Summary</h3>
 
-<p>Provide a brief overview of the project here.</p>
+<p>Our Mahjong game features essential functions such as Chi, Pong, Kong, Ready Hand, and Win. Players can enjoy the game in single-player mode or connect over a local area network (LAN) for multiplayer sessions, either on the same computer or across multiple computers. Additionally, players have the option to choose their avatars and set their own nicknames, enhancing the personalized gaming experience.</p>
 
 <h3>Features-特性</h3>
 
-<p>List the key features of the Mahjong game.</p>
+<p>Our Mahjong game includes the following features:</p>
+
+<ul>
+    <li>Chi, Pong, and Kong: Execute basic moves like Chi (melding three consecutive tiles), Pong (melding three identical tiles), and Kong (melding four identical tiles).</li>
+    <li>Ready Hand and Win: Prepare for winning by declaring Ready Hand and achieve victory by completing a valid hand.</li>
+    <li>Single-Player Mode: Play against computer-controlled opponents for a solo gaming experience.</li>
+    <li>Multiplayer Mode: Connect with other players over a local area network (LAN) to enjoy multiplayer sessions, either on the same computer or across multiple computers.</li>
+    <li>Avatar Selection: Customize your gaming experience by choosing an avatar.</li>
+    <li>Nickname Selection: Personalize your identity in the game by setting your own nickname.</li>
+</ul>
+<p>These features ensure a comprehensive and enjoyable Mahjong experience for all players.</p>
 
 <h2>Requirements-环境依赖</h2>
 
