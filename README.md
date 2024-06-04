@@ -34,7 +34,7 @@
 </ul>
 <p>Ensure that your system meets these requirements to run the Mahjong game smoothly.</p>
 
-<h2>Configuration-配置</h2>
+<h2>Configuration</h2>
 
 <p>To configure the Mahjong game, follow these steps:</p>
 
@@ -120,11 +120,7 @@ screen.height=800
 
 <p>For a visual guide, refer to the screenshots and tutorial videos provided in the <em>docs</em> folder.</p>
 
-<h2>Contributing</h2>
-
-<p>Provide guidelines for contributing to the project.</p>
-
-<h3>Contributors 贡献者</h3>
+<h3>Contributors</h3>
 <ul>
     <li>22207228 An Ran</li>
     <li>22207230 Shen Jinyan</li>
@@ -132,7 +128,7 @@ screen.height=800
     <li>22207236 Li Siying</li>
 </ul>
 
-<h2>Status 项目状态</h2>
+<h2>Status</h2>
 
 <p>The project is now completed.</p>
 
