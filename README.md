@@ -1,76 +1,72 @@
 # COMP2008J Mahjong Project
 
-# # Game Of Mahjong
+<h2>Introduction</h2>
 
-# ## Introduction
+<p>This is a basic implementation of the Mahjong game. Mahjong is a game for four people invented in ancient China. The game involves small rectangular pieces made of bamboo, bone, or plastic, engraved with patterns or characters. In the version of Mahjong used in this game, there are 134 cards per deck. The main types of Mahjong cards are Bing (Wenqian), Tiao (suozi), Wan (Wan Guan), and wind. This project realizes the basic functions of Mahjong and can be played in two modes: stand-alone and online mode.</p>
 
-This is a basic implementation of Mahjong game. Mahjong is a game for four people invented in ancient China. It is a small rectangular piece made of bamboo, bone or plastic and engraved with patterns or characters. In the version of Mahjong used in this game, there are 134 cards per deck. The main types of mahjong cards are Bing (Wenqian), Tiao (suozi), Wan (Wan Guan), wind.
-In this project, we have realized the basic functions of mahjong, and can play in two modes: stand-alone and online mode.
+<h3>Summary-概要</h3>
 
-## ### Summary-概要
+<p>Provide a brief overview of the project here.</p>
 
-## ### Features-特性
+<h3>Features-特性</h3>
 
-# ## Requirements-环境依赖
+<p>List the key features of the Mahjong game.</p>
 
-*------ 备注：环境，对所有项目，和所有子模块和库的描述。*
+<h2>Requirements-环境依赖</h2>
 
-# ## Configuration-配置
+<ul>
+    <li>List all dependencies and required environments for the project and its submodules and libraries.</li>
+</ul>
 
-*------ 备注：项目所需要的配置信息 。*
+<h2>Configuration-配置</h2>
 
-# ## Installation-安装
+<p>Include configuration information necessary for the project.</p>
 
-*------ 备注：如何安装，部署 ，最好包括界面操作截图及视频。*
+<h2>Installation-安装</h2>
 
-# ## Usage-用法
+<p>Provide step-by-step installation and deployment instructions, ideally including screenshots and videos.</p>
 
-*------ 备注：项目的入门使用方法 ，最好包括界面操作截图及视频*
+<h2>Usage-用法</h2>
 
-# ## Development-开发
+<p>Describe the basic usage of the project, including screenshots and videos if possible.</p>
 
-*------ 备注：关于怎样开发的文档信息，如 API 、兼容性等。*
+<h2>Development-开发</h2>
 
-# ## Changelog-更新日志
+<p>Document how to develop the project, including API information and compatibility notes.</p>
 
-*------备注： 一个简短的历史记录，更改，替换或者其他。*
+<h2>Changelog-更新日志</h2>
 
-# ## FAQ-常见问题
+<p>Provide a brief history of changes, replacements, or other updates.</p>
 
-*------备注： 常见的问题汇总，便于解决后续的新手答疑。*
+<h2>FAQ-常见问题</h2>
 
-# ## Support-支持
+<p>Compile a list of common questions and answers to help new users.</p>
 
-*------  备注：告诉用户可以去哪里寻求帮助。如问题跟踪器、聊天室、电子邮件地址等。*
+<h2>Support-支持</h2>
 
-## ### Doc-文档
+<p>Inform users where they can seek help, such as issue trackers, chat rooms, email addresses, etc.</p>
 
-*------ 备注：更多的文档说明 。*
+<h3>Doc-文档</h3>
 
-## ### Release planning-版本规划
+<p>Link to additional documentation.</p>
 
-*------ 备注：对项目未来方向的规划。*
+<h3>Release Planning-版本规划</h3>
 
-## ### Contact and Join-联系和加入社区
+<p>Describe the future direction of the project.</p>
 
-*------ 备注：可以包括但不限于如下条目*
+<h2>Contributing-贡献</h2>
 
-* *用户社区的加入路径（微信/QQ/其它群二维码、项目助手的 ID等）*
-* *项目的邮件订阅*
-* *公司名称、网站、地址*
-* *通过提交issue 联络解决遇到的问题*
-# ## Contributing-贡献
+<p>Provide guidelines for contributing to the project.</p>
 
-*------ 备注：贡献指引。*
+<h3>Contributors 贡献者</h3>
+<ul>
+    <li>22207228 An Ran</li>
+    <li>22207230 Shen Jinyan</li>
+    <li>22207232 Zhu Qiyue</li>
+    <li>22207236 Li Siying</li>
+</ul>
 
-## ###  Contributors 贡献者
+<h2>Status 项目状态</h2>
 
-*----- 备注：作者列表和鸣谢。*
+<p>The project is now completed.</p>
 
-# ## License-版权信息
-
-*------ 备注：版权、许可信息、法律声明。*
-
-# ## Status 项目状态
-
-*------ 备注：如果项目暂缓或停止更新，请进行状态标注。开发者可能会选择 fork 项目或自愿加入维护者或成为所有者，让其继续下去。同时，可在此处对维护者提出明确请求。*
