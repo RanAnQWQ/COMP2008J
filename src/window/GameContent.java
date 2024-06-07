@@ -1,11 +1,9 @@
 package window;
 
 import GameTable.ShuffleMajiang;
-import HuHelper.Hu;
 import Player.Computer;
-import Player.InitPlayer;
 import Player.HumanPlayer;
-import Player.Player;
+import Player.InitPlayer;
 import tiles.Tilemap;
 
 import javax.swing.*;
@@ -19,7 +17,7 @@ public class GameContent extends JFrame {
 
     public static GameWindow gameWindow;
 
-    public static AddComputerTile addComputerTile;
+    public AddComputerTile addComputerTile;
 
     public static String host;
     public static int hostNumber;
@@ -82,21 +80,16 @@ public class GameContent extends JFrame {
         System.out.println("computer3: "+computer3.getPlayerMajiangs());
         System.out.println("size3: "+computer3.getPlayerMajiangs().size());
 
+
         addComputerTile.addComputer1Tile(computer1.getPlayerMajiangs().size(),gameWindow.gamePanel);
         addComputerTile.addComputer2Tile(computer2.getPlayerMajiangs().size(),gameWindow.gamePanel);
         addComputerTile.addComputer3Tile(computer3.getPlayerMajiangs().size(),gameWindow.gamePanel);
 
 
 
-        ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test chi
-        //player.isPeng();
-        ArrayList<Integer> c =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test ting
-        boolean pengJudge = true;
-        boolean gangJudge = true;
         gameWindow.addTileToWindow(player.playerMajiangs); // add user player's tiles to window
         gameWindow.hideTiles();
-        addComputerTile.hideComputerTiles();
-       // gameWindow.setbuttons(b, pengJudge, gangJudge,c, false, false);
+        // gameWindow.setbuttons(b, pengJudge, gangJudge,c, false, false);
 
         // in the first turn, the host will discard a card
         System.out.println(",,,,,,"+gameWindow.cardToDiscard);
@@ -128,50 +121,52 @@ public class GameContent extends JFrame {
 
     int decideNextComputer(Integer card, Computer computer1, Computer computer2, Computer computer3,HumanPlayer player){
         if (computer1.isGang(card)) {
-            computer1.Gang(card);
+            computer1.Gang(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 1, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
             return 1;
         }else if(computer2.isGang(card)){
-            computer2.Gang(card);
+            computer2.Gang(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 2, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
             return 2;
         }else if(computer3.isGang(card)){
-            computer3.Gang(card);
+            computer3.Gang(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 3, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
             return 3;
         }else if(computer1.isPeng(card)){
-            computer1.Peng(card);
+            computer1.Peng(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 1, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
             return 1;
         }else if(computer2.isPeng(card)){
-            computer2.Peng(card);
+            computer2.Peng(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 2, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(),gameWindow.gamePanel);
             return 2;
         }else if(computer3.isPeng(card)){
-            computer3.Peng(card);
+            computer3.Peng(card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 3, addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
             return 3;
         }else if(!computer1.isChi(card).isEmpty()){
-            computer1.Chi(card);
+            System.out.println("chi41");
+            computer1.Chi(card,gameWindow.scaledWidth,gameWindow.scaledHeight,gameWindow.gamePanel,1,addComputerTile);
             player.playerRiver.remove(card);
             addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(),gameWindow.gamePanel);
             gameWindow.addTileToWindow(player.playerMajiangs);
+            System.out.println(computer1.cardsToDisplay.size()+"chi41 ctd");
             return 1;
         }else {
+            computer1.gainMajiang();
             return 1;
         }
-
 
     }
 
@@ -264,7 +259,6 @@ public class GameContent extends JFrame {
                     if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null && !comp.isVisible()) {
                         comp.setVisible(true);
                         comp.setEnabled(true);
-                        addComputerTile.showComputerTile();
                     }
                 }
 
@@ -330,7 +324,7 @@ public class GameContent extends JFrame {
                         });
                         timer.cancel();
                     }
-                }, 5000);
+                }, 3000);
                 // set a timer, let the number of dice and the arrow label remain 5s and remove;
                 init(host);
                 System.out.println("host:"+host);

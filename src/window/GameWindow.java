@@ -1,11 +1,9 @@
 package window;
 
 
-import GameTable.ShuffleMajiang;
-import HuHelper.Hu;
-import Player.*;
+import Player.Computer;
+import Player.HumanPlayer;
 import tiles.Tilemap;
-
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,10 +11,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
-import java.util.List;
 import java.util.Timer;
+import java.util.*;
 import java.util.concurrent.CountDownLatch;
+
+import static window.GameContent.gameWindow;
 
 
 public class GameWindow extends JFrame {
@@ -33,15 +32,11 @@ public class GameWindow extends JFrame {
 
     public HumanPlayer player;
     public int cardToDiscard;
+    public JButton chi = new JButton();
+    public JButton skip = new JButton();
 
-
-    //    static {
     GameContent gameContent = new GameContent();
 
-    //    }
-    //public void setTileNumber(ArrayList<Integer> tileNumber) {
-/*        this.tileNumber = tileNumber;
-    }*/
 
     public void setComputer1(Computer computer1Number) {
         this.computer1 = computer1Number;
@@ -66,11 +61,8 @@ public class GameWindow extends JFrame {
         return sum;
     }
 
-    // set the number of dices;
-
     public GameWindow() {
         window_frame();
-//        GameContent.helpB
         gameContent.helpButtons(gamePanel);
         gameContent.dice_button(sum, gamePanel);
 
@@ -83,7 +75,6 @@ public class GameWindow extends JFrame {
         headShot_M("src/profilephoto/cow.png");
         // Add the headShots of 3 machine players;
 
-        //tileNumber = new ArrayList<>();
     }
 
     private void window_frame() {
@@ -99,43 +90,52 @@ public class GameWindow extends JFrame {
     }
 
 
-
     ////////////////////////////set buttons///////////////////////
-    public void setbuttons(Player player, ArrayList<Integer> chiSet, boolean pengJudge, boolean gangJudge, ArrayList<Integer> tingSet, boolean huJudge, boolean iftrue) {
-        chi_button(player,chiSet);
+    public void setbuttons(HumanPlayer player, ArrayList<Integer> chiSet, boolean pengJudge, boolean gangJudge, ArrayList<Integer> tingSet, boolean huJudge, boolean iftrue) {
+        //chi_button(player,chiSet, );
         peng_button(pengJudge);
-        gang_button(gangJudge);
+        //gang_button(gangJudge,);
         ting_button(tingSet);
         hu_button(huJudge);
 
-        boolean ifExist = chi_button(player, chiSet) || peng_button(pengJudge) || gang_button(gangJudge) || ting_button(tingSet) || hu_button(huJudge);
+        //boolean ifExist = chi_button(player, chiSet) || peng_button(pengJudge) || gang_button(gangJudge) || ting_button(tingSet) || hu_button(huJudge);
 
-        skip_button(ifExist);
+        //skip_button(ifExist);
     }
 
 
 
-    public boolean chi_button(Player player, ArrayList<Integer> set) {
-        JButton chi = new JButton();
+    public void chi_button(HumanPlayer player, ArrayList<Integer> set, int card) {
         chi.setBorderPainted(false);
         chi.setFocusPainted(false);
         chi.setContentAreaFilled(false);
 
-        boolean judge = set != null;
-        final boolean[] result = {false};
-        CountDownLatch latch = new CountDownLatch(1);
-        if (skipClicked) {
-            return false; // If skip was clicked, return false
+        boolean judge;
+        if (set != null){
+            judge = true;
+        }else {
+            judge = false;
         }
+
+        int[] result = {100};//set for skip;
+
+        CountDownLatch latch = new CountDownLatch(1);
+
 
         if (judge) {
             chi.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
+            chi.setVisible(true);
+            skip.setVisible(true);
+            skip_button(judge);
             chi.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Display available");
-                    chi_choice(player, set);
-                    result[0] = true;
+                    int choice = chi_choice(player, set,card);
+                    System.out.println(choice);
+                    result[0] = choice;
                     latch.countDown();
+                    chi.setVisible(false);
+                    skip.setVisible(false);
                 }
             });
         } else {
@@ -145,23 +145,14 @@ public class GameWindow extends JFrame {
 
         gamePanel.add(chi);
 
-        return result[0];
     }
 
 
-    private int chi_choice(Player player, ArrayList<Integer> option) {
+    private int chi_choice(HumanPlayer player, ArrayList<Integer> option,int card) {
         int num = option.size();
 
         CountDownLatch latch = new CountDownLatch(1);
         int[] index = new int[1];
-
-        if (num == 3) {
-            for(int i:player.cardsToDisplay){
-                System.out.println(i);
-            }
-            return 3;
-        }
-        //if exist 1 chi type, return 3 directly;
 
         JFrame choice = new JFrame("Choice of Chi Method");
         choice.setSize(480, 210);
@@ -189,26 +180,78 @@ public class GameWindow extends JFrame {
             panel.putClientProperty("index", i); // 设置面板的索引属性
 
             for (int j = 0; j < 3; j++) {
+                System.out.println("option of chi window: " + option);
                 int tileNum = option.get(i + j);
+                System.out.println("tilenum "+tileNum);
                 String tilePath = tilemap.getTilePath(tileNum);
                 ImageIcon icon = new ImageIcon(new ImageIcon(tilePath).getImage().getScaledInstance(132 / 3, 191 / 3, Image.SCALE_SMOOTH));
                 JLabel label = new JLabel(icon);
                 panel.add(label);
+                System.out.println("按理说加完牌了 "+ tileNum);
             }
 
             panel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
+
                     System.out.println("Window Available");
                     JPanel clickedPanel = (JPanel) e.getSource();
                     index[0] = (int) clickedPanel.getClientProperty("index");
+                    //0,3,6/0,3
+                    if(index[0]==0){
+                            if(option.size()==3){
+                                System.out.println("玩家已经点了chi");
+                                player.Chi(player.isChi(card),3, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                                System.out.println("进行吃牌操作");
+                                computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                                listTiles(player.playerMajiangs, startX, startY);
+                            }else if(option.size()==6){
+                                System.out.println("玩家已经点了chi");
+                                player.Chi(player.isChi(card),1, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                                System.out.println("进行吃牌操作");
+                                computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                                listTiles(player.playerMajiangs, startX, startY);
+                            }else {
+                                System.out.println("玩家已经点了chi");
+                                player.Chi(player.isChi(card),2, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                                System.out.println("进行吃牌操作");
+                                computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                                listTiles(player.playerMajiangs, startX, startY);
+                            }
+
+                    }
+                    if(index[0]==3){
+                        if(option.size()==6){
+                            System.out.println("玩家已经点了chi");
+                            player.Chi(player.isChi(card),2, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                            System.out.println("进行吃牌操作");
+                            computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                            robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                        }else {
+                            System.out.println("玩家已经点了chi");
+                            player.Chi(player.isChi(card),1, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                            System.out.println("进行吃牌操作");
+                            computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                            robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                        }
+                    }
+                    if(index[0]==6){
+                            System.out.println("玩家已经点了chi");
+                            player.Chi(player.isChi(card),0, card, gameWindow.scaledWidth, gameWindow.scaledHeight, gameWindow.gamePanel, 4, addComputerTile);
+                            System.out.println("进行吃牌操作");
+                            computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                            robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                    }
+
                     System.out.println("Clicked panel index: " + index[0]);
                     choice.dispose();
                     latch.countDown();
                     for(int i:player.cardsToDisplay){
                         System.out.println(i);
                     }
-
                 }
             });
 
@@ -223,8 +266,23 @@ public class GameWindow extends JFrame {
         choice.setVisible(true);
         choice.setResizable(false);
 
+//        try {
+//            latch.await(); // 等待用户选择
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        // 返回用户选择的结果，如果选项数量为3且用户选择了唯一的选项，返回3
+/*        if (num == 3) {
+            for(int i:player.cardsToDisplay){
+                System.out.println(i);
+            }
+            return 3;
+        }*/
+
         return 2 - index[0] / 3;
     }
+
 
 
     public boolean peng_button(boolean judge) {
@@ -255,7 +313,7 @@ public class GameWindow extends JFrame {
     }
 
 
-    public boolean gang_button(boolean judge) {
+    public boolean gang_button(boolean judge,int card, int computernumber) {
         JButton gang = new JButton();
         gang.setBorderPainted(false);
         gang.setFocusPainted(false);
@@ -272,8 +330,23 @@ public class GameWindow extends JFrame {
             gang.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Gang is available");
+                    //这里加skip，skip里startRobotPlaySequence();
                     result[0] = true;
                     latch.countDown();
+                    player.Gang(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+                    if(computernumber==1){
+                        computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                        robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                    }else if(computernumber==2){
+                        computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                        robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+                    }else{
+                        computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                        robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                    }
+
+                    startRobotPlaySequence(4);
                 }
             });
             gamePanel.add(gang);
@@ -290,9 +363,6 @@ public class GameWindow extends JFrame {
         return result[0];
     }
 
-    private boolean isAvailable() {
-        return true;
-    }
 
     public boolean ting_button(ArrayList<Integer> option) {
         JButton ting = new JButton();
@@ -372,6 +442,12 @@ public class GameWindow extends JFrame {
                     System.out.println("Clicked tile index: " + index[0]);
                     choice.dispose();
                     latch.countDown();
+                    //要在玩家手牌里删掉它仍得牌并重新显示一遍手牌
+                    player.playerMajiangs.remove(option.get(index[0]));
+                    //addComputerTile.addComputerTileToWindow();
+                    int next= gameContent.decideNextComputer(option.get(index[0]),computer1,computer2,computer3,player);
+                    //决定下一把是谁用decide nextcomputer
+                    startRobotPlaySequence(next);
                 }
             });
 
@@ -429,13 +505,13 @@ public class GameWindow extends JFrame {
         return result[0];
     }
 
-    public boolean skip_button(boolean ifExist) {
-        JButton skip = new JButton();
+    public int skip_button(boolean ifExist) {
+        //JButton skip = new JButton();
         skip.setBorderPainted(false);
         skip.setFocusPainted(false);
         skip.setContentAreaFilled(false);
 
-        final boolean[] result = {false};
+        int[] result = {50};
         CountDownLatch latch = new CountDownLatch(1);
 
         if (ifExist) {
@@ -443,8 +519,12 @@ public class GameWindow extends JFrame {
             skip.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Skip is available");
-                    result[0] = true;
+                    result[0] = 100;
+                    player.gainMajiang();
+                    listTiles(player.playerMajiangs, startX, startY);
                     latch.countDown();
+                    skip.setVisible(false);
+                    chi.setVisible(false);
                 }
             });
         } else {
@@ -454,18 +534,9 @@ public class GameWindow extends JFrame {
 
         gamePanel.add(skip);
 
-        return result[0];
+        return result[0];//if skip,return 100,else, return 50
     }
 
-    private void disableOtherButtons() {
-        // Logic to disable other buttons
-        for (Component comp : gamePanel.getComponents()) {
-            if (comp instanceof JButton) {
-                JButton button = (JButton) comp;
-                button.setEnabled(false);
-            }
-        }
-    }
 
 ////////////////////////add or delete tiles/////////////////////////////////////////////////////////////////////////
 
@@ -477,7 +548,7 @@ public class GameWindow extends JFrame {
 
     int scaledWidth = 0;
     int scaledHeight = 0;
-    public boolean canClick = true;
+    public boolean canClick = false;
 
     public void addTileToWindow(ArrayList<Integer> tileNumber) {  //written by Siying.Li
         listTiles(tileNumber, startX, startY);
@@ -549,6 +620,7 @@ public class GameWindow extends JFrame {
                     cardToDiscard = tileNum;
 
                     // 将牌添加到河中
+                    player.playerRiver.add(cardToDiscard);
                     gameContent.addComputerTile.addTileToRiverX(tileIcon, tileNum, discardStartX, discardStartY, maxTilesPerRow, gamePanel,4);
 
                     // 移除被点击的牌号并重新列出剩余的牌
@@ -556,6 +628,8 @@ public class GameWindow extends JFrame {
                     Collections.sort(tileNumber);
                     listTiles(tileNumber, startX, startY);
                     int next=gameContent.decideNextComputer(tileNum,computer1,computer2,computer3,player);
+                    gameContent.addComputerTile.addTileToRiverX(tileIcon, tileNum, discardStartX, discardStartY, maxTilesPerRow, gamePanel,4);
+
                     startRobotPlaySequence(next);  // 开始机器人出牌序列
 
                 }
@@ -584,16 +658,9 @@ public class GameWindow extends JFrame {
         return tileLabel;
     }
 
-    public void resetTurn() {
-        canClick = true;
-        for (Component comp : gamePanel.getComponents()) {
-            if (comp instanceof JLabel && ((JLabel) comp).getClientProperty("tileNumber") != null) {
-                comp.setEnabled(true);
-            }
-        }
-    }
     //////////////////////start the turn////////////////////////
     AddComputerTile addComputerTile = new AddComputerTile();
+
 
     public void startRobotPlaySequence(int index) {
 
@@ -605,209 +672,470 @@ public class GameWindow extends JFrame {
             public void run() {
                 if (robotIndex%4!= 0) {
                     System.out.println(robotIndex);
-                    if (robotIndex %4== 1) {
-                        computer1.gainMajiang();
-                        System.out.println("computer1size"+computer1.playerMajiangs.size());
+
+                    // computer1 turn
+                    if (robotIndex % 4 == 1) {
+                        System.out.println("computer1第一次加牌");
+                        System.out.println("computer1size" + computer1.playerMajiangs.size());
                         addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(), gamePanel);
-                        if (computer1.isHu) {
+
+
+                        // check Hu for everyone in every turn
+                        boolean computer1Hu = computer1.isHu(computer1.playerMajiangs,computer1.cardsToDisplay);
+                        boolean computer2Hu = computer2.isHu(computer2.playerMajiangs,computer2.cardsToDisplay);
+                        boolean computer3Hu = computer3.isHu(computer3.playerMajiangs,computer3.cardsToDisplay);
+                        boolean playerHu = player.isHu(player.playerMajiangs, player.cardsToDisplay);
+
+                        if ( computer1Hu) {
                             computer1.isHu = true;
-                            System.out.println("hu");
-                        } else if (computer1.Tinging) {
-                            computer1.discardAfterTing();
-                        } else if (computer1.isTing()) {
+                            System.out.println("1：computer 1 hu");
+                            timer.cancel();
+                            return;
+                        } else if (computer2Hu) {
+                            computer2.isHu = true;
+                            System.out.println("1：computer 2 hu");
+                            timer.cancel();
+                            return;
+                        } else if (computer3Hu) {
+                            computer3.isHu = true;
+                            System.out.println("1: computer 3 hu");
+                            timer.cancel();
+                            return;
+                        } else if (playerHu) {
+                            player.isHu = true;
+                            hu_button(player.isHu);
+                            System.out.println("1: player hu");
+                            timer.cancel();
+                            return;
+                        }
+                        else if (computer1.isTing()&&!computer1.Tinging) {
                             computer1.isTing = true;
                             System.out.println("ting");
-                        } else {
-                            System.out.println("进循环2");
-                            int card = computer1.discardMajiang(computer1.nextCard());
-                            System.out.println(card);
+                            System.out.println(computer1.isTing() + "ting1");
 
-                            //boolean isSkip = chi_button(player, player.isChi(card)) || peng_button(player.isPeng(card)) || gang_button(player.isGang(card)) || ting_button(player.TingTiles) || hu_button(player.isHu);
-                            System.out.println("computer1:"+computer1.getPlayerMajiangs());
-                            addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(), gamePanel);
-                            robotPlayTile(computer1.getPlayerMajiangs(), 700, 210+260, Boolean.FALSE, 1, card);
-                            computer1.playerRiver.add(card);
-                            if(computer2.isGang(card)) {
-                                computer2.Gang(card);
-                                robotIndex=robotIndex+1;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if(computer3.isGang(card)){
-                                computer3.Gang(card);
-                                robotIndex=robotIndex+2;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if(gang_button(player.isGang(card))){
-                                player.Gang(card);
-                                robotIndex=robotIndex+3;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if (computer2.isPeng(card)){
-                                computer2.Peng(card);
-                                robotIndex=robotIndex+1;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if (computer3.isPeng(card)){
-                                computer3.Peng(card);
-                                robotIndex=robotIndex+2;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if (peng_button(player.isPeng(card))){
-                                player.Peng(card);
-                                robotIndex=robotIndex+3;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else if(!computer2.isChi(card).isEmpty()){
-                                computer2.Chi(card);
-                                robotIndex=robotIndex+1;
-                                computer1.playerRiver.remove(computer1.playerRiver.size()-1);
-                            }else{
-                                robotIndex=robotIndex+1;
-                            }
                         }
+                        System.out.println("进循环2");
 
-                    } else if (robotIndex%4 == 2) {
-                        computer2.gainMajiang();
-                        System.out.println("computer2size"+computer1.playerMajiangs.size());
-                        addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(), gamePanel);
-                        if (computer2.isHu) {
-                            computer2.isHu = true;
-                        } else if (computer2.Tinging) {
-                            computer2.discardAfterTing();
-                        } else if (computer1.isTing()) {
-                            computer2.isTing = true;
-                        } else {
-                            System.out.println("进循环3");
-                            int card = computer2.discardMajiang(computer2.nextCard());
-                            addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(), gamePanel);
-                            computer2.playerRiver.add(card);
-                            robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
-                            if(computer3.isGang(card)) {
-                                computer3.Gang(card);
-                                System.out.println("gang23");
-                                robotIndex=robotIndex+1;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if(gang_button(player.isGang(card))){
-                                player.Gang(card);
-                                robotIndex=robotIndex+2;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if(computer1.isGang(card)){
-                                computer1.Gang(card);
-                                System.out.println("gang21");
-                                robotIndex=robotIndex+3;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if (computer3.isPeng(card)){
-                                computer3.Peng(card);
-                                System.out.println("peng23");
-                                robotIndex=robotIndex+1;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if (peng_button(player.isPeng(card))){
-                                player.Peng(card);
-                                robotIndex=robotIndex+2;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if (computer1.isPeng(card)){
-                                computer1.Peng(card);
-                                System.out.println("peng21");
-                                robotIndex=robotIndex+3;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else if(!computer3.isChi(card).isEmpty()){
-                                computer3.Chi(card);
-                                System.out.println("chi23");
-                                robotIndex=robotIndex+1;
-                                computer2.playerRiver.remove(computer2.playerRiver.size()-1);
-                            }else{
-                                robotIndex=robotIndex+1;
-                                System.out.println("xiayige");
-                            }
-                        }
-
-
-                    } else if (robotIndex%4 == 3) {
-                        computer3.gainMajiang();
-                        System.out.println("computer3size"+computer1.playerMajiangs.size());
-                        addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
-                        if (computer3.isHu) {
-                            computer3.isHu = true;
-                            System.out.println(computer3.isHu + "hu");
-                        } else if (computer3.Tinging) {
-                            computer3.discardAfterTing();
-                            addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(), gamePanel);
-                        } else if (computer3.isTing()) {
-                            computer3.isTing = true;
-                            System.out.println(computer3.isTing() + "ting");
-                        } else {
-                            System.out.println("进循环4");
-                            int card = computer3.discardMajiang(computer3.nextCard());
-                            addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
-                            computer3.playerRiver.add(card);
-                            robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
-                            if (gang_button(player.isGang(card))) {
-                                System.out.println("playergang");
-                                player.Gang(card);
-                                robotIndex = robotIndex + 1;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (computer1.isGang(card)) {
-                                computer1.Gang(card);
-                                System.out.println("gang31");
-                                robotIndex = robotIndex + 2;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (computer2.isGang(card)) {
-                                computer2.Gang(card);
-                                System.out.println("gang32");
-                                robotIndex = robotIndex + 3;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (peng_button(player.isPeng(card))) {
-                                System.out.println("playerpeng");
-                                player.Peng(card);
-                                robotIndex = robotIndex + 1;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (computer1.isPeng(card)) {
-                                computer1.Peng(card);
-                                System.out.println("peng21");
-                                robotIndex = robotIndex + 2;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (computer2.isPeng(card)) {
-                                computer2.Peng(card);
-                                System.out.println("peng32");
-                                robotIndex = robotIndex + 3;
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                            } else if (!player.isChi(card).isEmpty() ) {
-                                System.out.println("playerchi");
-                                chi_button(player, player.isChi(card));
-                                player.Chi(player.isChi(card), chi_choice(player, player.isChi(card)), card);
-                                for (int i : player.cardsToDisplay) {
-                                    System.out.print(i + "card to display");
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                int card;
+                                if(computer1.Tinging){
+                                    card=computer1.discardAfterTing();
+                                }else if(computer1.isTing&&!computer1.Tinging){
+                                    Random random=new Random();
+                                    int index =random.nextInt(computer1.TingThrowTiles.size()-1);
+                                    card=computer1.discardMajiang(computer1.playerMajiangs.indexOf(computer1.TingThrowTiles.get(index)));
+                                    computer1.Tinging=true;
+                                }else{
+                                    card = computer1.discardMajiang(computer1.nextCard());
                                 }
-                                //show(player.cardsToDisplay);
-                                computer3.playerRiver.remove(computer3.playerRiver.size()-1);
-                                listTiles(player.playerMajiangs, startX, startY);
-                                robotIndex = robotIndex + 1;
-                            } else {
-                                System.out.println("循环4结束");
-                                robotIndex = robotIndex + 1;
-                                System.out.println("结束后index" + robotIndex);
+
+                                System.out.println(card);
+
+                                addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(), gamePanel);
+
+                                robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+
+                                if (computer2.isGang(card)) {
+                                    computer2.Gang(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
+                                    robotIndex = robotIndex + 1;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    computer2.gainMajiang();
+
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                    gamePanel.repaint();
+                                } else if (computer3.isGang(card)) {
+                                    computer3.Gang(card, scaledWidth, scaledHeight, gamePanel, 3, addComputerTile);
+                                    robotIndex = robotIndex + 2;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+                                    addComputerTile.removeRiverTile(gamePanel,1);
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    computer3.gainMajiang();
+
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                    gamePanel.repaint();
+                                } else if (player.isGang(card)) {
+                                    gang_button(true,card,1);
+                                    player.Gang(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                                    robotIndex = robotIndex + 3;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    player.gainMajiang();
+
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+
+                                } else if (computer2.isPeng(card)) {
+                                    computer2.Peng(card, scaledWidth, scaledHeight, gamePanel, 2, addComputerTile);
+                                    robotIndex = robotIndex + 1;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                } else if (computer3.isPeng(card)) {
+                                    computer3.Peng(card, scaledWidth, scaledHeight, gamePanel, 3, addComputerTile);
+                                    robotIndex = robotIndex + 2;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                } else if (peng_button(player.isPeng(card))) {
+                                    player.Peng(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                                    robotIndex = robotIndex + 3;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                } else if (!computer2.isChi(card).isEmpty()) {
+                                    System.out.println("chi21");
+                                    computer2.Chi(card,gameWindow.scaledWidth,gameWindow.scaledHeight,gameWindow.gamePanel,2,addComputerTile);
+                                    robotIndex = robotIndex + 1;
+                                    System.out.println("computer1.playerRiver.size() - 1:" + (computer1.playerRiver.size() - 1));
+                                    computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
+                                    System.out.println(computer2.cardsToDisplay.size()+"chi21 ctd");
+                                    robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
+                                } else {
+                                    robotIndex = robotIndex + 1;
+                                    computer2.gainMajiang();
+                                    System.out.println("next com2");
+                                }
+
+
+                                //重新打一边computer1的river牌
                             }
-                        }
+                        }, 2000); // 延迟3秒
                     }
-                }else {
+
+                    // computer2 turn
+                    else if (robotIndex % 4 == 2) {
+                        System.out.println("computer2第一次加牌");
+                        System.out.println("computer2size" + computer2.playerMajiangs.size());
+                        addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(), gamePanel);
+
+
+                        // check Hu for everyone in every turn
+                        boolean computer1Hu = computer1.isHu(computer1.playerMajiangs,computer1.cardsToDisplay);
+                        boolean computer2Hu = computer2.isHu(computer2.playerMajiangs,computer2.cardsToDisplay);
+                        boolean computer3Hu = computer3.isHu(computer3.playerMajiangs,computer3.cardsToDisplay);
+                        boolean playerHu = player.isHu(player.playerMajiangs, player.cardsToDisplay);
+
+                        if ( computer1Hu) {
+                            computer1.isHu = true;
+                            System.out.println("2：computer 1 hu");
+                            timer.cancel();
+                            return;
+                        } else if (computer2Hu) {
+                            computer2.isHu = true;
+                            System.out.println("2：computer 2 hu");
+                            timer.cancel();
+                            return;
+                        } else if (computer3Hu) {
+                            computer3.isHu = true;
+                            System.out.println("2: computer 3 hu");
+                            timer.cancel();
+                            return;
+                        } else if (playerHu) {
+                            player.isHu = true;
+                            hu_button(player.isHu);
+                            System.out.println("2: player hu");
+                            timer.cancel();
+                            return;
+                        }
+                        else if (computer2.isTing()&&!computer2.Tinging) {
+                            computer2.isTing = true;
+                            System.out.println(computer2.isTing() + "ting2");
+                        }
+                        System.out.println("进循环3");
+
+
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                int card;
+                                if(computer2.Tinging){
+                                    card=computer2.discardAfterTing();
+                                }else if(computer2.isTing&&!computer2.Tinging){
+                                    Random random=new Random();
+                                    int index =random.nextInt(computer2.TingThrowTiles.size()-1);
+                                    card=computer2.discardMajiang(computer2.playerMajiangs.indexOf(computer2.TingThrowTiles.get(index)));
+                                    computer2.Tinging=true;
+                                }else{
+                                    card = computer2.discardMajiang(computer1.nextCard());
+                                }
+                                addComputerTile.addComputer2Tile(computer2.playerMajiangs.size(), gamePanel);
+
+                                robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+                                if (computer3.isGang(card)) {
+                                    computer3.Gang(card, scaledWidth, scaledHeight, gamePanel, 3, addComputerTile);
+                                    System.out.println("gang23");
+                                    robotIndex = robotIndex + 1;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    computer3.gainMajiang();
+
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else if (player.isGang(card)) {
+                                    gang_button(true,card,2);
+
+                                    timer.cancel();
+
+                                } else if (computer1.isGang(card)) {
+                                    computer1.Gang(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
+                                    System.out.println("gang21");
+                                    robotIndex = robotIndex + 3;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    computer1.gainMajiang();
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else if (computer3.isPeng(card)) {
+                                    computer3.Peng(card, scaledWidth, scaledHeight, gamePanel, 3, addComputerTile);
+                                    System.out.println("peng23");
+                                    robotIndex = robotIndex + 1;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else if (peng_button(player.isPeng(card))) {
+                                    player.Peng(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                                    robotIndex = robotIndex + 2;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else if (computer1.isPeng(card)) {
+                                    computer1.Peng(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
+                                    System.out.println("peng21");
+                                    robotIndex = robotIndex + 3;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else if (!computer3.isChi(card).isEmpty()) {
+                                    computer3.Chi(card,gameWindow.scaledWidth,gameWindow.scaledHeight,gameWindow.gamePanel,3,addComputerTile);
+                                    System.out.println("chi23");
+                                    robotIndex = robotIndex + 1;
+                                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
+
+                                    computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
+                                    System.out.println(computer3.cardsToDisplay.size()+"chi23 ctd");
+                                    robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
+
+                                } else {
+                                    robotIndex = robotIndex + 1;
+                                    computer3.gainMajiang();
+                                    System.out.println("next com3");
+                                }
+                                //重新打一边computer2的river牌
+
+                            }
+                        }, 3000); // 延迟3秒
+                    }
+
+                    // computer3 turn
+                    else if (robotIndex % 4 == 3) {
+                        System.out.println("computer3 第一次加牌");
+                        System.out.println("computer3size" + computer3.playerMajiangs.size());
+                        addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
+
+
+                        // check Hu for everyone in every turn
+                        boolean computer1Hu = computer1.isHu(computer1.playerMajiangs,computer1.cardsToDisplay);
+                        boolean computer2Hu = computer2.isHu(computer2.playerMajiangs,computer2.cardsToDisplay);
+                        boolean computer3Hu = computer3.isHu(computer3.playerMajiangs,computer3.cardsToDisplay);
+                        boolean playerHu = player.isHu(player.playerMajiangs, player.cardsToDisplay);
+
+                        if ( computer1Hu) {
+                            computer1.isHu = true;
+                            System.out.println("3：computer 1 hu");
+                            timer.cancel();
+                        } else if (computer2Hu) {
+                            computer2.isHu = true;
+                            System.out.println("3：computer 2 hu");
+                            timer.cancel();
+                        } else if (computer3Hu) {
+                            computer3.isHu = true;
+                            System.out.println("3: computer 3 hu");
+                            timer.cancel();
+                            return;
+                        } else if (playerHu) {
+                            player.isHu = true;
+                            hu_button(player.isHu);
+                            System.out.println("3: player hu");
+                            timer.cancel();
+                            return;
+                        }
+                        else if (computer3.Tinging) {
+                            computer3.discardAfterTing();
+                            addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
+                            robotIndex = robotIndex + 1;
+
+                        } else if (computer3.isTing()&&!computer3.Tinging) {
+                            computer3.isTing = true;
+                            System.out.println(computer3.isTing() + "ting3");
+                        }
+                        System.out.println("进循环4");
+
+                        timer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                int card;
+                                if(computer3.Tinging){
+                                    card=computer3.discardAfterTing();
+                                }else if(computer3.isTing&&!computer3.Tinging){
+                                    Random random=new Random();
+                                    int index =random.nextInt(computer3.TingThrowTiles.size()-1);
+                                    card=computer3.discardMajiang(computer3.playerMajiangs.indexOf(computer3.TingThrowTiles.get(index)));
+                                    computer3.Tinging=true;
+                                }else{
+                                    card = computer3.discardMajiang(computer3.nextCard());
+                                }
+                                //扔牌以后重新打玩家手牌
+                                addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
+
+                                robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+                                if (player.isGang(card)) {
+                                    gang_button(true,card,3);
+                                    System.out.println("playergang");
+                                    player.Gang(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                                    robotIndex = robotIndex + 1;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    player.gainMajiang();
+
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (computer1.isGang(card)) {
+                                    computer1.Gang(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
+                                    System.out.println("gang31");
+                                    robotIndex = robotIndex + 2;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    computer1.gainMajiang();
+
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (computer2.isGang(card)) {
+                                    computer2.Gang(card, scaledWidth, scaledHeight, gamePanel, 2, addComputerTile);
+                                    System.out.println("gang32");
+                                    robotIndex = robotIndex + 3;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    computer2.gainMajiang();
+
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (peng_button(player.isPeng(card))) {
+                                    System.out.println("playerpeng");
+                                    player.Peng(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile);
+                                    robotIndex = robotIndex + 1;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (computer1.isPeng(card)) {
+                                    computer1.Peng(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
+                                    System.out.println("peng31");
+                                    robotIndex = robotIndex + 2;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (computer2.isPeng(card)) {
+                                    computer2.Peng(card, scaledWidth, scaledHeight, gamePanel, 2, addComputerTile);
+                                    System.out.println("peng32");
+                                    robotIndex = robotIndex + 3;
+                                    System.out.print("computer3.playerRiver.size() - 1:" + (computer3.playerRiver.size() - 1));
+
+                                    computer3.playerRiver.remove(computer3.playerRiver.size() - 1);
+                                    robotPlayTile(computer3.getPlayerMajiangs(), 380, 210, Boolean.FALSE, 3, card);
+
+                                } else if (!player.isChi(card).isEmpty()) {
+                                    System.out.println("玩家能吃但是没点");
+                                    chi_button(player, player.isChi(card),card);
+                                    for (int i : new ArrayList<Integer>()) {
+                                        System.out.print(i + " display");
+                                    }
+                                    for (int i : player.cardsToDisplay) {
+                                        System.out.print(i + " card to display");
+                                    }
+                                    listTiles(player.playerMajiangs, startX, startY);
+                                    robotIndex = robotIndex + 1;
+                                } else {
+                                    System.out.println("循环4结束");
+                                    robotIndex = robotIndex + 1;
+                                    player.gainMajiang();
+                                    System.out.println("结束后index" + robotIndex);
+                                }
+                                //重新打一边computer3的river牌
+
+                            }
+                        }, 2000); // 延迟3秒
+                    }
+                }
+
+                // player's turn
+                else {
                     System.out.println("lundaowol");
-                    player.playerMajiangs.add(ShuffleMajiang.maJiangs.get(0));
-                    ShuffleMajiang.maJiangs.remove(0);
                     System.out.println("playersize"+player.playerMajiangs.size());
-                    if (player.isHu(player.playerMajiangs, player.cardsToDisplay)) {
-                        //hu_button
-                    } else if (player.Tinging) {
+
+                    // check Hu for everyone in every turn
+                    boolean computer1Hu = computer1.isHu(computer1.playerMajiangs,computer1.cardsToDisplay);
+                    boolean computer2Hu = computer2.isHu(computer2.playerMajiangs,computer2.cardsToDisplay);
+                    boolean computer3Hu = computer3.isHu(computer3.playerMajiangs,computer3.cardsToDisplay);
+                    boolean playerHu = player.isHu(player.playerMajiangs, player.cardsToDisplay);
+
+                    if ( computer1Hu) {
+                        computer1.isHu = true;
+                        System.out.println("computer 1 hu");
+                        timer.cancel();
+                    } else if (computer2Hu) {
+                        computer2.isHu = true;
+                        System.out.println("computer 2 hu");
+                        timer.cancel();
+                    } else if (computer3Hu) {
+                        computer3.isHu = true;
+                        System.out.println("computer 3 hu");
+                        timer.cancel();
+                    } else if (playerHu) {
+                        player.isHu = true;
+                        hu_button(player.isHu);
+                        System.out.println("player hu");
+                        timer.cancel();
+                    }
+                    else if (player.Tinging) {
                         player.discardAfterTing();
+                        robotIndex = robotIndex + 1;
                     } else if (player.isTing()) {
-                        ting_button(player.TingTiles);
-                    }else{
+                        System.out.println("判断玩家能ting了，按钮应该能亮");
+                        if(ting_button(player.TingThrowTiles)){
+                            ting_choice(player.TingThrowTiles);
+                            System.out.println("玩家点了听了");
+                            player.Tinging=true;
+                        }
+                    } else {
                         canClick = true;
                         listTiles(player.playerMajiangs, startX, startY);
-                        System.out.println("轮到我了");
                         timer.cancel();
                     }
 
                 }
-
             }
         };
-        timer.schedule(robotPlayTask,1000,1000);  // 每1秒执行一次任务
-
-
+        timer.schedule(robotPlayTask,3000,4000);  // 每1秒执行一次任务
     }
 
     // 机器人打牌的方法
@@ -829,6 +1157,8 @@ public class GameWindow extends JFrame {
 
                 }
             }
+            gamePanel.revalidate();
+            gamePanel.repaint();
         }
     }
     ///////////////////////////profile photo///////////////////////////////
@@ -883,8 +1213,8 @@ public class GameWindow extends JFrame {
                 int labelHeight1 = scaledComIcon.getIconHeight();
                 int panelWidth1 = gamePanel.getWidth();
                 int panelHeight1 = gamePanel.getHeight();
-                int x_1 = ((panelWidth1 - labelWidth1) / 64) * 49;
-                int y_1 = ((panelHeight1 - labelHeight1) / 64) * 40;
+                int x_1 = ((panelWidth1 - labelWidth1) / 64) * 49+200;
+                int y_1 = ((panelHeight1 - labelHeight1) / 64) * 40-70;
                 headLabel.setBounds(x_1, y_1, labelWidth1, labelHeight1);
                 imagePanel.setBounds(x_1, y_1, labelWidth1, labelHeight1 + 20);
                 // Increase height to accommodate "Player" label
@@ -900,8 +1230,8 @@ public class GameWindow extends JFrame {
                 int labelHeight2 = scaledComIcon.getIconHeight();
                 int panelWidth2 = gamePanel.getWidth();
                 int panelHeight2 = gamePanel.getHeight();
-                int x_2 = ((panelWidth2 - labelWidth2) / 64) * 18-15;
-                int y_2 = ((panelHeight2 - labelHeight2) / 64) * 15-25;
+                int x_2 = ((panelWidth2 - labelWidth2) / 64) * 18-200;
+                int y_2 = ((panelHeight2 - labelHeight2) / 64) * 15+80;
                 headLabel.setBounds(x_2, y_2, labelWidth2, labelHeight2);
                 imagePanel.setBounds(x_2, y_2, labelWidth2, labelHeight2 + 20); // Increase height to accommodate "Player" label
                 gamePanel.add(headLabel);
@@ -915,8 +1245,75 @@ public class GameWindow extends JFrame {
                 int labelHeight3 = scaledComIcon.getIconHeight();
                 int panelWidth3 = gamePanel.getWidth();
                 int panelHeight3 = gamePanel.getHeight();
-                int x_3 = ((panelWidth3 - labelWidth3) / 64) * 43+30;
-                int y_3 = ((panelHeight3 - labelHeight3) / 64) * 12;
+                int x_3 = ((panelWidth3 - labelWidth3) / 64) * 43-50;
+                int y_3 = ((panelHeight3 - labelHeight3) / 64) * 12-80;
+                headLabel.setBounds(x_3, y_3, labelWidth3, labelHeight3);
+                imagePanel.setBounds(x_3, y_3, labelWidth3, labelHeight3 + 20); // Increase height to accommodate "Player" label
+                gamePanel.add(headLabel);
+                gamePanel.add(imagePanel);
+                break;
+
+        }
+    }
+
+    public void addOtherAvatar(String clientId, String avatar){
+        ImageIcon com;
+        Image scaledCom;
+        ImageIcon scaledComIcon;
+        JLabel headLabel;
+        //create the image object;
+        com = new ImageIcon(avatar);
+        scaledCom = com.getImage().getScaledInstance(com.getIconWidth() / 9, com.getIconHeight() / 9, Image.SCALE_DEFAULT);
+        scaledComIcon = new ImageIcon(scaledCom);
+        headLabel = new JLabel(scaledComIcon);
+        headLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        headLabel.setVerticalAlignment(SwingConstants.CENTER);
+        // adjust the image;
+
+        // Create a JPanel to hold the image and "Player" label
+        JPanel imagePanel = new JPanel();
+        imagePanel.setLayout(new BorderLayout());
+        imagePanel.add(headLabel, BorderLayout.CENTER);
+        switch (clientId) {
+            case "1":
+                int labelWidth1 = scaledComIcon.getIconWidth();
+                int labelHeight1 = scaledComIcon.getIconHeight();
+                int panelWidth1 = gamePanel.getWidth();
+                int panelHeight1 = gamePanel.getHeight();
+                int x_1 = ((panelWidth1 - labelWidth1) / 64) * 49+150;
+                int y_1 = ((panelHeight1 - labelHeight1) / 64) * 40-80;
+                headLabel.setBounds(x_1, y_1, labelWidth1, labelHeight1);
+                imagePanel.setBounds(x_1, y_1, labelWidth1, labelHeight1 + 20);
+                // Increase height to accommodate "Player" label
+
+                gamePanel.add(headLabel);
+                gamePanel.add(imagePanel);
+                break;
+
+            case "2":
+                //set the "South" headshot;
+
+                int labelWidth2 = scaledComIcon.getIconWidth();
+                int labelHeight2 = scaledComIcon.getIconHeight();
+                int panelWidth2 = gamePanel.getWidth();
+                int panelHeight2 = gamePanel.getHeight();
+                int x_2 = ((panelWidth2 - labelWidth2) / 64) * 18-80;
+                int y_2 = ((panelHeight2 - labelHeight2) / 64) * 15+80;
+                headLabel.setBounds(x_2, y_2, labelWidth2, labelHeight2);
+                imagePanel.setBounds(x_2, y_2, labelWidth2, labelHeight2 + 20); // Increase height to accommodate "Player" label
+                gamePanel.add(headLabel);
+                gamePanel.add(imagePanel);
+                break;
+
+            case "3":
+                //set the "West" headshot;
+
+                int labelWidth3 = scaledComIcon.getIconWidth();
+                int labelHeight3 = scaledComIcon.getIconHeight();
+                int panelWidth3 = gamePanel.getWidth();
+                int panelHeight3 = gamePanel.getHeight();
+                int x_3 = ((panelWidth3 - labelWidth3) / 64) * 43-50;
+                int y_3 = ((panelHeight3 - labelHeight3) / 64) * 12-80;
                 headLabel.setBounds(x_3, y_3, labelWidth3, labelHeight3);
                 imagePanel.setBounds(x_3, y_3, labelWidth3, labelHeight3 + 20); // Increase height to accommodate "Player" label
                 gamePanel.add(headLabel);
