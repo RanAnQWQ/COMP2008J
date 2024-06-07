@@ -1,7 +1,8 @@
 package Majiang;
-import window.*;
 
-public class Main {
+import window.MainMenuWindow;
+
+public class Main2 {
 
     public static void main(String[] args) {
 
