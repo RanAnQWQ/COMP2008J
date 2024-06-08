@@ -23,9 +23,7 @@ public class ShuffleMajiang {
     // current index of the cards in the river
     public static int riverIndex=0;
 
-
-
-    // this method is written by Ran An
+    //written by Ran An
     public static ArrayList<Integer> getRiver() {
         if(!river.isEmpty()){
             return river;
@@ -35,10 +33,6 @@ public class ShuffleMajiang {
     }
 
 
-    /**
-     * ShuffleMajiang(): create and shuffle cards
-     * @throws InterruptedException
-     */
     public ShuffleMajiang() throws InterruptedException {
         Random random = new Random();
         //create majiangs and add them into maJiangs
@@ -54,6 +48,7 @@ public class ShuffleMajiang {
                 maJiangs.add(i);
             }
         }
+
         // shuffle the cards that have been created in order
         Collections.shuffle(maJiangs);
         System.out.println(maJiangs.size());
