@@ -11,7 +11,7 @@ import java.util.Iterator;
 
 /**
  * Player class aims to create a player and its features.
- * @author Qiyue Zhu
+ * @author Ran An & Qiyue Zhu
  */
 public abstract class Player {
     // the boss is decided in the InitPlayer class
@@ -249,7 +249,7 @@ public abstract class Player {
 
 
 
-    //Hu method
+    //Hu method below: written by Ran An
     public static boolean isWinningType(ArrayList<Integer> hand, ArrayList<Integer> HuTiles ) {
         // Implement your winning hand logic here
         // For simplicity, let's assume a winning hand is a hand with 14 tiles
@@ -357,7 +357,7 @@ public abstract class Player {
     }
 
 
-    //Ting method
+    //Ting method below: written by Ran An
     public boolean isTing(){
         Throw_NeedPairs();
         if(!this.pairs.isEmpty()){
