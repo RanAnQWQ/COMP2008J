@@ -84,6 +84,8 @@ public class NetworkContent extends JFrame {
                             networkWindow.gamePanel.repaint();
 
                             init = true;
+
+                            continue;
                         }
 
                         //确认东家
@@ -98,7 +100,11 @@ public class NetworkContent extends JFrame {
 
                             new InitNetworkPlayer();
 
+                            showArrow(Integer.parseInt(this.clientId), Integer.parseInt(msg));
+
                             networkWindow.gamePanel.remove(tipLabel);
+
+                            continue;
                         }
 
                         //发牌和处理头像
@@ -182,6 +188,7 @@ public class NetworkContent extends JFrame {
                                         break;
                                 }
                             }
+                            continue;
                         }
 
                         //出牌
@@ -265,19 +272,35 @@ public class NetworkContent extends JFrame {
                                 //检查是否杠和碰
                                 if (networkWindow.gang_button(networkWindow.player.isGang(card))){
                                     out.println("Gang-"+this.clientId+"-"+card+"-"+true);
+                                    System.out.println("Gang-"+this.clientId+"-"+card+"-"+true);
                                 }else {
                                     out.println("Gang-"+this.clientId+"-"+card+"-"+false);
+                                    System.out.println("Gang-"+this.clientId+"-"+card+"-"+false);
                                 }
 
                                 if (networkWindow.peng_button(networkWindow.player.isPeng(card))){
                                     out.println("Peng-"+this.clientId+"-"+card+"-"+true);
-                                    System.out.println("Peng-"+this.clientId+"-"+card+"-"+false);
+                                    System.out.println("Peng-"+this.clientId+"-"+card+"-"+true);
                                 }else {
                                     out.println("Peng-"+this.clientId+"-"+card+"-"+false);
                                     System.out.println("Peng-"+this.clientId+"-"+card+"-"+false);
                                 }
+
+                                //检查是否吃
+                                boolean chiFlag = ("1".equals(this.clientId)&&"4".equals(clientId))
+                                        || ("2".equals(this.clientId)&&"1".equals(clientId))
+                                        || ("3".equals(this.clientId)&&"2".equals(clientId))
+                                        || ("4".equals(this.clientId)&&"3".equals(clientId));
+                                if (chiFlag && networkWindow.chi_button(networkWindow.player.isChi(card))){
+                                    out.println("Chi-"+this.clientId+"-"+card+"-"+true);
+                                    System.out.println("Chi-"+this.clientId+"-"+card+"-"+true);
+                                }else {
+                                    out.println("Chi-"+this.clientId+"-"+card+"-"+false);
+                                    System.out.println("Chi-"+this.clientId+"-"+card+"-"+false);
+                                }
                             }
 
+                            continue;
                         }
 
                         //碰和杠
@@ -285,7 +308,6 @@ public class NetworkContent extends JFrame {
                             String clientId = response.split("-")[1];
                             Integer card = Integer.parseInt(response.split("-")[2]);
                             if (this.clientId.equals(clientId)){
-                                networkWindow.canClick = true;
                                 networkWindow.skip_button(true);
                                 networkWindow.pengButton.addActionListener(e -> {
                                     System.out.println(clientId + " Click Peng");
@@ -310,7 +332,6 @@ public class NetworkContent extends JFrame {
                             String clientId = response.split("-")[1];
                             Integer card = Integer.parseInt(response.split("-")[2]);
                             if (this.clientId.equals(clientId)){
-                                networkWindow.canClick = true;
                                 networkWindow.skip_button(true);
                                 networkWindow.gangButton.addActionListener(e -> {
                                     System.out.println(clientId + " Click Gang");
@@ -325,6 +346,30 @@ public class NetworkContent extends JFrame {
                                             msg.append(card).append(",");
                                         }else {
                                             msg.append(card);
+                                        }
+                                    }
+                                    out.println(msg.toString());
+                                });
+
+                            }
+                        }else if (response.startsWith("Chi")){
+                            String clientId = response.split("-")[1];
+                            Integer card = Integer.parseInt(response.split("-")[2]);
+                            if (this.clientId.equals(clientId)){
+                                networkWindow.skip_button(true);
+                                networkWindow.chiButton.addActionListener(e -> {
+                                    System.out.println(clientId + " Click Chi");
+                                    NetworkPlayer player = networkWindow.player;
+                                    List<Integer> list = player.Chi(player.isChi(card), networkWindow.chi_choice(player, player.isChi(card)), card, networkWindow);
+                                    networkWindow.addTileToWindow(networkWindow.player.playerMajiangs);
+                                    networkWindow.gamePanel.remove(rivers.get(rivers.size()-1));
+                                    networkWindow.removeButton();
+                                    StringBuilder msg = new StringBuilder("Finish-Chi-" + this.clientId + "-");
+                                    for (int i = 0; i < list.size(); i++) {
+                                        if (i!=3){
+                                            msg.append(list.get(i)).append(",");
+                                        }else {
+                                            msg.append(list.get(i));
                                         }
                                     }
                                     out.println(msg.toString());
@@ -448,6 +493,9 @@ public class NetworkContent extends JFrame {
                                         break;
                                 }
 
+                            }else {
+                                networkWindow.addTileToWindow(networkWindow.player.playerMajiangs);
+                                networkWindow.canClick = true;
                             }
                         } else {
                             //发牌和切换玩家
@@ -455,6 +503,9 @@ public class NetworkContent extends JFrame {
                                 String currentId = response.split("-")[1];
                                 String playerMajiangs = response.split("-")[2];
                                 Integer size = Integer.parseInt(response.split("-")[3]);
+
+                                showArrow(Integer.parseInt(this.clientId), Integer.parseInt(currentId));
+
                                 if (this.clientId.equals(currentId)){
                                     //发牌
                                     System.out.println(playerMajiangs);
@@ -463,10 +514,26 @@ public class NetworkContent extends JFrame {
                                     for (String s : array) {
                                         list.add(Integer.parseInt(s));
                                     }
-                                    networkWindow.addTileToWindow(list);
 
-                                    //允许出牌
-                                    networkWindow.canClick = true;
+                                    NetworkPlayer player = networkWindow.player;
+                                    if (player.isHu(list)){
+                                        out.println("Win-"+this.clientId);
+                                        return;
+                                    }else if (player.isTing){
+                                        Integer card = list.get(list.size() - 1);
+                                        // 将牌添加到河中
+                                        addNetworkTile.addTileToRiverX(new ImageIcon(new ImageIcon(networkWindow.tilemap.getTilePath(card)).getImage()
+                                                        .getScaledInstance(networkWindow.scaledWidth, networkWindow.scaledHeight,
+                                                                Image.SCALE_SMOOTH)), card, networkWindow.discardStartX,
+                                                networkWindow.discardStartY, networkWindow.maxTilesPerRow, networkWindow.gamePanel,4);
+
+                                        out.println("Discard-" + this.clientId + "-" + card);
+                                    }else {
+                                        networkWindow.addTileToWindow(list);
+
+                                        //允许出牌
+                                        networkWindow.canClick = true;
+                                    }
                                 }else {
                                     switch (this.clientId){
                                         case "1":
@@ -536,73 +603,6 @@ public class NetworkContent extends JFrame {
             e.printStackTrace();
         }
 
-//        InitPlayer initPlayer = new InitPlayer();
-//
-//
-//        // create 4 players, and 3 of them are computers
-//        HumanPlayer player = initPlayer.player;
-//
-//        Computer computer1 = initPlayer.computer1, computer2 = initPlayer.computer2, computer3 = initPlayer.computer3;
-//        ShuffleMajiang shuffleMajiang = new ShuffleMajiang();
-//
-//        // deal the cards for the first time evenly (13 cards each)
-//        ShuffleMajiang.maJiangsIndex=0;
-//        initPlayer.haveFirstBoard();
-//
-//
-//        // sort the cards
-//        Collections.sort(player.getPlayerMajiangs());  //list the players tile list from small to large
-//        Collections.sort(computer1.getPlayerMajiangs());
-//        Collections.sort(computer2.getPlayerMajiangs());
-//        Collections.sort(computer3.getPlayerMajiangs());
-//
-//        String host=getFirstHost();
-//        System.out.println(host);
-//        int index;
-//
-//        // in the first turn, the host will gain one more card to discard first
-//        System.out.println("aaaaaaaaaaaaaa");
-//        // index are got from the window
-//
-//        networkWindow.tilemap = new Tilemap();
-//
-//        //networkWindow.runButton(shuffleMajiang.river.get(shuffleMajiang.river.size()-1));
-//        //networkWindow.setTileNumber(player.getPlayerMajiangs());
-//        System.out.println("player: "+player.playerMajiangs);  //print the players tiles
-//        System.out.println("playersize: "+player.playerMajiangs.size());
-//
-//        networkWindow.setComputer1(computer1);
-//        System.out.println("computer1: "+computer1.playerMajiangs);
-//        System.out.println("size1: "+computer1.playerMajiangs.size());
-//
-//        networkWindow.setComputer2(computer2);
-//        System.out.println("computer2: "+computer2.getPlayerMajiangs());
-//        System.out.println("size2: "+computer2.getPlayerMajiangs().size());
-//
-//        networkWindow.setComputer3(computer3);
-//        networkWindow.setHuman(player);
-//        System.out.println("computer3: "+computer3.getPlayerMajiangs());
-//        System.out.println("size3: "+computer3.getPlayerMajiangs().size());
-//
-//        addComputerTile.addComputer1Tile(computer1.getPlayerMajiangs().size(),networkWindow.gamePanel);
-//        addComputerTile.addComputer2Tile(computer2.getPlayerMajiangs().size(),networkWindow.gamePanel);
-//        addComputerTile.addComputer3Tile(computer3.getPlayerMajiangs().size(),networkWindow.gamePanel);
-//
-//
-//
-//        ArrayList<Integer> b =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test chi
-//        //player.isPeng();
-//        ArrayList<Integer> c =new ArrayList<>(Arrays.asList(11, 12, 13, 12, 13, 14));//test ting
-//        boolean pengJudge = true;
-//        boolean gangJudge = true;
-//        networkWindow.addTileToWindow(player.playerMajiangs); // add user player's tiles to window
-//        networkWindow.hideTiles();
-//        addComputerTile.hideComputerTiles();
-//       // networkWindow.setbuttons(b, pengJudge, gangJudge,c, false, false);
-//
-//        // in the first turn, the host will discard a card
-//        System.out.println(",,,,,,"+networkWindow.cardToDiscard);
-
     }
 
 
@@ -625,24 +625,6 @@ public class NetworkContent extends JFrame {
 
         }
         networkWindow.startRobotPlaySequence(hostNumber);
-    }
-
-
-    public boolean otherCheck(Integer card){
-        boolean b = false;
-
-        NetworkPlayer player = networkWindow.player;
-        if(networkWindow.gang_button(player.isGang(card))){
-            player.Gang(card, networkWindow.scaledWidth, networkWindow.scaledHeight, networkWindow.gamePanel,
-                    4, networkWindow.addNetworkTile);
-            b = true;
-        }else if (networkWindow.peng_button(player.isPeng(card))){
-            player.Peng(card, networkWindow.scaledWidth, networkWindow.scaledHeight, networkWindow.gamePanel,
-                    4, networkWindow.addNetworkTile);
-            b = true;
-        }
-
-        return b;
     }
 
     ///////////////////////method of help button including menu,restart and rules in game window///////////////////////////
@@ -740,64 +722,7 @@ public class NetworkContent extends JFrame {
                     }
                 }
 
-                Image scaledArrow;
-                ImageIcon scaledArrowIcon;
-                JLabel arrowLabel;
 
-                ImageIcon arrowIcon = choose_arrow(sum);
-                scaledArrow = arrowIcon.getImage().getScaledInstance(arrowIcon.getIconWidth() / 15, arrowIcon.getIconHeight() / 15, Image.SCALE_DEFAULT);
-                scaledArrowIcon = new ImageIcon(scaledArrow);
-                arrowLabel = new JLabel(scaledArrowIcon);
-                // set the arrowLabel object to display (and remove after 5s);
-
-                arrowLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                arrowLabel.setVerticalAlignment(SwingConstants.CENTER);
-                //set horizontal center & vertical center;
-
-                gamePanel.setLayout(null);
-                //remove the default lay
-
-                int labelWidth = scaledArrowIcon.getIconWidth();
-                int labelHeight = scaledArrowIcon.getIconHeight();
-                int panelWidth = gamePanel.getWidth();
-                int panelHeight = gamePanel.getHeight();
-                int x = (panelWidth - labelWidth) / 2;
-                int y = (panelHeight - labelHeight) / 2;
-                arrowLabel.setBounds(x, y, labelWidth, labelHeight);
-                //compute the position of the arrow;
-
-                gamePanel.add(arrowLabel);
-                // add the label picture to game screen;
-
-                JLabel sumLabel = new JLabel("" + sum);
-                Font label_font = new Font("Arial", Font.BOLD, 50);
-                sumLabel.setLocation(560, 250);
-                sumLabel.setFont(label_font);
-                sumLabel.setHorizontalAlignment(SwingConstants.CENTER);
-                sumLabel.setSize(70, 50);
-                sumLabel.setBackground(Color.WHITE);
-                sumLabel.setOpaque(true);
-                gamePanel.add(sumLabel);
-                revalidate();
-                repaint();
-                // set the label, show the sum of 2 dices;
-
-                // remove the original button once the label occur;
-                Timer timer = new Timer();
-
-                timer.schedule(new TimerTask() {
-                    @Override
-                    public void run() {
-                        SwingUtilities.invokeLater(() -> {
-                            gamePanel.remove(num);
-                            gamePanel.remove(sumLabel);
-                            gamePanel.remove(arrowLabel);
-                            gamePanel.revalidate();
-                            gamePanel.repaint();
-                        });
-                        timer.cancel();
-                    }
-                }, 5000);
                 // set a timer, let the number of dice and the arrow label remain 5s and remove;
                 init(host);
                 System.out.println("host:"+host);
@@ -806,31 +731,176 @@ public class NetworkContent extends JFrame {
         });
     }
 
-    public static ImageIcon choose_arrow(int sum) {
+    public void showArrow(int clientId, int host){
+        Image scaledArrow;
+        ImageIcon scaledArrowIcon;
+        JLabel arrowLabel;
+        ImagePanel gamePanel = networkWindow.gamePanel;
+
+        ImageIcon arrowIcon = choose_arrow(clientId, host);
+        scaledArrow = arrowIcon.getImage().getScaledInstance(arrowIcon.getIconWidth() / 15, arrowIcon.getIconHeight() / 15, Image.SCALE_DEFAULT);
+        scaledArrowIcon = new ImageIcon(scaledArrow);
+        arrowLabel = new JLabel(scaledArrowIcon);
+        // set the arrowLabel object to display (and remove after 5s);
+
+        arrowLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        arrowLabel.setVerticalAlignment(SwingConstants.CENTER);
+        //set horizontal center & vertical center;
+
+        gamePanel.setLayout(null);
+        //remove the default lay
+
+        int labelWidth = scaledArrowIcon.getIconWidth();
+        int labelHeight = scaledArrowIcon.getIconHeight();
+        int panelWidth = gamePanel.getWidth();
+        int panelHeight = gamePanel.getHeight();
+        int x = (panelWidth - labelWidth) / 2;
+        int y = (panelHeight - labelHeight) / 2;
+        arrowLabel.setBounds(x, y, labelWidth, labelHeight);
+        //compute the position of the arrow;
+
+        gamePanel.add(arrowLabel);
+        // add the label picture to game screen;
+
+        JLabel sumLabel = new JLabel("" + host);
+        Font label_font = new Font("Arial", Font.BOLD, 50);
+        sumLabel.setLocation(560, 250);
+        sumLabel.setFont(label_font);
+        sumLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        sumLabel.setSize(70, 50);
+        sumLabel.setBackground(Color.WHITE);
+        sumLabel.setOpaque(true);
+        gamePanel.add(sumLabel);
+        revalidate();
+        repaint();
+        // set the label, show the sum of 2 dices;
+
+        // remove the original button once the label occur;
+        Timer timer = new Timer();
+
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                SwingUtilities.invokeLater(() -> {
+                    gamePanel.remove(sumLabel);
+                    gamePanel.remove(arrowLabel);
+                    gamePanel.revalidate();
+                    gamePanel.repaint();
+                });
+                timer.cancel();
+            }
+        }, 2000);
+    }
+
+    public static ImageIcon choose_arrow(int clientId, int sum) {
         ImageIcon arrowIcon;
 
-        switch (sum % 4) {
+        switch (clientId){
             case 1:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                switch (sum % 4) {
+                    case 1:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                        break;
+                    //East;
+
+                    case 2:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                        break;
+                    //North;
+
+                    case 3:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                        break;
+                    //West;
+
+                    default:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
+                        break;
+                    //South;
+
+                }
                 break;
             //East;
 
             case 2:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                switch (sum % 4) {
+                    case 1:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
+                        break;
+                    //East;
+
+                    case 2:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                        break;
+                    //North;
+
+                    case 3:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                        break;
+                    //West;
+
+                    default:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                        break;
+                    //South;
+
+                }
                 break;
             //North;
 
             case 3:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                switch (sum % 4) {
+                    case 1:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                        break;
+                    //East;
+
+                    case 2:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
+                        break;
+                    //North;
+
+                    case 3:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                        break;
+                    //West;
+
+                    default:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                        break;
+                    //South;
+
+                }
                 break;
             //West;
 
             default:
-                arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
-                break;
-            //South;
+                switch (sum % 4) {
+                    case 1:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowRight.png");
+                        break;
+                    //East;
 
+                    case 2:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowTop.png");
+                        break;
+                    //North;
+
+                    case 3:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowLeft.png");
+                        break;
+                    //West;
+
+                    default:
+                        arrowIcon = new ImageIcon("src/window/Arrow/ArrowDown.png");
+                        break;
+                    //South;
+
+                }
+                break;
         }
+
+
         return arrowIcon;
     }
     //---------------------not the first game--------------------

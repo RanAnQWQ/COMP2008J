@@ -8,8 +8,8 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import static window.NetworkWindow.rivers;
 
@@ -38,9 +38,6 @@ public class AddNetworkTile extends AddTile {
 
     @Override
     public void addNetworkTileToWindow(int size, ImagePanel gamePanel, int computerName, int startX, int startY) {  //written by Siying.Li
-        System.out.println("gamePanel-add-before-size-"+size+"-"+computerName);
-        System.out.println("gamePanel-add-before-"+gamePanel.getComponents().length);
-        System.out.println("list2-before-"+list2.size());
         ImageIcon computerIcon = null;
 
         if (computerName == 1) {
@@ -64,16 +61,16 @@ public class AddNetworkTile extends AddTile {
             int tileY = startY;
 
             if (computerName == 1) {
-                tileX = startX - 5 * i;  // 每张牌水平向左移动5个像素
-                tileY = startY - 26 * i;  // 每张牌垂直向上移动52个像素
-
+                tileX = startX - 5 * i;  // Move each card horizontally 5 pixels to the left
+                tileY = startY - 26 * i;  // Each card moves up 52 pixels vertically
             } else if (computerName == 2) {
-                tileX = startX - 35 * i;  // 每张牌水平向左移动35个像素
+                tileX = startX - 35 * i;  // Move each card horizontally by 35 pixels to the left
                 tileY = startY;
             } else {
-                tileX = startX + 5 * i;  // 每张牌水平向左移动5个像素
-                tileY = startY - 26 * i;  // 每张牌垂直向下移动26个像素
+                tileX = startX + 5 * i;  // Move each card horizontally 5 pixels to the left
+                tileY = startY - 26 * i;  // Move each card down 26 pixels vertically
             }
+
 
             tileLabel.setBounds(tileX, tileY, computerIcon.getIconWidth(), computerIcon.getIconHeight());
             gamePanel.add(tileLabel);
@@ -91,14 +88,11 @@ public class AddNetworkTile extends AddTile {
             }
         }
 
-        System.out.println("gamePanel-add-"+gamePanel.getComponents().length);
-        System.out.println("list2-after-"+list2.size());
         gamePanel.revalidate();
         gamePanel.repaint();
     }
     @Override
     public void removeNetworkTiles(ImagePanel gamePanel, int computerName){
-        System.out.println("gamePanel-before-"+gamePanel.getComponents().length);
         switch (computerName){
             case 1:
                 for (JLabel label : list1) {
@@ -119,15 +113,6 @@ public class AddNetworkTile extends AddTile {
                 list3.clear();
                 break;
         }
-        System.out.println("gamePanel-remove-"+gamePanel.getComponents().length);
-//        String labelName = "computer"+computerName;
-//        Component[] components = gamePanel.getComponents();
-//        for (Component component : components) {
-//            if (component instanceof JLabel && labelName.equals(component.getName())) {
-//                System.out.println("remove");
-//                gamePanel.remove(component);
-//            }
-//        }
         gamePanel.revalidate();
         gamePanel.repaint();
     }
@@ -199,9 +184,6 @@ public class AddNetworkTile extends AddTile {
         gamePanel.revalidate();
         gamePanel.repaint();
     }
-
-
-
 
     @Override
     public void addTileToRiverY(ImageIcon tileIcon, int tileNum, int discardStartX, int discardStartY, int maxTilesPerCol, JPanel gamePanel, int computerName) {
