@@ -119,7 +119,10 @@ screen.height=800
 </ul>
 
 <p>For a visual guide, refer to the screenshots and tutorial videos provided in the <em>docs</em> folder.</p>
-
+<h3>Updated History</h3>
+<ul>
+    <li>6/8/24 Made the final update. Some classes were rebuild and rewrote by our menbers. Multiple classes were deleted and reload.</li>
+</ul>
 <h3>Contributors</h3>
 <ul>
     <li>22207228 An Ran</li>
