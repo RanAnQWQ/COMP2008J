@@ -364,7 +364,6 @@ public class GameWindow extends JFrame {
                     player.Gang(card, scaledWidth, scaledHeight, gamePanel, 4, addComputerTile); // Perform Gang action
 
                     // Remove the last tile from the appropriate computer's river
-                    System.out.print("computer2.playerRiver.size() - 1:" + (computer2.playerRiver.size() - 1));
                     if (computernumber == 1) {
                         computer1.playerRiver.remove(computer1.playerRiver.size() - 1);
                         robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
@@ -382,8 +381,6 @@ public class GameWindow extends JFrame {
                     latch.countDown(); // Release the latch
                 }
             });
-            gamePanel.add(gang); // Add the Gang button to the game panel
-            return true; // Return true indicating Gang action is possible
         } else {
             // If Gang action is not possible
             gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
@@ -682,8 +679,6 @@ public class GameWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Skip is available");
                     result[0] = 100;
-                    listTiles(player.playerMajiangs, startX, startY);
-                    latch.countDown();
                     if(computer==1){
                         computer1.gainMajiang();
                     }else if(computer==2){
@@ -692,6 +687,8 @@ public class GameWindow extends JFrame {
                         computer3.gainMajiang();
                     }
                     startRobotPlaySequence((computer+1)%4);
+                    listTiles(player.playerMajiangs, startX, startY);
+                    latch.countDown();
                     skipGang.setVisible(false);
                     gang.setVisible(false);
                     // Hide the gang buttons
@@ -1057,13 +1054,12 @@ public class GameWindow extends JFrame {
                                     System.out.println("computer1 peng computer2's tile");                                    robotIndex = robotIndex + 3;
                                     computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
                                     robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
-
+                                    robotIndex = robotIndex + 3;
                                 } else if (!computer3.isChi(card).isEmpty()&&!computer3.Tinging) {
                                     computer3.Chi(card,gameWindow.scaledWidth,gameWindow.scaledHeight,gameWindow.gamePanel,3,addComputerTile);
                                     System.out.println("computer3 chi computer1's tile");
                                     robotIndex = robotIndex + 1;
                                     computer2.playerRiver.remove(computer2.playerRiver.size() - 1);
-                                    System.out.println(computer3.cardsToDisplay.size()+"chi23 ctd");
                                     robotPlayTile(computer2.getPlayerMajiangs(), 678, 200, Boolean.TRUE, 2, card);
 
                                 } else {
