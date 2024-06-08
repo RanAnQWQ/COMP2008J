@@ -11,6 +11,14 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * TestHumanChi:
+ * test the Chi(ArrayList<Integer> set, int listener, Integer card,
+ * int scaledWidth, int scaledHeight, JPanel gamePanel, int computerName, AddTile addTile)
+ * in the HumanPlayer class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestHumanChi {
     HumanPlayer player = new HumanPlayer();
 

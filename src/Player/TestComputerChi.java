@@ -13,6 +13,12 @@ import java.util.Collections;
 
 import static org.junit.Assert.*;
 
+
+/**
+ * TestComputerChi: test the Chi(int card) in the Computer class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestComputerChi {
 
     // Chi(Integer card, int scaledWidth,

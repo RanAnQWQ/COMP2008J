@@ -10,8 +10,14 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * TestGang: test the Gang(Integer card, int scaledWidth, int scaledHeight, JPanel gamePanel,
+ *                      int computerName, AddTile addTile) in the Player class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestGang {
-    HumanPlayer player = new HumanPlayer();
+    Player player = new HumanPlayer();
 
     int scaledWidth = 100;
     int scaledHeight = 100;

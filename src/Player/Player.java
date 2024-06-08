@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+/**
+ * Player class aims to create a player and its features.
+ * @author Qiyue Zhu
+ */
 public abstract class Player {
     // the boss is decided in the InitPlayer class
     public boolean isHost;
@@ -72,6 +76,7 @@ public abstract class Player {
     public abstract int discardMajiang(int index);
 
 
+    // written by Ran An
     public int discardAfterTing(){
         int card=playerMajiangs.remove(playerMajiangs.size()-1);
         playerRiver.add(card);

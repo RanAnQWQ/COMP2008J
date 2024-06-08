@@ -8,6 +8,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * Computer: define the related features of computers,
+ *           including gain card, discard card, chi, peng, gang, ting & hu.
+ *           the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu
+ */
+
 public class Computer extends Player{
     public int discardMajiang(int index) {
         int card = playerMajiangs.get(index);

@@ -6,8 +6,13 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * TestIsChi: test the isChi(int card) in the Player class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestIsChi {
-    HumanPlayer player = new HumanPlayer();
+    Player player = new HumanPlayer();
 
 
     // 24, 25, 26, 27, 28; card: 26

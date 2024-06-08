@@ -5,6 +5,13 @@ import GameTable.ShuffleMajiang;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * NetworkPlayer: define the related features of network players,
+ *              including gain card, discard card, chi, peng, gang, ting & hu.
+ *              the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu
+ */
 public class NetworkPlayer extends Player {
     public int clientId;
     public boolean host;
