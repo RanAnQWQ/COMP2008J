@@ -6,13 +6,6 @@ import window.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * InitPlayer: initialize the game table,
- *             including identify the attributes of players
- *             and deal the cards to the players.
- *
- * @author: Qiyue Zhu
- */
 public class InitPlayer {
     //store the information of each in the players
     public static ArrayList<Player> players=new ArrayList<Player>();

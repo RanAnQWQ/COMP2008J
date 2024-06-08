@@ -8,13 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 
-/**
- * HumanPlayer: define the related features of human players,
- *              including gain card, discard card, chi, peng, gang, ting & hu.
- *              the discard card and the chi methods are rewritten.
- *
- * @author: Qiyue Zhu
- */
 public class HumanPlayer extends Player {
 
     /**
@@ -41,7 +34,8 @@ public class HumanPlayer extends Player {
             cardsToDisplay.add(set.get(0));
             cardsToDisplay.add(set.get(1));
             // remove the card from the player's card
-            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
+            playerMajiangs.
+                    remove(playerMajiangs.indexOf(set.get(0)));
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
         } else if (cardIndex == 1) {
             // add this card aside to display the card
@@ -128,6 +122,7 @@ public class HumanPlayer extends Player {
         // remove the card from the player's card
         Aside(set, listener);
         cardsToDisplay.add(set.get(listener));
+        //Collections.sort(cardsToDisplay);
 
         // remove this card from the river (both the player's river and the whole river)
         ShuffleMajiang.river.remove(ShuffleMajiang.river.size()-1);

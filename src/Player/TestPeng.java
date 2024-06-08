@@ -15,7 +15,7 @@ public class TestPeng {
 
     int scaledWidth = 100;
     int scaledHeight = 100;
-    JPanel gamePanel = new ImagePanel("src/window/background/background1.png");
+    JPanel gamePanel = new ImagePanel("src/window/background/background0.png");
     int computerName = 1;
     AddComputerTile addTile = new AddComputerTile();
 

@@ -13,12 +13,6 @@ import java.util.Collections;
 
 import static org.junit.Assert.*;
 
-
-/**
- * TestComputerChi: test the Chi(int card) in the Computer class
- *
- * @author: Qiyue Zhu
- */
 public class TestComputerChi {
 
     // Chi(Integer card, int scaledWidth,
@@ -29,7 +23,7 @@ public class TestComputerChi {
     ShuffleMajiang s;
     int scaledWidth = 100;
     int scaledHeight = 100;
-    JPanel gamePanel = new ImagePanel("src/window/background/background1.png");
+    JPanel gamePanel = new ImagePanel("src/window/background/background0.png");
     int computerName = 1;
     AddComputerTile addTile = new AddComputerTile();
 
@@ -55,14 +49,13 @@ public class TestComputerChi {
 
         ShuffleMajiang.river.add(27);
         computer.Chi(27, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
-        Collections.sort(computer.cardsToDisplay);
-
         // Assert
         assertEquals(1, computer.ChiNumber);
 
         ArrayList<Integer> correctPlayerMajiangs = new ArrayList<>();
         correctPlayerMajiangs.add(29);
         assertEquals(correctPlayerMajiangs, computer.playerMajiangs);
+        Collections.sort(computer.cardsToDisplay);
 
         ArrayList<Integer> correctCardsToDisplay = new ArrayList<>();
         correctCardsToDisplay.add(25);
@@ -89,7 +82,6 @@ public class TestComputerChi {
         ShuffleMajiang.river.add(26);
         computer.Chi(26, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(computer.cardsToDisplay);
-
         // Assert
         assertEquals(2, computer.ChiNumber);
 
@@ -123,7 +115,6 @@ public class TestComputerChi {
         ShuffleMajiang.river.add(27);
         computer.Chi(27, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(computer.cardsToDisplay);
-
         // Assert
         assertEquals(3, computer.ChiNumber);
 

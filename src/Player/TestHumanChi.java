@@ -11,20 +11,12 @@ import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 
-/**
- * TestHumanChi:
- * test the Chi(ArrayList<Integer> set, int listener, Integer card,
- * int scaledWidth, int scaledHeight, JPanel gamePanel, int computerName, AddTile addTile)
- * in the HumanPlayer class
- *
- * @author: Qiyue Zhu
- */
 public class TestHumanChi {
     HumanPlayer player = new HumanPlayer();
 
     int scaledWidth = 100;
     int scaledHeight = 100;
-    JPanel gamePanel = new ImagePanel("src/window/background/background1.png");
+    JPanel gamePanel = new ImagePanel("src/window/background/background0.png");
     int computerName = 1;
     AddComputerTile addTile = new AddComputerTile();
 
@@ -41,7 +33,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 3, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -67,7 +58,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 3, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -94,7 +84,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 3, 26, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -129,7 +118,6 @@ public class TestHumanChi {
         player.set.add(27);
         player.Chi(player.set, 0, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(25);
@@ -167,7 +155,6 @@ public class TestHumanChi {
         player.set.add(27);
         player.Chi(player.set, 1, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -206,7 +193,6 @@ public class TestHumanChi {
         player.set.add(27);
         player.Chi(player.set, 2, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -241,7 +227,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 1, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -274,7 +259,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 1, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -307,7 +291,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 2, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -340,7 +323,6 @@ public class TestHumanChi {
         player.set.add(26);
         player.Chi(player.set, 2, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         Collections.sort(player.cardsToDisplay);
-
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);

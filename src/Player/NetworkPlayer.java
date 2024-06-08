@@ -1,17 +1,12 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
+import window.NetworkWindow;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
-/**
- * NetworkPlayer: define the related features of network players,
- *              including gain card, discard card, chi, peng, gang, ting & hu.
- *              the discard card and the chi methods are rewritten.
- *
- * @author: Qiyue Zhu
- */
 public class NetworkPlayer extends Player {
     public int clientId;
     public boolean host;
@@ -38,11 +33,19 @@ public class NetworkPlayer extends Player {
      *        It starts by removing this card from the player's hand,
      *        then add this card to the display array.
      */
-    public void Aside(ArrayList<Integer> set, int cardIndex){
+    public void Aside(ArrayList<Integer> set, int cardIndex, NetworkWindow networkWindow, List<Integer> chiList){
         if (cardIndex == 2){
             // add this card aside to display the card
             cardsToDisplay.add(set.get(0));
             cardsToDisplay.add(set.get(1));
+
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(0), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(1), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            chiList.add(set.get(0));
+            chiList.add(set.get(1));
+
             // remove the card from the player's card
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
@@ -50,6 +53,14 @@ public class NetworkPlayer extends Player {
             // add this card aside to display the card
             cardsToDisplay.add(set.get(0));
             cardsToDisplay.add(set.get(2));
+
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(0), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(2), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            chiList.add(set.get(0));
+            chiList.add(set.get(2));
+
             // remove the card from the player's card
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
@@ -57,6 +68,14 @@ public class NetworkPlayer extends Player {
             // add this card aside to display the card
             cardsToDisplay.add(set.get(1));
             cardsToDisplay.add(set.get(2));
+
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(1), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            networkWindow.addNetworkTile.addTileToDisplay(set.get(2), networkWindow.scaledWidth,
+                    networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+            chiList.add(set.get(1));
+            chiList.add(set.get(2));
+
             // remove the card from the player's card
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(2)));
@@ -85,7 +104,9 @@ public class NetworkPlayer extends Player {
      *
      * In this process, listener is set finally as the index of the pattern chosen.
      */
-    public void Chi(ArrayList<Integer> set, int listener, int card) {
+    public List<Integer> Chi(ArrayList<Integer> set, int listener, int card, NetworkWindow networkWindow) {
+        List<Integer> chiList = new ArrayList<>();
+
         // listener=3
         // if set has 3 cards
         if (listener == 3){
@@ -128,12 +149,21 @@ public class NetworkPlayer extends Player {
         }
         // add this card aside to display the card
         // remove the card from the player's card
-        Aside(set, listener);
+        Aside(set, listener, networkWindow, chiList);
         cardsToDisplay.add(set.get(listener));
+
+        networkWindow.addNetworkTile.addTileToDisplay(set.get(listener), networkWindow.scaledWidth,
+                networkWindow.scaledHeight, networkWindow.gamePanel, 4);
+        chiList.add(set.get(listener));
+
+        Collections.sort(cardsToDisplay);
+
 
         // remove this card from the river (both the player's river and the whole river)
         ShuffleMajiang.river.remove(ShuffleMajiang.river.size()-1);
         // add up the number of Chi
         ChiNumber++;
+
+        return chiList;
     }
 }

@@ -4,15 +4,8 @@ import GameTable.ShuffleMajiang;
 import window.AddTile;
 
 import javax.swing.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.*;
 
-/**
- * Player class aims to create a player and its features.
- * @author Ran An & Qiyue Zhu
- */
 public abstract class Player {
     // the boss is decided in the InitPlayer class
     public boolean isHost;
@@ -76,7 +69,6 @@ public abstract class Player {
     public abstract int discardMajiang(int index);
 
 
-    // written by Ran An
     public int discardAfterTing(){
         int card=playerMajiangs.remove(playerMajiangs.size()-1);
         playerRiver.add(card);
@@ -171,8 +163,8 @@ public abstract class Player {
         cardsToDisplay.add(card);
         cardsToDisplay.add(card);
         // remove the card from the player's card
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
+        playerMajiangs.remove(card);
+        playerMajiangs.remove(card);
 
 
         for (int i = 0; i < 3; i++) {
@@ -249,20 +241,20 @@ public abstract class Player {
 
 
 
-    //Hu method below: written by Ran An
-    public static boolean isWinningType(ArrayList<Integer> hand, ArrayList<Integer> HuTiles ) {
+    //Hu method
+    public static boolean isWinningType(List<Integer> hand, List<Integer> HuTiles ) {
         // Implement your winning hand logic here
         // For simplicity, let's assume a winning hand is a hand with 14 tiles
         return hand.size()+ HuTiles.size() >= 14;
     }
 
 
-    private static ArrayList<Integer> getPairs(ArrayList<Integer> hand) {
+    private static List<Integer> getPairs(List<Integer> hand) {
         Collections.sort(hand);
-        ArrayList<Integer> res=new ArrayList<>();
-        if (null != hand && hand.size() > 1) {
+        List<Integer> res=new ArrayList<>();
+        if (hand.size() > 1) {
             for (int i = 0; i < hand.size() - 1; i++) {
-                if (hand.get(i) == hand.get(i+1)) {
+                if (hand.get(i).equals(hand.get(i + 1))) {
                     res.add(hand.get(i));
                     i++;
                 }
@@ -274,41 +266,58 @@ public abstract class Player {
 
     // Method to count the number of triplets in the hand
 
-    private static ArrayList<Integer> removeTriplets(ArrayList<Integer> temp) {
-        Iterator<Integer> iterator = temp.iterator();
+    private static List<Integer> removeTriplets(List<Integer> temp) {
+        // See if there are three of them
+        if (temp == null || temp.isEmpty()) {
+            return temp;  // If the list is empty, return it directly
+        }
 
-        while (iterator.hasNext()) {
-            Integer tile = iterator.next();
-            int count = countTiles(temp, tile);
+        int card = temp.get(0);
+        int count = 1;
+        // Store cleared cards
+        List<Integer> removeList = new ArrayList<>();
 
-            if (count >= 3) {
-                int removals = count >= 4 ? 4 : 3;// Remove 4 if there are quadruplets, otherwise remove 3
-                for (int i = 0; i < removals; i++) {
-                    iterator.remove();             // Remove the current element safely
-                    if (i < removals - 1) {        // If not the last iteration, move to next element
-                        iterator.next();
+        for (int i = 1; i < temp.size(); i++) {
+            // If it matches, the calculator adds 1
+            if (temp.get(i) == card) {
+                count++;
+
+                if (count == 3) {
+                    // When the calculator is equal to 3, add the card to the clear list
+                    for (int j = 0; j < count; j++) {
+                        removeList.add(card);
                     }
+                    count = 0;
                 }
-                if (iterator.hasNext()) {          // Move to next element if exists, or iterator will automatically end
-                    iterator.next();
-                }
+            } else {
+                // If not, the card is changed to the current card and the counter is set to 1
+                card = temp.get(i);
+                count = 1;
             }
         }
+
+        //Remove three identical cards from the list
+        temp.removeAll(removeList);
+
         return temp;
     }
 
 
+
     // Method to count the number of sequences in the hand
-    private static ArrayList<Integer> removeSequences(ArrayList<Integer> temp) {
+    private static List<Integer> removeSequences(List<Integer> temp) {
         Collections.sort(temp);
+        ArrayList<Integer> fengCards = new ArrayList<>();
         //remove Feng tiles
         int[] feng={41,42,43,44,45,46,47};
         for (Integer i:feng){
             if(temp.contains(i)){
                 temp.remove(i);
+                fengCards.add(i);
             }
         }
-        ArrayList<Integer> tempCards = (ArrayList<Integer>) temp.clone();
+        ArrayList<Integer> tempCards = new ArrayList<>();
+        tempCards.addAll(temp);
         for (int i = 0; i < temp.size() - 2; i++) {
             if (temp.get(i) + 1 == temp.get(i+1)&& temp.get(i+1)+ 1 == temp.get(i+2)) {
                 Integer a=temp.get(i);
@@ -320,11 +329,14 @@ public abstract class Player {
                 i += 2; // Skip the next two tiles as they're part of the sequence
             }
         }
+        if(!fengCards.isEmpty()){
+            tempCards.addAll(fengCards);
+        }
         return tempCards;
     }
 
     // Method to count the occurrences of a specific tile in the hand
-    private static int countTiles(ArrayList<Integer> hand, int tile) {
+    private static int countTiles(List<Integer> hand, int tile) {
         int count = 0;
         for (int t : hand) {
             if (t == tile) {
@@ -334,30 +346,25 @@ public abstract class Player {
         return count;
     }
 
-    public boolean isHu(ArrayList<Integer> hand,ArrayList<Integer> HuTiles){
-        if(isWinningType(hand,HuTiles)) {
-            ArrayList<Integer> js = getPairs(hand);
-            if (null == js || js.size() <= 0) {
+    public boolean isHu(List<Integer> hand){
+            //Clear three combinations of different and the same
+            List<Integer> tempCards = new ArrayList<>();
+            tempCards.addAll(hand);
+            Collections.sort(tempCards);
+            //Clear three consistent
+            tempCards = removeTriplets(tempCards);
+            //Clear three consecutive
+            tempCards= removeSequences(tempCards);
+            //See if it ends up being a couple
+            if (tempCards.size()==2 && tempCards.get(0).equals(tempCards.get(1))) {
+                return true;
+            }else {
                 return false;
-            }else{
-                for (Integer j : js) {
-                    ArrayList<Integer> tempCards = (ArrayList<Integer>) hand.clone();
-                    tempCards.remove(j);
-                    tempCards.remove(j);
-                    Collections.sort(tempCards);
-                    tempCards = removeTriplets(tempCards);
-                    tempCards= removeSequences(tempCards);
-                    if (tempCards.size() <= 0) {
-                        return true;
-                    }
-                }
             }
-        }
-        return false;
     }
 
 
-    //Ting method below: written by Ran An
+    //Ting method
     public boolean isTing(){
         Throw_NeedPairs();
         if(!this.pairs.isEmpty()){
@@ -368,18 +375,14 @@ public abstract class Player {
     }
     public void Throw_NeedPairs() {
         ArrayList<Integer> hand = new ArrayList<>(this.getPlayerMajiangs());   //use Arraylist to copy list
-        ArrayList<Integer> HuTiles = new ArrayList<>(this.getCardsToDisplay()); // same as above
-        //ArrayList<Integer> TingTiles = new ArrayList<>();  // initialize TingTiles ArrayList
-        if (hand.size() + HuTiles.size() >= 14 && !isHu(hand, HuTiles)) {
+        if (!isHu(hand)) {
             for (Integer tile : hand) {
                 ArrayList<Integer> tempHand = new ArrayList<>(hand); // create temporary arraylist for updating every time
-
-                tempHand.remove(tile); // remove the tile from the temporary arraylist
-
+                tempHand.remove(tile);
                 for (Integer i = 11; i <= 47; i++) { // Iterate all possible tiles
                     if (i >= 11 && i <= 19 || i >= 21 && i <= 29 || i >= 31 && i <= 39 || i >= 41 && i <= 47) {
                         tempHand.add(i); // add the current tile to temporary copy
-                        if (isHu(tempHand, HuTiles)) { // check is hu
+                        if (isHu(tempHand)) { // check is hu
                             this.TingTiles.add(i);
                         }
                         tempHand.remove(i); // remove tile from copy

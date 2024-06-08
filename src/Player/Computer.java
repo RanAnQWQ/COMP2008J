@@ -8,14 +8,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
-/**
- * Computer: define the related features of computers,
- *           including gain card, discard card, chi, peng, gang, ting & hu.
- *           the discard card and the chi methods are rewritten.
- *
- * @author: Qiyue Zhu
- */
-
 public class Computer extends Player{
     public int discardMajiang(int index) {
         int card = playerMajiangs.get(index);
@@ -40,7 +32,7 @@ public class Computer extends Player{
     public int nextCard(){
         // if nothing happen after, then randomly pick one card to discard
         Random num = new Random();
-        int index = num.nextInt(playerMajiangs.size()-1);
+        int index = num.nextInt(playerMajiangs.size());
 
         // check if there exists card hard to be matched (as a couple or triple)
         for (int element: playerMajiangs){
@@ -88,6 +80,7 @@ public class Computer extends Player{
             Aside(card + 1);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            //Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
@@ -104,6 +97,7 @@ public class Computer extends Player{
             Aside(card + 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            //Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
@@ -119,6 +113,7 @@ public class Computer extends Player{
             Aside(card - 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
+            //Collections.sort(cardsToDisplay);
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
             // add up the times of Chi

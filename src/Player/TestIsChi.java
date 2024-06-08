@@ -6,17 +6,10 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * TestIsChi: test the isChi(int card) in the Player class
- *
- * @author: Qiyue Zhu
- */
 public class TestIsChi {
-    Player player = new HumanPlayer();
+    HumanPlayer player = new HumanPlayer();
 
 
-    // 24, 25, 26, 27, 28; card: 26
-    // set: 24, 25, 26, 25, 26, 27, 26, 27, 28
     @Test
     public void testIsChiWith4Neighbours() {
         // Arrange
@@ -39,7 +32,7 @@ public class TestIsChi {
         correctSet.add(27);
         correctSet.add(28);
         assertEquals(correctSet, set);
-        //assertEquals(true, player.isChi);
+
     }
 
 

@@ -6,11 +6,6 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * TestIsPeng: test the isPeng(int card) in the Player class
- *
- * @author: Qiyue Zhu
- */
 public class TestIsPeng {
     HumanPlayer player = new HumanPlayer();
 
