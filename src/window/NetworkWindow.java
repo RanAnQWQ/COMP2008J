@@ -118,7 +118,7 @@ public class NetworkWindow extends JFrame {
             chiButton.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Chi_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
         }
         chiButton.setBounds(695, 570, 45, 57);
-
+        gamePanel.remove(chiButton);
         gamePanel.add(chiButton);
         gamePanel.validate();
         gamePanel.repaint();
@@ -218,6 +218,7 @@ public class NetworkWindow extends JFrame {
             pengButton.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng_unable.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
         }
         pengButton.setBounds(745, 570, 45, 57);
+        gamePanel.remove(pengButton);
         gamePanel.add(pengButton);
         gamePanel.validate();
         gamePanel.repaint();
@@ -243,6 +244,7 @@ public class NetworkWindow extends JFrame {
         }
 
         gangButton.setBounds(795, 570, 45, 57);
+        gamePanel.remove(gangButton);
         gamePanel.add(gangButton);
         gamePanel.validate();
         gamePanel.repaint();

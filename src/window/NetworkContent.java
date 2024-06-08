@@ -310,12 +310,12 @@ public class NetworkContent extends JFrame {
                             if (this.clientId.equals(clientId)){
                                 networkWindow.skip_button(true);
                                 networkWindow.pengButton.addActionListener(e -> {
+                                    networkWindow.removeButton();
                                     System.out.println(clientId + " Click Peng");
                                     networkWindow.player.Peng(card, networkWindow.scaledWidth, networkWindow.scaledHeight,
                                             networkWindow.gamePanel, 4, networkWindow.addNetworkTile);
                                     networkWindow.addTileToWindow(networkWindow.player.playerMajiangs);
                                     networkWindow.gamePanel.remove(rivers.get(rivers.size()-1));
-                                    networkWindow.removeButton();
                                     StringBuilder msg = new StringBuilder("Finish-Peng-" + this.clientId + "-");
                                     for (int i = 0; i < 3; i++) {
                                         if (i!=2){
@@ -335,11 +335,11 @@ public class NetworkContent extends JFrame {
                                 networkWindow.skip_button(true);
                                 networkWindow.gangButton.addActionListener(e -> {
                                     System.out.println(clientId + " Click Gang");
+                                    networkWindow.removeButton();
                                     networkWindow.player.Gang(card, networkWindow.scaledWidth, networkWindow.scaledHeight,
                                             networkWindow.gamePanel, 4, networkWindow.addNetworkTile);
                                     networkWindow.addTileToWindow(networkWindow.player.playerMajiangs);
                                     networkWindow.gamePanel.remove(rivers.get(rivers.size()-1));
-                                    networkWindow.removeButton();
                                     StringBuilder msg = new StringBuilder("Finish-Gang-" + this.clientId + "-");
                                     for (int i = 0; i < 4; i++) {
                                         if (i!=3){
@@ -359,11 +359,11 @@ public class NetworkContent extends JFrame {
                                 networkWindow.skip_button(true);
                                 networkWindow.chiButton.addActionListener(e -> {
                                     System.out.println(clientId + " Click Chi");
+                                    networkWindow.removeButton();
                                     NetworkPlayer player = networkWindow.player;
                                     List<Integer> list = player.Chi(player.isChi(card), networkWindow.chi_choice(player, player.isChi(card)), card, networkWindow);
                                     networkWindow.addTileToWindow(networkWindow.player.playerMajiangs);
                                     networkWindow.gamePanel.remove(rivers.get(rivers.size()-1));
-                                    networkWindow.removeButton();
                                     StringBuilder msg = new StringBuilder("Finish-Chi-" + this.clientId + "-");
                                     for (int i = 0; i < list.size(); i++) {
                                         if (i!=3){

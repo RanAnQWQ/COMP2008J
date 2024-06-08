@@ -351,7 +351,7 @@ public class GameWindow extends JFrame {
         // If Gang action is possible
         if (judge) {
             gang.setVisible(true);
-            skipGang.setVisible(false);
+            skipGang.setVisible(true);
             skipGang_button(judge,computernumber); // Call skipGang_button to set up the skip button
 
             // Set the icon for the Gang button
@@ -1033,7 +1033,6 @@ public class GameWindow extends JFrame {
                                     System.out.println("player can gang");
                                     gang_button(true,card,2);
                                     timer.cancel();
-
                                 } else if (computer1.isGang(card)) {
                                     computer1.Gang(card, scaledWidth, scaledHeight, gamePanel, 1, addComputerTile);
                                     System.out.println("computer1 gang computer2's tile");
