@@ -164,7 +164,7 @@ public class NetworkWindow extends JFrame {
         for (int i = 0; i < num; i += 3) {
             JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 0));
             panel.setOpaque(false);
-            panel.putClientProperty("index", i); // 设置面板的索引属性
+            panel.putClientProperty("index", i); // set the character of the interface
 
             for (int j = 0; j < 3; j++) {
                 int tileNum = option.get(i + j);
@@ -286,7 +286,7 @@ public class NetworkWindow extends JFrame {
         gamePanel.repaint();
 
         try {
-            latch.await(); // 等待按钮点击
+            latch.await(); //wait the button to be clicked
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -324,7 +324,7 @@ public class NetworkWindow extends JFrame {
             String tilePath = tilemap.getTilePath(tileNum);
             ImageIcon icon = new ImageIcon(new ImageIcon(tilePath).getImage().getScaledInstance(132 / 3, 191 / 3, Image.SCALE_SMOOTH));
             JLabel label = new JLabel(icon);
-            label.putClientProperty("index", i); // 设置标签的索引属性
+            label.putClientProperty("index", i); 
 
             label.addMouseListener(new MouseAdapter() {
                 @Override
@@ -418,8 +418,8 @@ public class NetworkWindow extends JFrame {
 
     public int startX = 230; //the position of use's tiles in hand
     public int startY = 640;
-    public int maxTilesPerRow = 12; // 每行最多显示的牌数
-    public int discardStartX = 418; // 弃牌的起始X位置
+    public int maxTilesPerRow = 12; // the max number of tile in a line
+    public int discardStartX = 418; 
     public int discardStartY = 420;
     public int scaledWidth = 0;
     public int scaledHeight = 0;
@@ -494,31 +494,31 @@ public class NetworkWindow extends JFrame {
 
             public void mouseClicked(MouseEvent e) {
                 if (canClick) {
-                    canClick = false;  // 禁止再次点击，直到操作完成
-                    tileLabel.setEnabled(false);  // 每回合只能弃一张牌
+                    canClick = false;  
+                    tileLabel.setEnabled(false); 
 
-                    JLabel clickedTile = (JLabel) e.getSource();  // 获取被点击的牌
+                    JLabel clickedTile = (JLabel) e.getSource(); 
                     ImageIcon tileIcon = (ImageIcon) clickedTile.getIcon();
-                    int tileNum = (int) clickedTile.getClientProperty("tileNumber");  // 获取用户点击的牌的编号
+                    int tileNum = (int) clickedTile.getClientProperty("tileNumber");  
                     cardToDiscard = tileNum;
 
                     // 将牌添加到河中
                     networkContent.addNetworkTile.addTileToRiverX(tileIcon, tileNum, discardStartX, discardStartY, maxTilesPerRow, gamePanel,4);
 
-                    // 移除被点击的牌号并重新列出剩余的牌
+                    
                     tileNumber.remove(Integer.valueOf(tileNum));
                     Collections.sort(tileNumber);
                     listTiles(tileNumber, startX, startY);
 
                     player.playerMajiangs.remove(Integer.valueOf(tileNum));
 
-                    //判断是否听牌
+                    
                     if (!player.Tinging) {
                         if (player.isTing()) {
-                            System.out.println("判断玩家能ting了，按钮应该能亮");
+    
                             if(ting_button(player.TingThrowTiles)){
                                 ting_choice(player.TingThrowTiles);
-                                System.out.println("玩家点了听了");
+                            
                                 player.Tinging=true;
                             }
                         }
@@ -567,7 +567,7 @@ public class NetworkWindow extends JFrame {
 
     }
 
-    // 其他人打牌的方法
+    // others method to play tiles
     public void otherPlayTile(int x, int y, Boolean isX, int computerName, int num) {
 
         String tilePath = tilemap.getTilePath(num);
