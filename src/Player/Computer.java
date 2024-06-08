@@ -1,18 +1,12 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
+import window.AddTile;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
-
-/**
- * Computer: define the related features of computers,
- *           including gain card, discard card, chi, peng, gang, ting & hu.
- *           the discard card and the chi methods are rewritten.
- *
- * @author: Qiyue Zhu
- */
 
 public class Computer extends Player{
     public int discardMajiang(int index) {
@@ -20,6 +14,7 @@ public class Computer extends Player{
         playerMajiangs.remove(index);
         ShuffleMajiang.river.add(card);
         ShuffleMajiang.riverIndex++;
+        playerRiver.add(card);
         return card;
     }
 
@@ -77,19 +72,23 @@ public class Computer extends Player{
      *      For example, if your hand tiles are 3, 4, 5, and your previous player discards 2,
      *      you can eat the 2 to form the sequence 2, 3, 4.
      */
-    public void Chi(int card){
+    public void Chi(Integer card, int scaledWidth, int scaledHeight, JPanel gamePanel,
+                    int computerName, AddTile addTile){
         // if the card both have left and right neighbour, its neighbours and itself will be a sequence
         if ( playerMajiangs.contains(card + 1) && playerMajiangs.contains(card - 1) ) {
             Aside(card - 1);
             Aside(card + 1);
             // add this card aside to display the card
             cardsToDisplay.add(card);
-            Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
+            addTile.addTileToDisplay(card-1, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card+1, scaledWidth, scaledHeight, gamePanel,computerName);
+
         }
         // if the card only have right neighbour, its right neighbour,the right neighbour of its right neighbour and itself will be a sequence
         else if ( playerMajiangs.contains(card + 1) &&  playerMajiangs.contains(card + 2) ) {
@@ -97,12 +96,14 @@ public class Computer extends Player{
             Aside(card + 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
-            Collections.sort(cardsToDisplay);
             // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
+            addTile.addTileToDisplay(card, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card+1, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card+2, scaledWidth, scaledHeight, gamePanel,computerName);
         }
         // if the card only have left neighbour, its left neighbour,the left neighbour of its left neighbour and itself will be a sequence
         else if ( playerMajiangs.contains(card - 1) && playerMajiangs.contains(card - 2) ) {
@@ -110,13 +111,15 @@ public class Computer extends Player{
             Aside(card - 2);
             // add this card aside to display the card
             cardsToDisplay.add(card);
-            Collections.sort(cardsToDisplay);
-            // remove this card from the river (both the player's river and the whole river)
             ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
             ShuffleMajiang.riverIndex--;
             // add up the times of Chi
             ChiNumber++;
+            addTile.addTileToDisplay(card-2, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card-1, scaledWidth, scaledHeight, gamePanel,computerName);
+            addTile.addTileToDisplay(card, scaledWidth, scaledHeight, gamePanel,computerName);
         }
+
     }
 
 }

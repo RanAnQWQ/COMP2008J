@@ -1,14 +1,18 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
-import window.AddTile;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
-public class HumanPlayer extends Player {
+public class NetworkPlayer extends Player {
+    public int clientId;
+    public boolean host;
+    public String avatar;
+
+    public NetworkPlayer(int clientId) {
+        this.clientId = clientId;
+    }
 
     /**
      * discardMajiang()：remove a card from the player
@@ -21,7 +25,6 @@ public class HumanPlayer extends Player {
         Collections.sort(playerMajiangs);
         return card;
     }
-
 
     /**
      * Aside: put this card aside to display.
@@ -75,8 +78,7 @@ public class HumanPlayer extends Player {
      *
      * In this process, listener is set finally as the index of the pattern chosen.
      */
-    public void Chi(ArrayList<Integer> set, int listener, Integer card, int scaledWidth, int scaledHeight, JPanel gamePanel,
-                    int computerName, AddTile addTile) {
+    public void Chi(ArrayList<Integer> set, int listener, int card) {
         // listener=3
         // if set has 3 cards
         if (listener == 3){
@@ -124,9 +126,6 @@ public class HumanPlayer extends Player {
 
         // remove this card from the river (both the player's river and the whole river)
         ShuffleMajiang.river.remove(ShuffleMajiang.river.size()-1);
-        for (int i:set) {
-            addTile.addTileToDisplay(i, scaledWidth, scaledHeight, gamePanel,computerName);
-        }
         // add up the number of Chi
         ChiNumber++;
     }

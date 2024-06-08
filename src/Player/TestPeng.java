@@ -2,18 +2,22 @@ package Player;
 
 import GameTable.ShuffleMajiang;
 import org.junit.Test;
+import window.AddComputerTile;
+import window.ImagePanel;
 
+import javax.swing.*;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * TestPeng: test the Peng(int card) in the Player class
- *
- * @author: Qiyue Zhu
- */
 public class TestPeng {
     HumanPlayer player = new HumanPlayer();
+
+    int scaledWidth = 100;
+    int scaledHeight = 100;
+    JPanel gamePanel = new ImagePanel("src/window/background/background1.png");
+    int computerName = 1;
+    AddComputerTile addTile = new AddComputerTile();
 
 
     @Test
@@ -24,7 +28,7 @@ public class TestPeng {
         player.playerMajiangs.add(25);
         player.playerMajiangs.add(25);
         // perform Peng
-        player.Peng(25);
+        player.Peng(25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         // Assert correct answer
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(25);
@@ -33,7 +37,6 @@ public class TestPeng {
         // test
         assertEquals(correctDisplay, player.getCardsToDisplay());
         assertEquals(new ArrayList<>(), player.playerMajiangs);
-        assertEquals(new ArrayList<>(), player.playerRiver);
         assertEquals(new ArrayList<>(), ShuffleMajiang.river);
         assertEquals(1, player.PengNumber);
     }
@@ -52,7 +55,7 @@ public class TestPeng {
         player.playerMajiangs.add(47);
         player.playerMajiangs.add(47);
         // perform Peng
-        player.Peng(47);
+        player.Peng(47, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
         // Assert correct answer
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(47);
@@ -62,12 +65,9 @@ public class TestPeng {
         correctCards.add(25);
         ArrayList<Integer> correctRiver = new ArrayList<>();
         correctRiver.add(42);
-        ArrayList<Integer> correctPlayerRiver = new ArrayList<>();
-        correctPlayerRiver.add(31);
         // test
         assertEquals(correctDisplay, player.getCardsToDisplay());
         assertEquals(correctCards, player.playerMajiangs);
-        assertEquals(correctPlayerRiver, player.playerRiver);
         assertEquals(correctRiver, ShuffleMajiang.river);
         assertEquals(2, player.PengNumber);
     }

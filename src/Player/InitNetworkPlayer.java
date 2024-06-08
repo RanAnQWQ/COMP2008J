@@ -1,12 +1,10 @@
 package Player;
 
-import GameTable.ShuffleMajiang;
-import window.*;
+import window.NetworkContent;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class InitPlayer {
+public class InitNetworkPlayer {
     //store the information of each in the players
     public static ArrayList<Player> players=new ArrayList<Player>();
 
@@ -14,7 +12,7 @@ public class InitPlayer {
     public Computer computer1, computer2, computer3;
 
 
-    public InitPlayer() {
+    public InitNetworkPlayer() {
 
         // create players
         player = new HumanPlayer();
@@ -27,7 +25,7 @@ public class InitPlayer {
         players.add(computer2);
         players.add(computer3);
 
-        GameContent gameContent = new GameContent();
+        NetworkContent gameContent = new NetworkContent();
         if (gameContent.getFirstHost().equalsIgnoreCase("east")) {
             // reset the boolean isHost based on the host result
             player.isHost = true;

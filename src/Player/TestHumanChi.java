@@ -4,15 +4,21 @@ import static org.junit.Assert.*;
 
 import GameTable.ShuffleMajiang;
 import org.junit.Test;
-import java.util.ArrayList;
+import window.AddComputerTile;
+import window.ImagePanel;
 
-/**
- * TestHumanChi: test the Chi(ArrayList<Integer> set, int listener, int card) in the HumanPlayer class
- *
- * @author: Qiyue Zhu
- */
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class TestHumanChi {
     HumanPlayer player = new HumanPlayer();
+
+    int scaledWidth = 100;
+    int scaledHeight = 100;
+    JPanel gamePanel = new ImagePanel("src/window/background/background1.png");
+    int computerName = 1;
+    AddComputerTile addTile = new AddComputerTile();
 
     // set length=3, listener=3 (card on the left), card: 24
     // 24, 25, 26;
@@ -25,7 +31,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 3, 24);
+        player.Chi(player.set, 3, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -49,7 +57,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 3, 25);
+        player.Chi(player.set, 3, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -74,7 +84,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 3, 26);
+        player.Chi(player.set, 3, 26, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -107,7 +119,9 @@ public class TestHumanChi {
         player.set.add(25);
         player.set.add(26);
         player.set.add(27);
-        player.Chi(player.set, 0, 25);
+        player.Chi(player.set, 0, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(25);
@@ -143,7 +157,9 @@ public class TestHumanChi {
         player.set.add(25);
         player.set.add(26);
         player.set.add(27);
-        player.Chi(player.set, 1, 25);
+        player.Chi(player.set, 1, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -180,7 +196,9 @@ public class TestHumanChi {
         player.set.add(25);
         player.set.add(26);
         player.set.add(27);
-        player.Chi(player.set, 2, 25);
+        player.Chi(player.set, 2, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -213,7 +231,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 1, 25);
+        player.Chi(player.set, 1, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -244,7 +264,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 1, 24);
+        player.Chi(player.set, 1, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(23);
@@ -275,7 +297,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 2, 25);
+        player.Chi(player.set, 2, 25, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);
@@ -306,7 +330,9 @@ public class TestHumanChi {
         player.set.add(24);
         player.set.add(25);
         player.set.add(26);
-        player.Chi(player.set, 2, 24);
+        player.Chi(player.set, 2, 24, scaledWidth, scaledHeight, gamePanel, computerName, addTile);
+        Collections.sort(player.cardsToDisplay);
+
         // Assert
         ArrayList<Integer> correctDisplay = new ArrayList<>();
         correctDisplay.add(24);

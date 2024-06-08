@@ -1,18 +1,14 @@
 package Player;
 
 import GameTable.ShuffleMajiang;
-import HuHelper.Hu;
+import window.AddTile;
 
-import java.util.*;
+import javax.swing.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 
-/**
- * Player: define the related features of players,
- *         including gain card, discard card, chi, peng, gang, ting & hu.
- *         the gain card, discard card, chi, peng, gang are written by Qiyue Zhu,
- *         and the ting and hu related methods are written by Ran An.
- *
- * @author: Qiyue Zhu & Ran An
- */
 public abstract class Player {
     // the boss is decided in the InitPlayer class
     public boolean isHost;
@@ -52,10 +48,10 @@ public abstract class Player {
 
     public boolean isTing;
     public boolean isHu;
-    public boolean Tinging;
+    public boolean Tinging=false;
     public HashMap<Integer,ArrayList<Integer>> pairs=new HashMap<>();
     public ArrayList<Integer> TingTiles=new ArrayList();
-    ArrayList<Integer> TingThrowTiles=new ArrayList<>();
+    public ArrayList<Integer> TingThrowTiles=new ArrayList<>();
     public ArrayList<Integer> set=new ArrayList<>();
 
 
@@ -76,11 +72,12 @@ public abstract class Player {
     public abstract int discardMajiang(int index);
 
 
-    public void discardAfterTing(){
+    public int discardAfterTing(){
         int card=playerMajiangs.remove(playerMajiangs.size()-1);
         playerRiver.add(card);
         ShuffleMajiang.river.add(card);
         ShuffleMajiang.riverIndex++;
+        return card;
     }
 
 
@@ -159,21 +156,29 @@ public abstract class Player {
      *       you can collide the 8 to form the set 8, 8, 8.
      *
      */
-    public void Peng(int card){
+    public void Peng(Integer card, int scaledWidth, int scaledHeight, JPanel gamePanel,
+                     int computerName, AddTile addTile){
         // remove these 2 same cards from the player's card
         // then add these 2 same cards to a new array to display the Peng cards
 
         // add this card aside to display the card
         cardsToDisplay.add(card);
         cardsToDisplay.add(card);
+        cardsToDisplay.add(card);
         // remove the card from the player's card
         playerMajiangs.remove(playerMajiangs.indexOf(card));
         playerMajiangs.remove(playerMajiangs.indexOf(card));
-        // add this card aside to display the card
-        cardsToDisplay.add(card);
+
+
+        for (int i = 0; i < 3; i++) {
+            addTile.addTileToDisplay(card, scaledWidth, scaledHeight, gamePanel,computerName);
+        }
+
         // remove this card from the river (both the player's river and the whole river)
-        ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
-        playerRiver.remove(playerRiver.size() - 1);
+        if (ShuffleMajiang.river.size()>0) {
+            ShuffleMajiang.river.remove(ShuffleMajiang.river.size() - 1);
+        }
+
         // add up the times of Peng
         PengNumber++;
     }
@@ -209,7 +214,8 @@ public abstract class Player {
      *                  this make up the covert gang, and you don't need to show them in public.
      * In this case, the overt gang is shown below.
      */
-    public void Gang(int card){
+    public void Gang(Integer card, int scaledWidth, int scaledHeight, JPanel gamePanel,
+                     int computerName, AddTile addTile){
         // remove these 3 cards from the player's card
         // then add these 3 cards to a new array to display the Gang cards
 
@@ -217,15 +223,21 @@ public abstract class Player {
         cardsToDisplay.add(card);
         cardsToDisplay.add(card);
         cardsToDisplay.add(card);
+
         // remove the card from the player's card
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
-        playerMajiangs.remove(playerMajiangs.indexOf(card));
+        playerMajiangs.remove(card);
+        playerMajiangs.remove(card);
+        playerMajiangs.remove(card);
         // add this card aside to display the card
         cardsToDisplay.add(card);
+
+        for (int i = 0; i < 4; i++) {
+            addTile.addTileToDisplay(card, scaledWidth, scaledHeight, gamePanel,computerName);
+        }
+        
         // remove this card from the river (both the player's river and the whole river)
         ShuffleMajiang.river.remove(ShuffleMajiang.river.size() -1);
-        playerRiver.remove(playerRiver.size() - 1);
+
         // add up the times of Gang
         GangNumber++;
     }
@@ -265,7 +277,7 @@ public abstract class Player {
             int count = countTiles(temp, tile);
 
             if (count >= 3) {
-                int removals = count >= 4 ? 4 : 3;  // Remove 4 if there are quadruplets, otherwise remove 3
+                int removals = count >= 4 ? 4 : 3;// Remove 4 if there are quadruplets, otherwise remove 3
                 for (int i = 0; i < removals; i++) {
                     iterator.remove();             // Remove the current element safely
                     if (i < removals - 1) {        // If not the last iteration, move to next element
@@ -353,9 +365,7 @@ public abstract class Player {
         ArrayList<Integer> hand = new ArrayList<>(this.getPlayerMajiangs());   //use Arraylist to copy list
         ArrayList<Integer> HuTiles = new ArrayList<>(this.getCardsToDisplay()); // same as above
         //ArrayList<Integer> TingTiles = new ArrayList<>();  // initialize TingTiles ArrayList
-        Hu hu = new Hu(); // instance Hu (if is not finished)
-
-        if (hand.size() + HuTiles.size() >= 14 && !hu.isHu(hand, HuTiles)) {
+        if (hand.size() + HuTiles.size() >= 14 && !isHu(hand, HuTiles)) {
             for (Integer tile : hand) {
                 ArrayList<Integer> tempHand = new ArrayList<>(hand); // create temporary arraylist for updating every time
 
@@ -364,7 +374,7 @@ public abstract class Player {
                 for (Integer i = 11; i <= 47; i++) { // Iterate all possible tiles
                     if (i >= 11 && i <= 19 || i >= 21 && i <= 29 || i >= 31 && i <= 39 || i >= 41 && i <= 47) {
                         tempHand.add(i); // add the current tile to temporary copy
-                        if (hu.isHu(tempHand, HuTiles)) { // check is hu
+                        if (isHu(tempHand, HuTiles)) { // check is hu
                             this.TingTiles.add(i);
                         }
                         tempHand.remove(i); // remove tile from copy
