@@ -2,12 +2,17 @@ package Player;
 
 import GameTable.ShuffleMajiang;
 import window.AddTile;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 
+/**
+ * Computer: define the related features of computers,
+ *           including gain card, discard card, chi, peng, gang, ting & hu.
+ *           the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu and Ran An
+ */
 public class HumanPlayer extends Player {
 
     /**
@@ -34,8 +39,7 @@ public class HumanPlayer extends Player {
             cardsToDisplay.add(set.get(0));
             cardsToDisplay.add(set.get(1));
             // remove the card from the player's card
-            playerMajiangs.
-                    remove(playerMajiangs.indexOf(set.get(0)));
+            playerMajiangs.remove(playerMajiangs.indexOf(set.get(0)));
             playerMajiangs.remove(playerMajiangs.indexOf(set.get(1)));
         } else if (cardIndex == 1) {
             // add this card aside to display the card

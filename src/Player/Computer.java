@@ -4,11 +4,23 @@ import GameTable.ShuffleMajiang;
 import window.AddTile;
 
 import javax.swing.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * Computer: define the related features of computers,
+ *           including gain card, discard card, chi, peng, gang, ting & hu.
+ *           the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu and Ran An
+ */
+
 public class Computer extends Player{
+
+    /**
+     * discardMajiang()：remove a card from the player
+     * @param index: the card to be discarded in the player's cards
+     */
     public int discardMajiang(int index) {
         int card = playerMajiangs.get(index);
         playerMajiangs.remove(index);

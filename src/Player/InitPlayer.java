@@ -1,11 +1,15 @@
 package Player;
 
-import GameTable.ShuffleMajiang;
 import window.*;
-
 import java.util.ArrayList;
-import java.util.List;
 
+/**
+ * Computer: define the related features of computers,
+ *           including gain card, discard card, chi, peng, gang, ting & hu.
+ *           the discard card and the chi methods are rewritten.
+ *
+ * @author: Qiyue Zhu
+ */
 public class InitPlayer {
     //store the information of each in the players
     public static ArrayList<Player> players=new ArrayList<Player>();

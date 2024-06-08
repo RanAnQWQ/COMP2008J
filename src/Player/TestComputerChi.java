@@ -3,8 +3,6 @@ package Player;
 import GameTable.ShuffleMajiang;
 import org.junit.Test;
 import window.AddComputerTile;
-import window.AddTile;
-import window.GameContent;
 import window.ImagePanel;
 
 import javax.swing.*;
@@ -13,6 +11,11 @@ import java.util.Collections;
 
 import static org.junit.Assert.*;
 
+/**
+ * TestComputerChi: test the Chi(int card) in the Computer class
+ *
+ * @author: Qiyue Zhu
+ */
 public class TestComputerChi {
 
     // Chi(Integer card, int scaledWidth,

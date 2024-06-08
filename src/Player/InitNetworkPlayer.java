@@ -1,9 +1,15 @@
 package Player;
 
 import window.NetworkContent;
-
 import java.util.ArrayList;
 
+/**
+ * InitNetworkPlayer: initialize the game table,
+ *                    including identify the attributes of players
+ *                    and deal the cards to the players.
+ *
+ * @author: Qiyue Zhu
+ */
 public class InitNetworkPlayer {
     //store the information of each in the players
     public static ArrayList<Player> players=new ArrayList<Player>();

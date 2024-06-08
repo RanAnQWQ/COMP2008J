@@ -249,20 +249,7 @@ public abstract class Player {
     }
 
 
-    private static List<Integer> getPairs(List<Integer> hand) {
-        Collections.sort(hand);
-        List<Integer> res=new ArrayList<>();
-        if (hand.size() > 1) {
-            for (int i = 0; i < hand.size() - 1; i++) {
-                if (hand.get(i).equals(hand.get(i + 1))) {
-                    res.add(hand.get(i));
-                    i++;
-                }
-            }
-        }
-        return res;
 
-    }
 
     // Method to count the number of triplets in the hand
 
@@ -335,16 +322,6 @@ public abstract class Player {
         return tempCards;
     }
 
-    // Method to count the occurrences of a specific tile in the hand
-    private static int countTiles(List<Integer> hand, int tile) {
-        int count = 0;
-        for (int t : hand) {
-            if (t == tile) {
-                count++;
-            }
-        }
-        return count;
-    }
 
     public boolean isHu(List<Integer> hand){
             //Clear three combinations of different and the same
