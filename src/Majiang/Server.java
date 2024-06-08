@@ -26,6 +26,7 @@ public class Server {
     private static int currentClient;
     private static AtomicInteger pengCount = new AtomicInteger(0);
     private static AtomicInteger gangCount = new AtomicInteger(0);
+    private static AtomicInteger chiCount = new AtomicInteger(0);
 
     public static void main(String[] args) {
         ServerSocket serverSocket = null;
@@ -40,7 +41,7 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client " + (clientCount + 1) + " connected: " + clientSocket.getRemoteSocketAddress());
 
-                // 为每个客户端创建一个处理器，并分配一个标识
+                // Create a processor for each client and assign an identity
                 ClientHandler clientHandler = new ClientHandler(clientSocket, clientCount + 1);
                 clients.add(clientHandler);
                 executorService.submit(clientHandler);
@@ -65,7 +66,7 @@ public class Server {
         @Override
         public void run() {
             try {
-                // 这里处理客户端的通信逻辑
+                // This is where the client's communication logic is handled
                 System.out.println("Client " + clientId + " is being handled by thread " + Thread.currentThread().getName());
 
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
@@ -93,14 +94,14 @@ public class Server {
                 }
 
                 if(this.clientId == MAX_CLIENTS){
-                    //决定谁摇色子
+                    //Decide who shakes the dice
                     int sum = new Random().nextInt(12) + 2;
                     int host = sum%4==0?4:sum%4;
                     sendToAll("Host-"+host);
                     networkPlayers.get((sum%4==0?3:sum%4-1)).host = true;
                     currentClient = host;
 
-                    //发牌
+                    //deal cards
                     shuffleMajiang();
                     System.out.println(ShuffleMajiang.maJiangs);
                     haveFirstBoard();
@@ -117,90 +118,122 @@ public class Server {
                         Integer card = Integer.parseInt(input.split("-")[2]);
                         networkPlayers.get(clientId-1).playerMajiangs.remove(card);
 
-                        //通知客户端，用户出牌了
+                        //Notify the client that the user has played
                         sendToAll(input + "-" + networkPlayers.get(clientId-1).playerMajiangs.size());
                         continue;
                     }
 
                     if (input.startsWith("Peng")){
-                        //碰
+                        //peng
                         int clientId1 = Integer.parseInt(input.split("-")[1]);
-                        int card = Integer.parseInt(input.split("-")[2]);
+                        Integer card = Integer.parseInt(input.split("-")[2]);
                         Boolean isPeng = Boolean.valueOf(input.split("-")[3]);
 
                         if (isPeng){
                             System.out.println(clientId1 + " Can Peng");
 
-                            //清除被吃的牌
-                            NetworkPlayer networkPlayer = networkPlayers.get(currentClient - 1);
-                            networkPlayer.playerMajiangs.remove(networkPlayer.playerMajiangs.size()-1);
-                            sendToAll("RemoveRiver-"+currentClient+"-"+networkPlayer.playerMajiangs+"-"+networkPlayer.playerMajiangs.size());
-
-                            //吃碰杠的出牌
-                            //切换用户
+                            //chi, peng, gang
+                            //switch user
                             currentClient = clientId1;
                             sendToAll("Peng-"+currentClient+"-"+card);
 
+                            continue;
                         }else {
                             pengCount.incrementAndGet();
                         }
+
                     }
 
                     if (input.startsWith("Gang")){
-                        //杠
+                        //gang
                         int clientId1 = Integer.parseInt(input.split("-")[1]);
-                        int card = Integer.parseInt(input.split("-")[2]);
-                        Boolean isPeng = Boolean.valueOf(input.split("-")[3]);
+                        Integer card = Integer.parseInt(input.split("-")[2]);
+                        Boolean isGang = Boolean.valueOf(input.split("-")[3]);
 
-                        if (isPeng){
+                        if (isGang){
                             System.out.println(clientId1 + " Can Gang");
-
-                            //清除被吃的牌
-                            NetworkPlayer networkPlayer = networkPlayers.get(currentClient - 1);
-                            networkPlayer.playerMajiangs.remove(networkPlayer.playerMajiangs.size()-1);
-                            sendToAll("RemoveRiver-"+currentClient+"-"+networkPlayer.playerMajiangs+"-"+networkPlayer.playerMajiangs.size());
-
-                            //吃碰杠的出牌
-                            //切换用户
+                            //switch user
                             currentClient = clientId1;
                             sendToAll("Gang-"+currentClient+"-"+card);
 
+                            continue;
                         }else {
                             gangCount.incrementAndGet();
                         }
                     }
 
+                    if (input.startsWith("Chi")){
+                        //eat
+                        int clientId1 = Integer.parseInt(input.split("-")[1]);
+                        Integer card = Integer.parseInt(input.split("-")[2]);
+                        Boolean isChi = Boolean.valueOf(input.split("-")[3]);
+
+                        if (isChi){
+                            System.out.println(clientId1 + " Can Chi");
+
+                            //switch user
+                            currentClient = clientId1;
+                            sendToAll("Chi-"+currentClient+"-"+card);
+
+                        }else {
+                            chiCount.incrementAndGet();
+                        }
+                    }
+
+
                     if (input.startsWith("Finish")){
                         pengCount.set(0);
                         gangCount.set(0);
+                        chiCount.set(0);
 
-                        //清楚碰或者杠的人的牌
+                        // Clear the card of the person who peng or gang
                         int clientId = Integer.parseInt(input.split("-")[2]);
                         String cards = input.split("-")[3];
                         String[] split = cards.split(",");
                         for (String card : split) {
-                            networkPlayers.get(clientId-1).playerMajiangs.removeIf(item -> item == Integer.parseInt(card));
+                            Integer i = Integer.parseInt(card);
+                            networkPlayers.get(clientId-1).playerMajiangs.remove(i);
                         }
 
+                        //Deal the cards to the man of the gang
+                        if ("Gang".equals(input.split("-")[1])){
+                            Integer card = ShuffleMajiang.maJiangs.get(0);
+                            ShuffleMajiang.maJiangs.remove(0);
+                            NetworkPlayer networkPlayer = networkPlayers.get(clientId - 1);
+                            networkPlayer.playerMajiangs.add(card);
+                        }
+
+                        Collections.sort(networkPlayers.get(clientId-1).playerMajiangs);
                         sendToAll(input+"-"+currentClient);
                     }
 
-                    System.out.println("pengCount-"+pengCount);
-                    System.out.println("gangCount-"+gangCount);
-                    if ((pengCount.intValue()==3 && gangCount.intValue()==3) || input.startsWith("Skip")) {
+                    if ((pengCount.intValue()==3
+                            && gangCount.intValue()==3
+                            && chiCount.intValue()==3
+                    )
+                            || input.startsWith("Skip")) {
                         pengCount.set(0);
                         gangCount.set(0);
-                        System.out.println("After-pengCount-"+pengCount);
-                        System.out.println("After-gangCount-"+gangCount);
+                        chiCount.set(0);
 
-                        //切换用户
-                        currentClient = currentClient+1>4?1:currentClient+1;
+                        //switch user
+                        if (input.startsWith("Skip")){
+                            //User whose operation is skipped
+                            String clientId = input.split("-")[1];
+                            if (currentClient != Integer.parseInt(clientId)){
+                                currentClient = currentClient+1>4?1:currentClient+1;
+                            }
+                        }else {
+                            currentClient = currentClient+1>4?1:currentClient+1;
+                        }
+
 
                         System.out.println("Next is "+currentClient);
 
-                        //发牌
+                        //deal tile
                         Integer card = ShuffleMajiang.maJiangs.get(0);
                         ShuffleMajiang.maJiangs.remove(0);
+                        Collections.sort(networkPlayers.get(clientId-1).playerMajiangs);
                         NetworkPlayer networkPlayer = networkPlayers.get(currentClient - 1);
                         networkPlayer.playerMajiangs.add(card);
 
