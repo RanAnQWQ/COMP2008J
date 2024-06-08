@@ -71,8 +71,6 @@ public class GameWindow extends JFrame {
     }
 
     public GameWindow() {
-        LossWindow("West");
-
         window_frame();
         gameContent.helpButtons(gamePanel);
         gameContent.dice_button(sum, gamePanel);
@@ -296,7 +294,7 @@ public class GameWindow extends JFrame {
         if (judge) { // If Peng action is possible
             peng.setVisible(true);
             skipPeng.setVisible(true);
-            skipPeng_button(judge); // Call skipPeng_button to set up the skip button
+            skipPeng_button(judge,computerNumber); // Call skipPeng_button to set up the skip button
 
             // Set the icon for the Peng button
             peng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Peng.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
@@ -354,7 +352,7 @@ public class GameWindow extends JFrame {
         if (judge) {
             gang.setVisible(true);
             skipGang.setVisible(false);
-            skipGang_button(judge); // Call skipGang_button to set up the skip button
+            skipGang_button(judge,computernumber); // Call skipGang_button to set up the skip button
 
             // Set the icon for the Gang button
             gang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Gang.png").getImage().getScaledInstance(45, 57, Image.SCALE_SMOOTH)));
@@ -547,6 +545,24 @@ public class GameWindow extends JFrame {
                     scoreFrame.add(scoreLabel);
                     scoreFrame.setVisible(true);
 
+                    JButton mainMenuButton = new JButton("Main Menu");
+                    mainMenuButton.setFont(new Font("Arial", Font.BOLD, 18));
+                    mainMenuButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            // Close the Hu window
+                            scoreFrame.dispose();
+                            dispose();
+                            // Here you should add the code to return to the main menu
+                            new MainMenuWindow();
+                        }
+                    });
+
+                    JPanel buttonPanel = new JPanel();
+                    buttonPanel.add(mainMenuButton);
+                    scoreFrame.add(buttonPanel, BorderLayout.SOUTH);
+
+                    scoreFrame.setVisible(true);
+
                     result[0] = true;
                     latch.countDown();
                 }
@@ -600,7 +616,7 @@ public class GameWindow extends JFrame {
         return result[0]; // Return the result indicating if skip was chosen
     }
 
-    public int skipPeng_button(boolean ifExist) {
+    public int skipPeng_button(boolean ifExist, int computer) {
         // Set the icon and appearance of the skipPeng button
         skipPeng.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo.png").getImage().getScaledInstance(42, 55, Image.SCALE_SMOOTH)));
         skipPeng.setBorderPainted(false);
@@ -620,7 +636,14 @@ public class GameWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Skip is available");
                     result[0] = 100; // Set result to 100, skip action
-                    player.gainMajiang(); // Player draws a new tile
+                    if(computer==1){
+                        computer1.gainMajiang();
+                    }else if(computer==2){
+                        computer2.gainMajiang();
+                    }else{
+                        computer3.gainMajiang();
+                    }
+                    startRobotPlaySequence((computer+1)%4);
                     listTiles(player.playerMajiangs, startX, startY); // List the player's tiles
                     latch.countDown(); // Release the latch
                     skipPeng.setVisible(false);
@@ -639,7 +662,7 @@ public class GameWindow extends JFrame {
         return result[0]; // Return the result indicating if skip was chosen
     }
 
-    public int skipGang_button(boolean ifExist) {
+    public int skipGang_button(boolean ifExist,int computer) {
         // Set the icon and appearance of the skipGang button
         skipGang.setIcon(new ImageIcon(new ImageIcon("src/PromtButton/Guo.png").getImage().getScaledInstance(42, 55, Image.SCALE_SMOOTH)));
         skipGang.setBorderPainted(false);
@@ -659,9 +682,16 @@ public class GameWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Skip is available");
                     result[0] = 100;
-                    player.gainMajiang();
                     listTiles(player.playerMajiangs, startX, startY);
                     latch.countDown();
+                    if(computer==1){
+                        computer1.gainMajiang();
+                    }else if(computer==2){
+                        computer2.gainMajiang();
+                    }else{
+                        computer3.gainMajiang();
+                    }
+                    startRobotPlaySequence((computer+1)%4);
                     skipGang.setVisible(false);
                     gang.setVisible(false);
                     // Hide the gang buttons
@@ -698,8 +728,8 @@ public class GameWindow extends JFrame {
                 public void actionPerformed(ActionEvent e) {
                     System.out.println("Skip is available");
                     result[0] = 100;
-                    player.gainMajiang();
                     listTiles(player.playerMajiangs, startX, startY);
+                    startRobotPlaySequence(4);
                     latch.countDown();
                     skipTing.setVisible(false); // Hide the skipTing button
                     ting.setVisible(false); // Hide the ting button
@@ -933,7 +963,7 @@ public class GameWindow extends JFrame {
                                     robotPlayTile(computer1.getPlayerMajiangs(), 740, 210 + 260, Boolean.FALSE, 1, card);
                                 } else if (player.isPeng(card)&&!player.Tinging) {
                                     System.out.println("player can peng");
-                                    peng_button(true,card,4);
+                                    peng_button(true,card,1);
                                     timer.cancel();
                                 } else if (!computer2.isChi(card).isEmpty()&&!computer2.Tinging) {
                                     System.out.println("computer2 chi computer1's tile");
@@ -1001,7 +1031,7 @@ public class GameWindow extends JFrame {
 
                                 } else if (player.isGang(card)) {
                                     System.out.println("player can gang");
-                                    gang_button(true,card,4);
+                                    gang_button(true,card,2);
                                     timer.cancel();
 
                                 } else if (computer1.isGang(card)) {
@@ -1523,7 +1553,7 @@ public class GameWindow extends JFrame {
         gamePanel.revalidate();
         gamePanel.repaint();
     }
-    private void drawTileWindow(){
+    private void drawTileWindow() {
         JFrame draw = new JFrame("Game result");
         draw.setSize(480, 210);
         draw.setLocationRelativeTo(null);
@@ -1536,17 +1566,16 @@ public class GameWindow extends JFrame {
         hint.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel hintPanel = new JPanel(new BorderLayout());
-        hintPanel.add(hint, BorderLayout.SOUTH);
+        hintPanel.add(hint, BorderLayout.CENTER);
         draw.add(hintPanel, BorderLayout.NORTH);
 
-        JPanel mainPanel = new JPanel(new GridLayout(1, 2, 10, 10));
-        mainPanel.setOpaque(false);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
+        buttonPanel.setOpaque(false);
 
         // Main Menu Button
         JButton menuButton = new JButton("Main Menu");
         menuButton.setFocusPainted(false);
         Font backFont = new Font("Arial", Font.BOLD, 24);
-        menuButton.setSize(80, 80);
         menuButton.setFont(backFont);
         menuButton.addActionListener(new AbstractAction() {
             @Override
@@ -1557,13 +1586,12 @@ public class GameWindow extends JFrame {
                 new MainMenuWindow(); // Opens the main menu window
             }
         });
-        mainPanel.add(menuButton);
+        buttonPanel.add(menuButton);
 
         // Restart Button
         JButton restartButton = new JButton("Restart Game");
         restartButton.setFocusPainted(false);
         Font restartFont = new Font("Arial", Font.BOLD, 24);
-        restartButton.setSize(80, 80);
         restartButton.setFont(restartFont);
         restartButton.addActionListener(new AbstractAction() {
             @Override
@@ -1577,37 +1605,36 @@ public class GameWindow extends JFrame {
                 }
             }
         });
-        draw.add(restartButton);
+        buttonPanel.add(restartButton);
 
-        draw.add(mainPanel, BorderLayout.CENTER);
+        draw.add(buttonPanel, BorderLayout.SOUTH);
+
         draw.setVisible(true);
     }
 
 
-    private void LossWindow(String winner){
+    private void LossWindow(String winner) {
         JFrame loss = new JFrame("Game result");
-        loss.setSize(480, 210);
+        loss.setSize(480, 280);
         loss.setLocationRelativeTo(null);
         loss.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         loss.setLayout(new BorderLayout());
 
-        JLabel hint = new JLabel("<html><br> You Loss! <br><br>The winner is: "+ winner);
+        JLabel hint = new JLabel("<html><br> You Lose! <br><br>The winner is: " + winner + "</html>");
         hint.setFont(new Font("Consolas", Font.BOLD, 24));
         hint.setForeground(Color.GRAY);
         hint.setHorizontalAlignment(SwingConstants.CENTER);
 
         JPanel hintPanel = new JPanel(new BorderLayout());
-        hintPanel.add(hint, BorderLayout.SOUTH);
+        hintPanel.add(hint, BorderLayout.CENTER);
         loss.add(hintPanel, BorderLayout.NORTH);
 
-        JPanel mainPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
-        mainPanel.setOpaque(false);
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 10));
 
         // Main Menu Button
         JButton menuButton = new JButton("Main Menu");
         menuButton.setFocusPainted(false);
         Font backFont = new Font("Arial", Font.BOLD, 24);
-        menuButton.setSize(80, 80);
         menuButton.setFont(backFont);
         menuButton.addActionListener(new AbstractAction() {
             @Override
@@ -1618,13 +1645,12 @@ public class GameWindow extends JFrame {
                 new MainMenuWindow(); // Opens the main menu window
             }
         });
-        loss.add(menuButton);
+        buttonPanel.add(menuButton);
 
         // Restart Button
         JButton restartButton = new JButton("Restart Game");
         restartButton.setFocusPainted(false);
         Font restartFont = new Font("Arial", Font.BOLD, 24);
-        restartButton.setSize(80, 80);
         restartButton.setFont(restartFont);
         restartButton.addActionListener(new AbstractAction() {
             @Override
@@ -1638,11 +1664,12 @@ public class GameWindow extends JFrame {
                 }
             }
         });
-        mainPanel.add(restartButton);
+        buttonPanel.add(restartButton);
 
-        loss.add(mainPanel, BorderLayout.CENTER);
+        loss.add(buttonPanel, BorderLayout.SOUTH);
         loss.setVisible(true);
     }
+
 
 }
 
