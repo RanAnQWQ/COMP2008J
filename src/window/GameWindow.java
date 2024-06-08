@@ -71,6 +71,7 @@ public class GameWindow extends JFrame {
     }
 
     public GameWindow() {
+        LossWindow("West");
 
         window_frame();
         gameContent.helpButtons(gamePanel);
@@ -865,7 +866,7 @@ public class GameWindow extends JFrame {
                             computer1.isHu = true;
                             System.out.println("computer1 can hu");
                             timer.cancel();
-                            LossWindow();
+                            LossWindow("North");
                             return;
                         }
                         else if (computer1.isTing()&&!computer1.Tinging) {
@@ -886,7 +887,7 @@ public class GameWindow extends JFrame {
                                     addComputerTile.addComputer1Tile(computer1.playerMajiangs.size(), gamePanel);
                                 }else if(computer1.isTing&&!computer1.Tinging){
                                     Random random=new Random();
-                                    int index =random.nextInt(computer1.TingThrowTiles.size()-1);
+                                    int index =random.nextInt(computer1.TingThrowTiles.size());
                                     card=computer1.discardMajiang(computer1.playerMajiangs.indexOf(computer1.TingThrowTiles.get(index)));
                                     computer1.Tinging=true;
                                 }else{
@@ -958,7 +959,7 @@ public class GameWindow extends JFrame {
                         if (computer2Hu) {
                             computer2.isHu = true;
                             System.out.println("computer2 can hu");
-                            LossWindow();
+                            LossWindow("West");
                             timer.cancel();
                             return;
                         }
@@ -980,7 +981,7 @@ public class GameWindow extends JFrame {
 
                                 }else if(computer2.isTing&&!computer2.Tinging){
                                     Random random=new Random();
-                                    int index =random.nextInt(computer2.TingThrowTiles.size()-1);
+                                    int index =random.nextInt(computer2.TingThrowTiles.size());
                                     card=computer2.discardMajiang(computer2.playerMajiangs.indexOf(computer2.TingThrowTiles.get(index)));
                                     computer2.Tinging=true;
                                 }else{
@@ -1054,7 +1055,7 @@ public class GameWindow extends JFrame {
                         if (computer3Hu) {
                             computer3.isHu = true;
                             System.out.println("computer3 can hu");
-                            LossWindow();
+                            LossWindow("South");
                             timer.cancel();
                             return;
                         }
@@ -1075,7 +1076,7 @@ public class GameWindow extends JFrame {
                                     addComputerTile.addComputer3Tile(computer3.playerMajiangs.size(), gamePanel);
                                 }else if(computer3.isTing&&!computer3.Tinging){
                                     Random random=new Random();
-                                    int index =random.nextInt(computer3.TingThrowTiles.size()-1);
+                                    int index =random.nextInt(computer3.TingThrowTiles.size());
                                     card=computer3.discardMajiang(computer3.playerMajiangs.indexOf(computer3.TingThrowTiles.get(index)));
                                     computer3.Tinging=true;
                                 }else{
@@ -1576,21 +1577,21 @@ public class GameWindow extends JFrame {
                 }
             }
         });
-        mainPanel.add(restartButton);
+        draw.add(restartButton);
 
         draw.add(mainPanel, BorderLayout.CENTER);
         draw.setVisible(true);
     }
 
 
-    private void LossWindow(){
+    private void LossWindow(String winner){
         JFrame loss = new JFrame("Game result");
         loss.setSize(480, 210);
         loss.setLocationRelativeTo(null);
         loss.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         loss.setLayout(new BorderLayout());
 
-        JLabel hint = new JLabel("<html><br> You Loss! <br><br>");
+        JLabel hint = new JLabel("<html><br> You Loss! <br><br>The winner is: "+ winner);
         hint.setFont(new Font("Consolas", Font.BOLD, 24));
         hint.setForeground(Color.GRAY);
         hint.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1617,7 +1618,7 @@ public class GameWindow extends JFrame {
                 new MainMenuWindow(); // Opens the main menu window
             }
         });
-        mainPanel.add(menuButton);
+        loss.add(menuButton);
 
         // Restart Button
         JButton restartButton = new JButton("Restart Game");
@@ -1641,7 +1642,6 @@ public class GameWindow extends JFrame {
 
         loss.add(mainPanel, BorderLayout.CENTER);
         loss.setVisible(true);
-        gamePanel.add(mainPanel);
     }
 
 }
