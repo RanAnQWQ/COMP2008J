@@ -64,13 +64,14 @@ public class NetworkContent extends JFrame {
                     try {
                         String response = in.readLine();
                         if (response == null) {
-                            // 如果没有数据可读，通常是因为socket已经关闭
+                    
+                            //if there is no data to read, usually is due to the closed socket
                             break;
                         }
 
                         System.out.println(response);
 
-                        //等待其他玩家
+                        //wait for other players
                         if (response.startsWith("Waiting") && !init){
                             String msg = response.split("-")[1];
                             System.out.println(msg);
@@ -88,11 +89,11 @@ public class NetworkContent extends JFrame {
                             continue;
                         }
 
-                        //确认东家
+                        //ensure the host
                         if (response.startsWith("Host")){
                             String msg = response.split("-")[1];
 
-                            //如果与客户端id一致，则作为东家
+                            //the clientId is the host
                             if (msg.equals(clientId)){
                                 isHost = true;
                                 networkWindow.canClick = true;
@@ -107,7 +108,7 @@ public class NetworkContent extends JFrame {
                             continue;
                         }
 
-                        //发牌和处理头像
+                        //add tile and headshot
                         if (response.startsWith("Majiangs&Avatar")){
                             String clientId = response.split("-")[1];
                             Integer size = Integer.parseInt(response.split("-")[2]);
@@ -191,7 +192,7 @@ public class NetworkContent extends JFrame {
                             continue;
                         }
 
-                        //出牌
+                        
                         if (response.startsWith("Discard")){
                             String clientId = response.split("-")[1];
                             Integer card = Integer.parseInt(response.split("-")[2]);
@@ -269,7 +270,7 @@ public class NetworkContent extends JFrame {
                                         break;
                                 }
 
-                                //检查是否杠和碰
+                                //check Gang and Peng
                                 if (networkWindow.gang_button(networkWindow.player.isGang(card))){
                                     out.println("Gang-"+this.clientId+"-"+card+"-"+true);
                                     System.out.println("Gang-"+this.clientId+"-"+card+"-"+true);
@@ -286,7 +287,7 @@ public class NetworkContent extends JFrame {
                                     System.out.println("Peng-"+this.clientId+"-"+card+"-"+false);
                                 }
 
-                                //检查是否吃
+                                //check chi
                                 boolean chiFlag = ("1".equals(this.clientId)&&"4".equals(clientId))
                                         || ("2".equals(this.clientId)&&"1".equals(clientId))
                                         || ("3".equals(this.clientId)&&"2".equals(clientId))
@@ -303,7 +304,7 @@ public class NetworkContent extends JFrame {
                             continue;
                         }
 
-                        //碰和杠
+                       
                         if (response.startsWith("Peng")){
                             String clientId = response.split("-")[1];
                             Integer card = Integer.parseInt(response.split("-")[2]);
@@ -383,8 +384,8 @@ public class NetworkContent extends JFrame {
                             List<String> list = Arrays.asList(card.split(","));
                             String discardClientId =  split[4];
                             if (!this.clientId.equals(clientId)){
-                                //清理河中的牌
-                                //展示杠或碰牌
+                                //clear river tile
+                                //show tiles
                                 switch (this.clientId){
                                     case "1":
                                         switch (clientId) {
@@ -498,7 +499,7 @@ public class NetworkContent extends JFrame {
                                 networkWindow.canClick = true;
                             }
                         } else {
-                            //发牌和切换玩家
+                            //change players
                             if (response.startsWith("Current")) {
                                 String currentId = response.split("-")[1];
                                 String playerMajiangs = response.split("-")[2];
@@ -507,7 +508,7 @@ public class NetworkContent extends JFrame {
                                 showArrow(Integer.parseInt(this.clientId), Integer.parseInt(currentId));
 
                                 if (this.clientId.equals(currentId)){
-                                    //发牌
+                                    /
                                     System.out.println(playerMajiangs);
                                     String[] array = playerMajiangs.replace("[", "").replace("]", "").split(", ");
                                     List<Integer> list = new ArrayList<>();
@@ -521,7 +522,7 @@ public class NetworkContent extends JFrame {
                                         return;
                                     }else if (player.isTing){
                                         Integer card = list.get(list.size() - 1);
-                                        // 将牌添加到河中
+                                        // add tile to river
                                         addNetworkTile.addTileToRiverX(new ImageIcon(new ImageIcon(networkWindow.tilemap.getTilePath(card)).getImage()
                                                         .getScaledInstance(networkWindow.scaledWidth, networkWindow.scaledHeight,
                                                                 Image.SCALE_SMOOTH)), card, networkWindow.discardStartX,
@@ -531,7 +532,7 @@ public class NetworkContent extends JFrame {
                                     }else {
                                         networkWindow.addTileToWindow(list);
 
-                                        //允许出牌
+                                        //allow add tiles
                                         networkWindow.canClick = true;
                                     }
                                 }else {
